@@ -1,18 +1,5 @@
 # 语音聊天室
 
-## 效果演示
-
-<table>
-     <tr>
-         <th>房主麦位操作</th>  
-         <th>听众麦位操作</th>  
-     </tr>
-<tr>
-<td><img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/voiceroom_pick_seat.gif"/></td>
-<td><img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/voiceroom_enter_seat.gif"/></td>
-</tr>
-</table>
-
 ## 应用地址
 
 ### iOS

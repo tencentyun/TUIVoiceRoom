@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">语音聊天室</string>
+    <string name="tv_room_id">房间号</string>
+    <string name="hint_input_room_id">请输入房间号</string>
+    <string name="text_enter_room">进入房间</string>
+    <string name="create_room">创建房间</string>
+</resources>

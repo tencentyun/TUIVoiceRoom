@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VoiceRoom</string>
+    <string name="tv_room_id">Room ID</string>
+    <string name="hint_input_room_id">Enter a room id</string>
+    <string name="text_enter_room">Enter Room</string>
+    <string name="create_room">Create Room</string>
+</resources>
