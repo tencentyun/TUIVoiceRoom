@@ -1,5 +1,18 @@
 # 语音聊天室
 
+## 效果演示
+
+<table>
+     <tr>
+         <th>房主麦位操作</th>  
+         <th>听众麦位操作</th>  
+     </tr>
+<tr>
+<td><img src="voiceroom_pick_seat.gif" width="300px" height="640px"/></td>
+<td><img src="voiceroom_enter_seat.gif" width="300px" height="640px"/></td>
+</tr>
+</table>
+
 ## 应用地址
 
 ### iOS
