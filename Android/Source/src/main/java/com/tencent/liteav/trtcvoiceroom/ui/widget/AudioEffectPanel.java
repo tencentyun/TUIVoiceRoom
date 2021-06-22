@@ -449,21 +449,21 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     private List<ItemEntity> createAudioChangeItems() {
         List<ItemEntity> list = new ArrayList<>();
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_origin), R.drawable.trtcvoiceroom_no_select_normal, R.drawable.trtcvoiceroom_no_select_hover, AUDIO_VOICECHANGER_TYPE_0));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_child), R.drawable.trtcvoiceroom_changetype_child_normal,  R.drawable.trtcvoiceroom_changetype_child_hover, AUDIO_VOICECHANGER_TYPE_1));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_luoli), R.drawable.trtcvoiceroom_changetype_luoli_normal, R.drawable.trtcvoiceroom_changetype_luoli_hover, AUDIO_VOICECHANGER_TYPE_2));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_dashu), R.drawable.trtcvoiceroom_changetype_dashu_normal, R.drawable.trtcvoiceroom_changetype_dashu_hover, AUDIO_VOICECHANGER_TYPE_3));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_kongling), R.drawable.trtcvoiceroom_reverbtype_kongling_normal, R.drawable.trtcvoiceroom_reverbtype_kongling_hover, AUDIO_VOICECHANGER_TYPE_11));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_no_effect), R.drawable.trtcvoiceroom_no_select_normal, R.drawable.trtcvoiceroom_no_select_hover, AUDIO_VOICECHANGER_TYPE_0));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_child), R.drawable.trtcvoiceroom_changetype_child_normal,  R.drawable.trtcvoiceroom_changetype_child_hover, AUDIO_VOICECHANGER_TYPE_1));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_luoli), R.drawable.trtcvoiceroom_changetype_luoli_normal, R.drawable.trtcvoiceroom_changetype_luoli_hover, AUDIO_VOICECHANGER_TYPE_2));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_dashu), R.drawable.trtcvoiceroom_changetype_dashu_normal, R.drawable.trtcvoiceroom_changetype_dashu_hover, AUDIO_VOICECHANGER_TYPE_3));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_kongling), R.drawable.trtcvoiceroom_reverbtype_kongling_normal, R.drawable.trtcvoiceroom_reverbtype_kongling_hover, AUDIO_VOICECHANGER_TYPE_11));
         return list;
     }
 
     private List<ItemEntity> createReverbItems() {
         List<ItemEntity> list = new ArrayList<>();
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_origin), R.drawable.trtcvoiceroom_no_select_normal, R.drawable.trtcvoiceroom_no_select_hover, AUDIO_REVERB_TYPE_0));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_ktv), R.drawable.trtcvoiceroom_reverbtype_ktv_normal, R.drawable.trtcvoiceroom_reverbtype_ktv_hover, AUDIO_REVERB_TYPE_1));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_lowdeep), R.drawable.trtcvoiceroom_reverbtype_lowdeep_normal, R.drawable.trtcvoiceroom_reverbtype_lowdeep_hover, AUDIO_REVERB_TYPE_4));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_heavymetal), R.drawable.trtcvoiceroom_reverbtype_heavymetal_normal, R.drawable.trtcvoiceroom_reverbtype_heavymetal_hover, AUDIO_REVERB_TYPE_6));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_hongliang), R.drawable.trtcvoiceroom_reverbtype_hongliang_normal, R.drawable.trtcvoiceroom_reverbtype_hongliang_hover, AUDIO_REVERB_TYPE_5));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_no_effect), R.drawable.trtcvoiceroom_no_select_normal, R.drawable.trtcvoiceroom_no_select_hover, AUDIO_REVERB_TYPE_0));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_ktv), R.drawable.trtcvoiceroom_reverbtype_ktv_normal, R.drawable.trtcvoiceroom_reverbtype_ktv_hover, AUDIO_REVERB_TYPE_1));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_lowdeep), R.drawable.trtcvoiceroom_reverbtype_lowdeep_normal, R.drawable.trtcvoiceroom_reverbtype_lowdeep_hover, AUDIO_REVERB_TYPE_4));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_heavymetal), R.drawable.trtcvoiceroom_reverbtype_heavymetal_normal, R.drawable.trtcvoiceroom_reverbtype_heavymetal_hover, AUDIO_REVERB_TYPE_6));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_hongliang), R.drawable.trtcvoiceroom_reverbtype_hongliang_normal, R.drawable.trtcvoiceroom_reverbtype_hongliang_hover, AUDIO_REVERB_TYPE_5));
         return list;
     }
 
@@ -837,9 +837,5 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     public void setPanelBackgroundDrawable(Drawable drawable) {
         mMainPanel.setBackground(drawable);
-    }
-
-    public void initPanelDefaultBackground() {
-        mMainPanel.setBackground(mContext.getResources().getDrawable(R.drawable.audio_effect_setting_bg_gradient));
     }
 }

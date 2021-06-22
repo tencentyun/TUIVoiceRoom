@@ -30,8 +30,6 @@ dependencies {
     compile rootProject.ext.imSdk
     compile project(':Login')
     compile project(':Debug')
-    compile project(':audioeffectsettingkit')
-
     //依赖一个utils类
     compile 'com.blankj:utilcode:1.25.9'
     compile 'com.google.code.gson:gson:2.3.1'

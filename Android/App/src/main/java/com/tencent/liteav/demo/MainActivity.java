@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.blankj.utilcode.util.ToastUtils;
+import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.liteav.debug.GenerateTestUserSig;
 import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.login.model.UserModel;
@@ -30,6 +33,7 @@ import com.tencent.trtc.TRTCCloudDef;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private Toolbar         mToolbar;
     private EditText        mEditRoomId;
@@ -149,6 +153,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enterRoom(final String roomIdStr) {
+        ProfileManager.getInstance().getGroupInfo(roomIdStr, new ProfileManager.GetGroupInfoCallback() {
+            @Override
+            public void onSuccess(V2TIMGroupInfoResult result) {
+                if (isRoomExist(result)) {
+                    realEnterRoom(roomIdStr);
+                } else {
+                    ToastUtils.showLong(R.string.room_not_exist);
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+                ToastUtils.showLong(msg);
+            }
+        });
+    }
+
+    private void realEnterRoom(String roomIdStr) {
         UserModel userModel = ProfileManager.getInstance().getUserModel();
         String userId = userModel.userId;
         int roomId;
@@ -158,6 +180,14 @@ public class MainActivity extends AppCompatActivity {
             roomId = 10000;
         }
         VoiceRoomAudienceActivity.enterRoom(this, roomId, userId, TRTCCloudDef.TRTC_AUDIO_QUALITY_DEFAULT);
+    }
+
+    private boolean isRoomExist(V2TIMGroupInfoResult result) {
+        if (result == null) {
+            Log.e(TAG, "room not exist result is null");
+            return false;
+        }
+        return result.getResultCode() == 0;
     }
 
     private void initStatusBar() {

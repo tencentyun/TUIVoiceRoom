@@ -5,4 +5,5 @@
     <string name="hint_input_room_id">请输入房间号</string>
     <string name="text_enter_room">进入房间</string>
     <string name="create_room">创建房间</string>
+    <string name="room_not_exist">当前房间不存在</string>
 </resources>

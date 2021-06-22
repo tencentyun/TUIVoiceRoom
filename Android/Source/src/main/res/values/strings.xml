@@ -126,4 +126,13 @@
     <string name="trtcvoiceroom_welcome_visit">"欢迎体验TRTC语聊房！进一步了解如何快速搭建语聊房，请点击："</string>
     <string name="trtcvoiceroom_welcome_visit_link">"https://cloud.tencent.com/document/product/647/45737"</string>
     <string name="trtcvoiceroom_tips_open_audio">请先打开麦克风权限</string>
+    <string name="trtcvoiceroom_no_effect">无效果</string>
+    <string name="trtcvoiceroom_audio_change_type_child">熊孩子</string>
+    <string name="trtcvoiceroom_audio_change_type_luoli">萝莉</string>
+    <string name="trtcvoiceroom_audio_change_type_dashu">大叔</string>
+    <string name="trtcvoiceroom_audio_change_type_kongling">空灵</string>
+    <string name="trtcvoiceroom_audio_reverb_type_ktv">KTV</string>
+    <string name="trtcvoiceroom_audio_reverb_type_lowdeep">低沉</string>
+    <string name="trtcvoiceroom_audio_reverb_type_heavymetal">金属声</string>
+    <string name="trtcvoiceroom_audio_reverb_type_hongliang">洪亮</string>
 </resources>
