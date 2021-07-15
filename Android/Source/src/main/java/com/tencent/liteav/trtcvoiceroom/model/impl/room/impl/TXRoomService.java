@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupListener;
@@ -21,7 +22,6 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXCallback;
-import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXInviteData;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXRoomInfo;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXSeatInfo;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXUserInfo;
@@ -141,6 +141,7 @@ public class TXRoomService extends V2TIMSDKListener {
     private void initIMListener() {
         V2TIMManager.getInstance().setGroupListener(mGroupListener);
         V2TIMManager.getSignalingManager().addSignalingListener(mSignalListener);
+        V2TIMManager.getMessageManager();
         V2TIMManager.getInstance().addSimpleMsgListener(mSimpleListener);
     }
 
@@ -862,9 +863,20 @@ public class TXRoomService extends V2TIMSDKListener {
     }
 
     public String sendInvitation(String cmd, String userId, String content, final TXCallback callback) {
-        String json = IMProtocol.getInvitationMsg(mRoomId, cmd, content);
+        int roomId = 0;
+        try {
+            roomId = Integer.parseInt(mRoomId);
+        } catch (Exception e) {
+            TRTCLogger.e(TAG, "room is not right: "+mRoomId);
+        }
+        SignallingData signallingData = createSignallingData();
+        SignallingData.DataInfo dataInfo = signallingData.getData();
+        dataInfo.setCmd(cmd);
+        dataInfo.setSeatNumber(content);
+        dataInfo.setRoomID(roomId);
+        String json = new Gson().toJson(signallingData);
         TRTCLogger.i(TAG, "send " + userId + " json:" + json);
-        return V2TIMManager.getSignalingManager().invite(userId, json, 0, new V2TIMCallback() {
+        return V2TIMManager.getSignalingManager().invite(userId, json, true, null, 0, new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
                 TRTCLogger.e(TAG, "sendInvitation error " + i);
@@ -885,7 +897,9 @@ public class TXRoomService extends V2TIMSDKListener {
 
     public void acceptInvitation(String id, final TXCallback callback) {
         TRTCLogger.i(TAG, "acceptInvitation " + id);
-        V2TIMManager.getSignalingManager().accept(id, null, new V2TIMCallback() {
+        SignallingData signallingData = createSignallingData();
+        String json = new Gson().toJson(signallingData);
+        V2TIMManager.getSignalingManager().accept(id, json, new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
                 TRTCLogger.e(TAG, "acceptInvitation error " + i);
@@ -906,7 +920,9 @@ public class TXRoomService extends V2TIMSDKListener {
 
     public void rejectInvitation(String id, final TXCallback callback) {
         TRTCLogger.i(TAG, "rejectInvitation " + id);
-        V2TIMManager.getSignalingManager().reject(id, null, new V2TIMCallback() {
+        SignallingData signallingData = createSignallingData();
+        String json = new Gson().toJson(signallingData);
+        V2TIMManager.getSignalingManager().reject(id, json, new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
                 TRTCLogger.e(TAG, "rejectInvitation error " + i);
@@ -926,7 +942,9 @@ public class TXRoomService extends V2TIMSDKListener {
 
     public void cancelInvitation(String id, final TXCallback callback) {
         TRTCLogger.i(TAG, "cancelInvitation " + id);
-        V2TIMManager.getSignalingManager().cancel(id, null, new V2TIMCallback() {
+        SignallingData signallingData = createSignallingData();
+        String json = new Gson().toJson(signallingData);
+        V2TIMManager.getSignalingManager().cancel(id, json, new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
                 TRTCLogger.e(TAG, "cancelInvitation error " + i);
@@ -1127,24 +1145,34 @@ public class TXRoomService extends V2TIMSDKListener {
     private class VoiceRoomSignalListener extends V2TIMSignalingListener {
         @Override
         public void onReceiveNewInvitation(String inviteID, String inviter, String groupId, List<String> inviteeList, String data) {
-            TRTCLogger.i(TAG, "recv new invitation: " + inviteID + " from " + inviter);
+            TRTCLogger.i(TAG, "recv new invitation: " + inviteID + " from " + inviter + " data:"+data);
             if (mDelegate != null) {
-                TXInviteData txInviteData = IMProtocol.parseInvitationMsg(data);
-                if (txInviteData == null) {
-                    TRTCLogger.e(TAG, "parse data error");
+                SignallingData signallingData = IMProtocol.convert2SignallingData(data);
+                if (!isVoiceRoomData(signallingData)) {
+                    TRTCLogger.d(TAG, "this is not the voice room sense ");
                     return;
                 }
-                if (!mRoomId.equals(txInviteData.roomId)) {
+                SignallingData.DataInfo dataInfo = signallingData.getData();
+                if (dataInfo == null) {
+                    TRTCLogger.e(TAG, "parse data error, dataInfo is null");
+                    return;
+                }
+                if (!mRoomId.equals(String.valueOf(dataInfo.getRoomID()))) {
                     TRTCLogger.e(TAG, "roomId is not right");
                     return;
                 }
-                mDelegate.onReceiveNewInvitation(inviteID, inviter, txInviteData.command, txInviteData.message);
+                mDelegate.onReceiveNewInvitation(inviteID, inviter, dataInfo.getCmd(), dataInfo.getSeatNumber());
             }
         }
 
         @Override
         public void onInviteeAccepted(String inviteID, String invitee, String data) {
             TRTCLogger.i(TAG, "recv accept invitation: " + inviteID + " from " + invitee);
+            SignallingData signallingData = IMProtocol.convert2SignallingData(data);
+            if (!isVoiceRoomData(signallingData)) {
+                TRTCLogger.d(TAG, "this is not the voice room sense ");
+                return;
+            }
             if (mDelegate != null) {
                 mDelegate.onInviteeAccepted(inviteID, invitee);
             }
@@ -1153,6 +1181,11 @@ public class TXRoomService extends V2TIMSDKListener {
         @Override
         public void onInviteeRejected(String inviteID, String invitee, String data) {
             TRTCLogger.i(TAG, "recv reject invitation: " + inviteID + " from " + invitee);
+            SignallingData signallingData = IMProtocol.convert2SignallingData(data);
+            if (!isVoiceRoomData(signallingData)) {
+                TRTCLogger.d(TAG, "this is not the voice room sense ");
+                return;
+            }
             if (mDelegate != null) {
                 mDelegate.onInviteeRejected(inviteID, invitee);
             }
@@ -1161,6 +1194,11 @@ public class TXRoomService extends V2TIMSDKListener {
         @Override
         public void onInvitationCancelled(String inviteID, String inviter, String data) {
             TRTCLogger.i(TAG, "recv cancel invitation: " + inviteID + " from " + inviter);
+            SignallingData signallingData = IMProtocol.convert2SignallingData(data);
+            if (isVoiceRoomData(signallingData)) {
+                TRTCLogger.d(TAG, "this is not the voice room sense ");
+                return;
+            }
             if (mDelegate != null) {
                 mDelegate.onInvitationCancelled(inviteID, inviter);
             }
@@ -1169,5 +1207,23 @@ public class TXRoomService extends V2TIMSDKListener {
         @Override
         public void onInvitationTimeout(String inviteID, List<String> inviteeList) {
         }
+    }
+
+    private boolean isVoiceRoomData(SignallingData signallingData) {
+        if (signallingData == null) {
+            return false;
+        }
+        String businessId = signallingData.getBusinessID();
+        return IMProtocol.SignallingDefine.VALUE_BUSINESS_ID.equals(businessId);
+    }
+
+    private SignallingData createSignallingData() {
+        SignallingData callingData = new SignallingData();
+        callingData.setVersion(IMProtocol.SignallingDefine.VALUE_VERSION);
+        callingData.setBusinessID(IMProtocol.SignallingDefine.VALUE_BUSINESS_ID);
+        callingData.setPlatform(IMProtocol.SignallingDefine.VALUE_PLATFORM);
+        SignallingData.DataInfo dataInfo = new SignallingData.DataInfo();
+        callingData.setData(dataInfo);
+        return callingData;
     }
 }

@@ -8,7 +8,7 @@ package com.tencent.liteav.trtcvoiceroom.ui.room;
  */
 public class TCConstants {
     //直播端右下角listview显示type
-    public static final String CMD_REQUEST_TAKE_SEAT = "1";
-    public static final String CMD_PICK_UP_SEAT      = "2";
+    public static final String CMD_REQUEST_TAKE_SEAT = "takeSeat";
+    public static final String CMD_PICK_UP_SEAT      = "pickSeat";
 }
 

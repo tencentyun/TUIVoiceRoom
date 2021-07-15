@@ -6,8 +6,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.tencent.liteav.audio.TXAudioEffectManager;
-import com.tencent.liteav.login.model.ProfileManager;
-import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
@@ -422,7 +420,6 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
             }
         });
         TRTCLogger.i(TAG, "start exit room service.");
-        setVoiceRoomType(false);
         TXRoomService.getInstance().exitRoom(new TXCallback() {
             @Override
             public void onCallback(final int code, final String msg) {
@@ -974,22 +971,10 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
             }
         });
     }
-    
-    /**
-     * 标志用户已经进入语音聊天
-     * @param updateType true：进入语音聊天；false：退出语音聊天
-     */
-    private void setVoiceRoomType(boolean updateType) {
-        if(updateType) {
-            ProfileManager.getInstance().getUserModel().userType = UserModel.UserType.VOICEROOMTYPE;
-        } else {
-            ProfileManager.getInstance().getUserModel().userType = UserModel.UserType.NONE;
-        }
-    }
+
     private void enterTRTCRoomInner(final String roomId, final String userId, final String userSig, final int role, final TRTCVoiceRoomCallback.ActionCallback callback) {
         // 进入 TRTC 房间
         TRTCLogger.i(TAG, "enter trtc room.");
-        setVoiceRoomType(true);
         VoiceRoomTRTCService.getInstance().enterRoom(mSdkAppId, roomId, userId, userSig, role, new TXCallback() {
             @Override
             public void onCallback(final int code, final String msg) {

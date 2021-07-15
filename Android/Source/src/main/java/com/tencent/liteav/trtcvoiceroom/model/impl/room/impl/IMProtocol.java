@@ -4,8 +4,8 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TRTCLogger;
-import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXInviteData;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXRoomInfo;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXSeatInfo;
 
@@ -41,16 +41,23 @@ public class IMProtocol {
         public static final String VALUE_CMD_VERSION = "1.0";
         public static final String KEY_CMD_ACTION    = "action";
 
-        public static final String KEY_INVITATION_VERSION   = "version";
-        public static final String VALUE_INVITATION_VERSION = "1.0";
-        public static final String KEY_INVITATION_CMD       = "command";
-        public static final String KEY_INVITATION_CONTENT   = "content";
-
 
         public static final int CODE_UNKNOWN      = 0;
         public static final int CODE_ROOM_DESTROY = 200;
-
         public static final int CODE_ROOM_CUSTOM_MSG = 301;
+    }
+
+    public static class SignallingDefine {
+        public static String  KEY_VERSION        = "version";
+        public static String  KEY_BUSINESS_ID    = "businessID";
+        public static String  KEY_DATA           = "data";
+        public static String  KEY_ROOM_ID        = "room_id";
+        public static String  KEY_CMD            = "cmd";
+        public static String  KEY_SEAT_NUMBER    = "seat_number";
+
+        public static final int    VALUE_VERSION     = 1;
+        public static final String VALUE_BUSINESS_ID = "VoiceRoom"; //语聊房场景
+        public static final String VALUE_PLATFORM    = "Android";   //当前平台
     }
 
     public static HashMap<String, String> getInitRoomMap(TXRoomInfo TXRoomInfo, List<TXSeatInfo> TXSeatInfoList) {
@@ -120,24 +127,80 @@ public class IMProtocol {
         return txSeatInfoList;
     }
 
-    public static String getInvitationMsg(String roomId, String cmd, String content) {
-        Gson         gson = new Gson();
-        TXInviteData data = new TXInviteData();
-        data.roomId = roomId;
-        data.command = cmd;
-        data.message = content;
-        return gson.toJson(data, TXInviteData.class);
+    public static SignallingData convert2SignallingData(String json) {
+        SignallingData signallingData = new SignallingData();
+        Map<String, Object> extraMap;
+        try {
+            extraMap = new Gson().fromJson(json, Map.class);
+            if (extraMap == null) {
+                TRTCLogger.e(TAG, " extraMap is null, ignore");
+                return signallingData;
+            }
+            if (extraMap.containsKey(SignallingDefine.KEY_VERSION)) {
+                Object version = extraMap.get(SignallingDefine.KEY_VERSION);
+                if (version instanceof Double) {
+                    signallingData.setVersion(((Double) version).intValue());
+                } else {
+                    TRTCLogger.e(TAG, "version is not int, value is :" + version);
+                }
+            }
+
+            if (extraMap.containsKey(SignallingDefine.KEY_BUSINESS_ID)) {
+                Object businessId = extraMap.get(SignallingDefine.KEY_BUSINESS_ID);
+                if (businessId instanceof String) {
+                    signallingData.setBusinessID((String) businessId);
+                } else {
+                    TRTCLogger.e(TAG, "businessId is not string, value is :" + businessId);
+                }
+            }
+
+            if (extraMap.containsKey(SignallingDefine.KEY_DATA)) {
+                Object dataMapObj = extraMap.get(SignallingDefine.KEY_DATA);
+                if (dataMapObj != null && dataMapObj instanceof Map) {
+                    Map<String, Object> dataMap = (Map<String, Object>) dataMapObj;
+                    SignallingData.DataInfo dataInfo = convert2DataInfo(dataMap);
+                    signallingData.setData(dataInfo);
+                } else {
+                    TRTCLogger.e(TAG, "dataMapObj is not map, value is :" + dataMapObj);
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            TRTCLogger.i(TAG, "convert2SignallingData json parse error");
+        }
+        return signallingData;
     }
 
-    public static TXInviteData parseInvitationMsg(String json) {
-        Gson         gson = new Gson();
-        TXInviteData data;
+    private static SignallingData.DataInfo convert2DataInfo(Map<String, Object> dataMap) {
+        SignallingData.DataInfo dataInfo = new SignallingData.DataInfo();
         try {
-            data = gson.fromJson(json, TXInviteData.class);
-        } catch (Exception e) {
-            return null;
+            if (dataMap.containsKey(SignallingDefine.KEY_CMD)) {
+                Object cmd = dataMap.get(SignallingDefine.KEY_CMD);
+                if (cmd instanceof String) {
+                    dataInfo.setCmd((String)cmd);
+                } else {
+                    TRTCLogger.e(TAG, "cmd is not string, value is :" + cmd);
+                }
+            }
+            if (dataMap.containsKey(SignallingDefine.KEY_ROOM_ID)) {
+                Object roomId = dataMap.get(SignallingDefine.KEY_ROOM_ID);
+                if (roomId instanceof Double) {
+                    dataInfo.setRoomID(((Double) roomId).intValue());
+                } else {
+                    TRTCLogger.e(TAG, "roomId is not Double, value is :" + roomId);
+                }
+            }
+            if (dataMap.containsKey(SignallingDefine.KEY_SEAT_NUMBER)) {
+                Object seatNumber = dataMap.get(SignallingDefine.KEY_SEAT_NUMBER);
+                if (seatNumber instanceof String) {
+                    dataInfo.setSeatNumber((String)seatNumber);
+                } else {
+                    TRTCLogger.e(TAG, "seatNumber is not string, value is :" + seatNumber);
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            TRTCLogger.e(TAG, "onReceiveNewInvitation JsonSyntaxException:" + e);
         }
-        return data;
+        return dataInfo;
     }
 
     public static String getRoomDestroyMsg() {

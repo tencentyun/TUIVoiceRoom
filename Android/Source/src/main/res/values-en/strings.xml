@@ -3,6 +3,7 @@
     <string name="trtcvoiceroom_numer_format" >%d watching</string>
     <string name="trtcvoiceroom_agree">Agree</string>
     <string name="trtcvoiceroom_warning_not_empty">The input field must not be empty</string>
+    <string name="trtcvoiceroom_warning_room_name_too_long">Room name is too long</string>
     <string name="trtcvoiceroom_send">Send</string>
     <string name="trtcvoiceroom_main_title">%1s(%2d)</string>
     <string name="trtcvoiceroom_dialog_cancel">Cancel</string>
@@ -61,7 +62,7 @@
     <string name="trtcvoiceroom_toast_anchor_can_only_operate_it">Only an anchor can perform this operation.</string>
     <string name="trtcvoiceroom_toast_please_enter_content">Enter content</string>
     <string name="trtcvoiceroom_toast_sent_successfully">Sent</string>
-    <string name="trtcvoiceroom_toast_sent_message_failure">Failed to send message [%1$d]:%2$s</string>
+    <string name="trtcvoiceroom_toast_sent_message_failure">Failed to send message [%1$d]</string>
     <string name="trtcvoiceroom_tv_information_acquisition">Getting room owner information</string>
     <string name="trtcvoiceroom_tv_the_anchor_is_not_online">The anchor is not online</string>
     <string name="trtcvoiceroom_tv_online">%1$s took seat %2$d</string>

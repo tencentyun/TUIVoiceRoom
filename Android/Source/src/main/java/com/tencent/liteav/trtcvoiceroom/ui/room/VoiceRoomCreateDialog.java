@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomAnchorActivity;
@@ -28,6 +30,7 @@ public class VoiceRoomCreateDialog extends BottomSheetDialog {
     private String   mCoverUrl;
     private int      mAudioQuality;
     private boolean  mNeedRequest;
+    private int      MAX_LEN = 30;
 
     public void showVoiceRoomCreateDialog(String userId, String userName, String coverUrl, int audioQuality,
                                           boolean needRequest) {
@@ -83,6 +86,10 @@ public class VoiceRoomCreateDialog extends BottomSheetDialog {
     private void createRoom() {
         String roomName = mRoomNameEt.getText().toString();
         if (TextUtils.isEmpty(roomName)) {
+            return;
+        }
+        if (roomName.getBytes().length > MAX_LEN) {
+            ToastUtils.showLong(getContext().getText(R.string.trtcvoiceroom_warning_room_name_too_long));
             return;
         }
         VoiceRoomAnchorActivity.createRoom(getContext(), roomName, mUserId, mUserName, mCoverUrl, mAudioQuality, mNeedRequest);

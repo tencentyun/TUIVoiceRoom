@@ -13,6 +13,7 @@ import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
 import com.tencent.liteav.trtcvoiceroom.model.VoiceRoomManager;
+import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
 import com.tencent.liteav.trtcvoiceroom.ui.base.MemberEntity;
 import com.tencent.liteav.trtcvoiceroom.ui.base.VoiceRoomSeatEntity;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.CommonBottomDialog;
@@ -88,6 +89,11 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
     }
 
     private void destroyRoom() {
+        EarMonitorInstance monitorInstance = EarMonitorInstance.getInstance();
+        if (monitorInstance.ismEarMonitorOpen()) {
+            EarMonitorInstance.getInstance().updateEarMonitorState(false);
+            mTRTCVoiceRoom.setVoiceEarMonitorEnable(false);
+        }
         mTRTCVoiceRoom.destroyRoom(new TRTCVoiceRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {

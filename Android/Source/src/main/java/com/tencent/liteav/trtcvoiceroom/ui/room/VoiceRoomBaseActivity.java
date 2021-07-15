@@ -25,6 +25,8 @@ import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.squareup.picasso.Picasso;
+import com.tencent.liteav.login.model.ProfileManager;
+import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
@@ -142,6 +144,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ProfileManager.getInstance().getUserModel().userType = UserModel.UserType.VOICE_ROOM;
         mContext = this;
         // 应用运行时，保持不锁屏、全屏化
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -174,6 +177,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ProfileManager.getInstance().getUserModel().userType = UserModel.UserType.NONE;
         if (mAnchorAudioPanel != null) {
             mAnchorAudioPanel.unInit();
             mAnchorAudioPanel = null;

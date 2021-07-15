@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
+import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
 import com.tencent.liteav.trtcvoiceroom.ui.base.VoiceRoomSeatEntity;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.CommonBottomDialog;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.ConfirmDialogFragment;
@@ -201,6 +202,11 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
     }
 
     private void leaveSeat() {
+        EarMonitorInstance monitorInstance = EarMonitorInstance.getInstance();
+        if (monitorInstance.ismEarMonitorOpen()) {
+            EarMonitorInstance.getInstance().updateEarMonitorState(false);
+            mTRTCVoiceRoom.setVoiceEarMonitorEnable(false);
+        }
         mTRTCVoiceRoom.leaveSeat(new TRTCVoiceRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
