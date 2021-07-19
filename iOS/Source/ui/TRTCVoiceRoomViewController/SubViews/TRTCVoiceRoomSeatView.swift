@@ -144,6 +144,7 @@ class TRTCVoiceRoomSeatView: UIView {
             avatarImageView.image = UIImage.init(named: "room_lockseat", in: VoiceRoomBundle(), compatibleWith: nil)
             nameLabel.text = ""//.lockedText
             speakView.isHidden = true
+            muteImageView.isHidden = true
             return
         }
         

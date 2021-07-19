@@ -17,8 +17,8 @@ public enum VoiceRoomViewType {
 class VoiceRoomConstants {
     public static let TYPE_VOICE_ROOM = "voiceRoom"
     // 直播端右下角listview显示的type
-    public static let CMD_REQUEST_TAKE_SEAT = "1"
-    public static let CMD_PICK_UP_SEAT = "2"
+    public static let CMD_REQUEST_TAKE_SEAT = "takeSeat"
+    public static let CMD_PICK_UP_SEAT = "pickSeat"
 }
 
 /// 记录房间座位信息的Model

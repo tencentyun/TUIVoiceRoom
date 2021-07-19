@@ -114,6 +114,9 @@ class TRTCVoiceRoomViewModel: NSObject {
         guard !isExitingRoom else { return }
         viewResponder?.popToPrevious()
         isExitingRoom = true
+        if voiceEarMonitor {
+            voiceEarMonitor = false
+        }
         if dependencyContainer.userId == roomInfo.ownerId && roomType == .anchor {
             dependencyContainer.destroyRoom(roomID: "\(roomInfo.roomID)", success: {
                 TRTCLog.out("---deinit room success")
@@ -730,6 +733,9 @@ extension TRTCVoiceRoomViewModel: TRTCVoiceRoomDelegate {
             isOwnerMute = false
             // 自己下麦，停止音效播放
             viewResponder?.stopPlayBGM()
+            if voiceEarMonitor {
+                voiceEarMonitor = false
+            }
         }
         if !memberAudienceDic.keys.contains(user.userId) {
             for model in memberAudienceList {

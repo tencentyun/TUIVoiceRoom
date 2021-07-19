@@ -310,6 +310,16 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
                 return;
             }
         }
+        var muteModel: IconTuple?
+        for model in mainMenuView.dataSource {
+            if model.type == .mute {
+                muteModel = model
+                break
+            }
+        }
+        if let model = muteModel {
+            model.isSelect = !isMute
+        }
         mainMenuView.changeMixStatus(isMute: isMute)
     }
     

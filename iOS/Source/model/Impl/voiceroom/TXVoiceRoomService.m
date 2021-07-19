@@ -608,7 +608,18 @@
 }
 
 - (NSString *)sendInvitation:(NSString *)cmd userId:(NSString *)userId content:(NSString *)content callback:(TXCallback)callback {
-    NSString* jsonString = [TXVoiceRoomIMJsonHandle getInvitationMsgWithRoomId:self.mRoomId cmd:cmd content:content];
+    NSDictionary *dic = @{
+        VOICE_ROOM_KEY_CMD_VERSION:@(VOICE_ROOM_VALUE_CMD_VERSION),
+        VOICE_ROOM_KEY_CMD_BUSINESSID:VOICE_ROOM_VALUE_CMD_BUSINESSID,
+        VOICE_ROOM_KEY_CMD_PLATFORM:VOICE_ROOM_VALUE_CMD_PLATFORM,
+        VOICE_ROOM_KEY_CMD_EXTINFO:@"",
+        VOICE_ROOM_KEY_CMD_DATA:@{
+                VOICE_ROOM_KEY_CMD_ROOMID:@(self.mRoomId.intValue),
+                VOICE_ROOM_KEY_CMD_CMD:cmd,
+                VOICE_ROOM_KEY_CMD_SEATNUMBER:content,
+        },
+    };
+    NSString *jsonString = [dic mj_JSONString];
     return [self.imManager invite:userId data:jsonString onlineUserOnly:YES offlinePushInfo:nil timeout:0 succ:^{
         TRTCLog(@"send invitation success.");
         if (callback) {
@@ -624,7 +635,13 @@
 
 - (void)acceptInvitation:(NSString *)identifier callback:(TXCallback)callback {
     TRTCLog(@"accept %@", identifier);
-    [self.imManager accept:identifier data:nil succ:^{
+    NSDictionary *dic = @{
+        VOICE_ROOM_KEY_CMD_VERSION:@(VOICE_ROOM_VALUE_CMD_VERSION),
+        VOICE_ROOM_KEY_CMD_BUSINESSID:VOICE_ROOM_VALUE_CMD_BUSINESSID,
+        VOICE_ROOM_KEY_CMD_PLATFORM:VOICE_ROOM_VALUE_CMD_PLATFORM,
+    };
+    NSString *jsonString = [dic mj_JSONString];
+    [self.imManager accept:identifier data:jsonString succ:^{
         TRTCLog(@"accept invitation success.");
         if (callback) {
             callback(0, @"accept invitation success.");
@@ -639,7 +656,13 @@
 
 - (void)rejectInvitaiton:(NSString *)identifier callback:(TXCallback)callback {
     TRTCLog(@"reject %@", identifier);
-    [self.imManager reject:identifier data:nil succ:^{
+    NSDictionary *dic = @{
+        VOICE_ROOM_KEY_CMD_VERSION:@(VOICE_ROOM_VALUE_CMD_VERSION),
+        VOICE_ROOM_KEY_CMD_BUSINESSID:VOICE_ROOM_VALUE_CMD_BUSINESSID,
+        VOICE_ROOM_KEY_CMD_PLATFORM:VOICE_ROOM_VALUE_CMD_PLATFORM,
+    };
+    NSString *jsonString = [dic mj_JSONString];
+    [self.imManager reject:identifier data:jsonString succ:^{
         TRTCLog(@"reject invitation success.");
         if (callback) {
             callback(0, @"reject invitation success.");
@@ -654,7 +677,13 @@
 
 - (void)cancelInvitation:(NSString *)identifier callback:(TXCallback)callback {
     TRTCLog(@"cancel %@", identifier);
-    [self.imManager cancel:identifier data:nil succ:^{
+    NSDictionary *dic = @{
+        VOICE_ROOM_KEY_CMD_VERSION:@(VOICE_ROOM_VALUE_CMD_VERSION),
+        VOICE_ROOM_KEY_CMD_BUSINESSID:VOICE_ROOM_VALUE_CMD_BUSINESSID,
+        VOICE_ROOM_KEY_CMD_PLATFORM:VOICE_ROOM_VALUE_CMD_PLATFORM,
+    };
+    NSString *jsonString = [dic mj_JSONString];
+    [self.imManager cancel:identifier data:jsonString succ:^{
         TRTCLog(@"cancel invitation success.");
         if (callback) {
             callback(0, @"cancel invitation success.");
@@ -666,6 +695,16 @@
         }
     }];
 }
+
+- (NSString *)getInvitationBaseData {
+    NSDictionary *dic = @{
+        VOICE_ROOM_KEY_CMD_VERSION:@(VOICE_ROOM_VALUE_CMD_VERSION),
+        VOICE_ROOM_KEY_CMD_BUSINESSID:VOICE_ROOM_VALUE_CMD_BUSINESSID,
+        VOICE_ROOM_KEY_CMD_PLATFORM:VOICE_ROOM_VALUE_CMD_PLATFORM,
+    };
+    return [dic mj_JSONString];
+}
+
 #pragma mark - V2TIMSDKListener
 
 #pragma mark - V2TIMSimpleMsgListener
@@ -832,17 +871,32 @@
 
 #pragma mark - V2TIMSignalingListener
 - (void)onReceiveNewInvitation:(NSString *)inviteID inviter:(NSString *)inviter groupID:(NSString *)groupID inviteeList:(NSArray<NSString *> *)inviteeList data:(NSString *)data{
-    TXInviteData *reslut = [TXVoiceRoomIMJsonHandle parseInvitationMsgWithJson:data];
-    if (!reslut) {
+    NSDictionary *dic = [data mj_JSONObject];
+    if (![dic isKindOfClass:[NSDictionary class]]) {
         TRTCLog(@"parse data error");
         return;
     }
-    if (![reslut.roomId isEqualToString:self.mRoomId]) {
+    NSInteger version = [[dic objectForKey:VOICE_ROOM_KEY_CMD_VERSION] integerValue];
+    if (version < VOICE_ROOM_VALUE_CMD_BASIC_VERSION) {
+        TRTCLog(@"protocol version is nil or not match, ignore c2c msg");
+        return;
+    }
+    NSString *businessID = [dic objectForKey:VOICE_ROOM_KEY_CMD_BUSINESSID];
+    if (!businessID || ![businessID isEqualToString:VOICE_ROOM_VALUE_CMD_BUSINESSID]) {
+        TRTCLog(@"bussiness id error");
+        return;
+    }
+    
+    NSDictionary *cmdData = [dic objectForKey:VOICE_ROOM_KEY_CMD_DATA];
+    NSString *cmd = [cmdData objectForKey:VOICE_ROOM_KEY_CMD_CMD];
+    NSString *content = [cmdData objectForKey:VOICE_ROOM_KEY_CMD_SEATNUMBER];
+    int roomID = [[cmdData objectForKey:VOICE_ROOM_KEY_CMD_ROOMID] intValue];
+    if ([self.mRoomId intValue] != roomID) {
         TRTCLog(@"room id is not right");
         return;
     }
     if ([self canDelegateResponseMethod:@selector(onReceiveNewInvitationWithIdentifier:inviter:cmd:content:)]) {
-        [self.delegate onReceiveNewInvitationWithIdentifier:inviteID inviter:inviter cmd:reslut.command content:reslut.message];
+        [self.delegate onReceiveNewInvitationWithIdentifier:inviteID inviter:inviter cmd:cmd content:content];
     }
 }
 
