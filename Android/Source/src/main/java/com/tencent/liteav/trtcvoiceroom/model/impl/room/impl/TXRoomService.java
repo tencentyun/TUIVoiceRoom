@@ -1195,7 +1195,7 @@ public class TXRoomService extends V2TIMSDKListener {
         public void onInvitationCancelled(String inviteID, String inviter, String data) {
             TRTCLogger.i(TAG, "recv cancel invitation: " + inviteID + " from " + inviter);
             SignallingData signallingData = IMProtocol.convert2SignallingData(data);
-            if (isVoiceRoomData(signallingData)) {
+            if (!isVoiceRoomData(signallingData)) {
                 TRTCLogger.d(TAG, "this is not the voice room sense ");
                 return;
             }
