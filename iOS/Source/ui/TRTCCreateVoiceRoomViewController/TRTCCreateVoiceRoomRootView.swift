@@ -36,7 +36,7 @@ class TRTCCreateVoiceRoomRootView: UIView {
         let textView = UITextView(frame: .zero)
         textView.font = UIFont(name: "PingFangSC-Regular", size: 16)
         textView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        textView.text = LocalizeReplaceXX(.defaultCreateText, viewModel.userName)
+        textView.text = LocalizeReplaceXX(.defaultCreateText, viewModel.userName).subString(toByteLength: createRoomTextMaxByteLength)
         textView.textColor = .black
         textView.layer.cornerRadius = 20
         textView.backgroundColor = UIColor(hex: "F4F5F9")
@@ -207,27 +207,22 @@ extension TRTCCreateVoiceRoomRootView : UITextViewDelegate {
     }
     func textViewDidChange(_ textView: UITextView) {
         createBtn.isEnabled = textView.text != ""
-        textView.text = textView.text.subString(fromByteLength: 30)
     }
-}
-
-extension String {
-    func subString(fromByteLength: Int) -> String {
-        guard let data = data(using: .utf8) else {
-            return ""
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard let textFieldText = textView.text,
+              let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+            return false
         }
-        if data.count > fromByteLength {
-            guard let str = String(data: data[0..<fromByteLength], encoding: .utf8) else {
-                guard let str = String(data: data[0..<(fromByteLength - 1)], encoding: .utf8) else {
-                    return ""
-                }
-                return str
-            }
-            return str
+        let substringToReplace = textFieldText[rangeOfTextToReplace]
+        if substringToReplace.count > 0 && text.count == 0 {
+            return true
         }
-        else {
-            return self
+        let newText = (textFieldText as NSString).replacingCharacters(in: range, with: text)
+        if newText.byteLength() > createRoomTextMaxByteLength && text.byteLength() > createRoomTextMaxByteLength {
+            textView.text = newText.subString(toByteLength: createRoomTextMaxByteLength)
+            return false
         }
+        return newText.byteLength() <= createRoomTextMaxByteLength
     }
 }
 

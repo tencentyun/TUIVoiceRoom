@@ -70,25 +70,25 @@ class TRTCVoiceRoomTopView: UIView {
         view.clipsToBounds = true
         return view
     }()
-private let roomBgView : UIView = {
+    private let roomBgView : UIView = {
         let view = UIView(frame: .zero)
         view.backgroundColor = .white
         view.alpha = 0.2
         return view
     }()
-public let roomImageView : UIImageView = {
+    public let roomImageView : UIImageView = {
         let imageV = UIImageView(frame: .zero)
         imageV.clipsToBounds = true
         return imageV
     }()
-private let roomTitleLabel : UILabel = {
+    private let roomTitleLabel : UILabel = {
         let label = UILabel(frame: .zero)
         label.text = .roomTitleText
         label.font = UIFont(name: "PingFangSC-Medium", size: 14)
         label.textColor = .white
         return label
     }()
-private let roomDescLabel : UILabel = {
+    private let roomDescLabel : UILabel = {
         let label = UILabel(frame: .zero)
         label.font = UIFont(name: "PingFangSC-Medium", size: 12)
         label.textColor = .white

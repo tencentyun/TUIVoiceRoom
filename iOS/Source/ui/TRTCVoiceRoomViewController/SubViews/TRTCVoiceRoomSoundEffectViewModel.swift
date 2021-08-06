@@ -229,14 +229,14 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
             ]
         let iconNameArray = [
             "originState_nor",
-            "Reverb_KTV_nor",
+            "Reverb_Karaoke_nor",
             "Reverb_jinshu_nor",
             "Reverb_dichen_nor",
             "Reverb_hongliang_nor",
         ]
         let iconSelectedNameArray = [
             "originState_sel",
-            "Reverb_KTV_sel",
+            "Reverb_Karaoke_sel",
             "Reverb_jinshu_sel",
             "Reverb_dichen_sel",
             "Reverb_hongliang_sel",
