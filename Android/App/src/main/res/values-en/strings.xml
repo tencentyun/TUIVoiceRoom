@@ -6,4 +6,7 @@
     <string name="text_enter_room">Enter Room</string>
     <string name="create_room">Create Room</string>
     <string name="room_not_exist">The current room does not exist</string>
+    <string name="user_id">Username</string>
+    <string name="hint_user_id">Enter a userId</string>
+    <string name="btn_login">Log In</string>
 </resources>

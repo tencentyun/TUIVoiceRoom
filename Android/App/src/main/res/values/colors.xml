@@ -5,4 +5,5 @@
     <color name="transparent">#00000000</color>
     <color name="color_main_text">#333333</color>
     <color name="text_color_hint">#BBBBBB</color>
+    <color name="color_input_normal">#BBBBBB</color>
 </resources>

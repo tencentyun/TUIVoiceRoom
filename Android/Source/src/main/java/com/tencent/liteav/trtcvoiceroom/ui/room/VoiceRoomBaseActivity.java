@@ -24,9 +24,9 @@ import android.widget.Toast;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.squareup.picasso.Picasso;
-import com.tencent.liteav.login.model.ProfileManager;
-import com.tencent.liteav.login.model.UserModel;
+import com.tencent.liteav.basic.ImageLoader;
+import com.tencent.liteav.basic.UserModel;
+import com.tencent.liteav.basic.UserModelManager;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
@@ -144,7 +144,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ProfileManager.getInstance().getUserModel().userType = UserModel.UserType.VOICE_ROOM;
+        UserModelManager.getInstance().getUserModel().userType = UserModel.UserType.VOICE_ROOM;
         mContext = this;
         // 应用运行时，保持不锁屏、全屏化
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -177,7 +177,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ProfileManager.getInstance().getUserModel().userType = UserModel.UserType.NONE;
+        UserModelManager.getInstance().getUserModel().userType = UserModel.UserType.NONE;
         if (mAnchorAudioPanel != null) {
             mAnchorAudioPanel.unInit();
             mAnchorAudioPanel = null;
@@ -306,11 +306,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         mAnchorAudioPanel = new AudioEffectPanel(this);
         mAnchorAudioPanel.setAudioEffectManager(mTRTCVoiceRoom.getAudioEffectManager());
         mAnchorAudioPanel.setTRTCVoiceRoom(mTRTCVoiceRoom);
-        if (!TextUtils.isEmpty(mRoomCover)) {
-            Picasso.get().load(mRoomCover).placeholder(R.drawable.trtcvoiceroom_ic_cover).error(R.drawable.trtcvoiceroom_ic_cover).into(mRootBg);
-        } else {
-            mRootBg.setBackgroundResource(R.drawable.trtcvoiceroom_scene_bg);
-        }
+        ImageLoader.loadImage(this, mRootBg, mRoomCover, R.drawable.trtcvoiceroom_ic_cover);
     }
 
     protected void initView() {
@@ -466,9 +462,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         mTvRoomName.setText(roomInfo.roomName);
         mTvRoomId.setText(getString(R.string.trtcvoiceroom_room_id, roomInfo.roomId));
         String roomCover = roomInfo.coverUrl;
-        if (!TextUtils.isEmpty(roomCover)) {
-            Picasso.get().load(roomCover).placeholder(R.drawable.trtcvoiceroom_ic_cover).error(R.drawable.trtcvoiceroom_ic_cover).into(mRootBg);
-        }
+        ImageLoader.loadImage(this, mRootBg, roomCover, R.drawable.trtcvoiceroom_ic_cover);
     }
 
     @Override
@@ -540,13 +534,8 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
                     if (i == 0) {
                         if (newSeatInfo.status == STATUS_USED) {
                             //主播上线啦
-                            if (!TextUtils.isEmpty(userInfo.userAvatar)) {
-                                Picasso.get().load(userInfo.userAvatar).placeholder(R.drawable.trtcvoiceroom_ic_head).error(R.drawable.trtcvoiceroom_ic_head).into(mImgHead);
-                                Picasso.get().load(userInfo.userAvatar).placeholder(R.drawable.trtcvoiceroom_ic_head).error(R.drawable.trtcvoiceroom_ic_head).into(mIvAnchorHead);
-                            } else {
-                                mImgHead.setImageResource(R.drawable.trtcvoiceroom_ic_head);
-                                mIvAnchorHead.setImageResource(R.drawable.trtcvoiceroom_ic_head);
-                            }
+                            ImageLoader.loadImage(mContext, mImgHead, userInfo.userAvatar, R.drawable.trtcvoiceroom_ic_head);
+                            ImageLoader.loadImage(mContext, mIvAnchorHead, userInfo.userAvatar, R.drawable.trtcvoiceroom_ic_head);
                             if (TextUtils.isEmpty(userInfo.userName)) {
                                 mTvName.setText(userInfo.userId);
                             } else {

@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.tencent.liteav.basic.ImageLoader;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.msg.AudienceEntity;
 
@@ -103,12 +103,7 @@ public class AudienceListAdapter extends RecyclerView.Adapter<AudienceListAdapte
 
         public void bind(final Context context,
                          final AudienceEntity entity) {
-            if (!TextUtils.isEmpty(entity.userAvatar)) {
-                Picasso.get().load(entity.userAvatar).placeholder(R.drawable.trtcvoiceroom_ic_head).error(R.drawable.trtcvoiceroom_ic_head).into(mImgHead);
-            } else {
-                mImgHead.setImageResource(R.drawable.trtcvoiceroom_ic_head);
-            }
-
+            ImageLoader.loadImage(context, mImgHead, entity.userAvatar, R.drawable.trtcvoiceroom_ic_head);
         }
 
         private void initView(@NonNull final View itemView) {

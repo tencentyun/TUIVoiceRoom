@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.tencent.liteav.basic.ImageLoader;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.ui.base.VoiceRoomSeatEntity;
 
@@ -100,11 +100,7 @@ public class VoiceRoomSeatAdapter extends
                 mIvMute.setVisibility(View.GONE);
                 mIvTalkBorder.setVisibility(View.GONE);
             } else {
-                if (!TextUtils.isEmpty(model.userAvatar)) {
-                    Picasso.get().load(model.userAvatar).placeholder(R.drawable.trtcvoiceroom_ic_head).error(R.drawable.trtcvoiceroom_ic_head).into(mImgHead);
-                } else {
-                    mImgHead.setImageResource(R.drawable.trtcvoiceroom_ic_head);
-                }
+                ImageLoader.loadImage(context, mImgHead, model.userAvatar, R.drawable.trtcvoiceroom_ic_head);
                 if (!TextUtils.isEmpty(model.userName)) {
                     mTvName.setText(model.userName);
                 } else {

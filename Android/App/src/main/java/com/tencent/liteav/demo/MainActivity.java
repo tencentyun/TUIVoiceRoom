@@ -21,11 +21,12 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
+import com.tencent.liteav.basic.UserModel;
+import com.tencent.liteav.basic.UserModelManager;
 import com.tencent.liteav.debug.GenerateTestUserSig;
-import com.tencent.liteav.login.model.ProfileManager;
-import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
+import com.tencent.liteav.trtcvoiceroom.model.VoiceRoomManager;
 import com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomAudienceActivity;
 import com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomCreateDialog;
 import com.tencent.trtc.TRTCCloudDef;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        final UserModel userModel = ProfileManager.getInstance().getUserModel();
+        final UserModel userModel = UserModelManager.getInstance().getUserModel();
         mTRTCVoiceRoom = TRTCVoiceRoom.sharedInstance(this);
         mTRTCVoiceRoom.login(GenerateTestUserSig.SDKAPPID, userModel.userId, userModel.userSig, new TRTCVoiceRoomCallback.ActionCallback() {
             @Override
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onCallback(int code, String msg) {
                             if (code == 0) {
+                                Log.d(TAG, "setSelfProfile success");
                             }
                         }
                     });
@@ -146,14 +148,14 @@ public class MainActivity extends AppCompatActivity {
     private void createRoom() {
         int index = new Random().nextInt(ROOM_COVER_ARRAY.length);
         String coverUrl = ROOM_COVER_ARRAY[index];
-        String userName = ProfileManager.getInstance().getUserModel().userName;
-        String userId = ProfileManager.getInstance().getUserModel().userId;
+        String userName = UserModelManager.getInstance().getUserModel().userName;
+        String userId = UserModelManager.getInstance().getUserModel().userId;
         VoiceRoomCreateDialog dialog = new VoiceRoomCreateDialog(this);
         dialog.showVoiceRoomCreateDialog(userId, userName, coverUrl, TRTCCloudDef.TRTC_AUDIO_QUALITY_DEFAULT, true);
     }
 
     private void enterRoom(final String roomIdStr) {
-        ProfileManager.getInstance().getGroupInfo(roomIdStr, new ProfileManager.GetGroupInfoCallback() {
+        VoiceRoomManager.getInstance().getGroupInfo(roomIdStr, new VoiceRoomManager.GetGroupInfoCallback() {
             @Override
             public void onSuccess(V2TIMGroupInfoResult result) {
                 if (isRoomExist(result)) {
@@ -171,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void realEnterRoom(String roomIdStr) {
-        UserModel userModel = ProfileManager.getInstance().getUserModel();
+        UserModel userModel = UserModelManager.getInstance().getUserModel();
         String userId = userModel.userId;
         int roomId;
         try {

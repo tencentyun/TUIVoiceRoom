@@ -1,27 +1,16 @@
 package com.tencent.liteav.trtcvoiceroom.ui.widget;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.AppCompatImageButton;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.blankj.utilcode.constant.PermissionConstants;
-import com.blankj.utilcode.util.PermissionUtils;
-import com.blankj.utilcode.util.ToastUtils;
-import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
-import com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomAnchorActivity;
-import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.Locale;
 

@@ -11,9 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.tencent.liteav.login.model.ProfileManager;
+import com.tencent.liteav.basic.UserModelManager;
 import com.tencent.liteav.trtcvoiceroom.R;
-import com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomAnchorActivity;
 
 /**
  * 创建语聊房页面
@@ -70,8 +69,8 @@ public class VoiceRoomCreateDialog extends BottomSheetDialog {
     }
 
     private void initData() {
-        mUserName = ProfileManager.getInstance().getUserModel().userName;
-        mUserId   = ProfileManager.getInstance().getUserModel().userId;
+        mUserName = UserModelManager.getInstance().getUserModel().userName;
+        mUserId   = UserModelManager.getInstance().getUserModel().userId;
         mRoomNameEt.addTextChangedListener(mEditTextWatcher);
         mEnterTv.setOnClickListener(new View.OnClickListener() {
             @Override

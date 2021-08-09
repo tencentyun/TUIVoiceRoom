@@ -15,11 +15,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.tencent.liteav.basic.ImageLoader;
 import com.tencent.liteav.trtcvoiceroom.R;
-import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.ui.base.MemberEntity;
-import com.tencent.liteav.trtcvoiceroom.ui.base.VoiceRoomSeatEntity;
 
 import java.util.List;
 
@@ -204,12 +202,7 @@ public class SelectMemberView extends BottomSheetDialog {
                     mUserNameTv.setText(model.userName);
                 }
 
-                if (!TextUtils.isEmpty(model.userAvatar)) {
-                    Picasso.get().load(model.userAvatar).placeholder(R.drawable.trtcvoiceroom_ic_cover).into(mImageAvatar);
-                } else {
-                    mImageAvatar.setImageResource(R.drawable.trtcvoiceroom_ic_cover);
-                }
-
+                ImageLoader.loadImage(context, mImageAvatar, model.userAvatar, R.drawable.trtcvoiceroom_ic_cover);
                 mButtonInvite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
