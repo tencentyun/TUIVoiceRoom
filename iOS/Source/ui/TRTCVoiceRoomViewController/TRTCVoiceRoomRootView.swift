@@ -420,6 +420,7 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
     
     func changeRoom(info: VoiceRoomInfo) {
         topView.reloadRoomInfo(info)
+        bgView.kf.setImage(with: URL(string: info.coverUrl), placeholder: nil, options: [.backgroundDecode], completionHandler: nil)
     }
     
     func refreshAnchorInfos() {
