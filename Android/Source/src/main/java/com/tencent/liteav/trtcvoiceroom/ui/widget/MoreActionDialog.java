@@ -1,9 +1,9 @@
 package com.tencent.liteav.trtcvoiceroom.ui.widget;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.widget.AppCompatImageButton;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.appcompat.widget.AppCompatImageButton;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;

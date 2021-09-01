@@ -1,7 +1,7 @@
 package com.tencent.liteav.trtcvoiceroom.ui.widget;
 
 import android.content.Context;
-import android.support.design.widget.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;

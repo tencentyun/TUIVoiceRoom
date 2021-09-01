@@ -54,7 +54,7 @@
                 android:textSize="16sp" />
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/audio_bgm_rv"
             android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
@@ -122,7 +122,7 @@
                 android:textColor="@color/trtcvoiceroom_light_black"
                 android:textSize="12sp" />
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_music_audition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -363,7 +363,7 @@
             android:textStyle="bold"
             android:textSize="16sp" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/audio_change_type_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -379,7 +379,7 @@
             android:textStyle="bold"
             android:textSize="16sp" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/audio_reverb_type_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
