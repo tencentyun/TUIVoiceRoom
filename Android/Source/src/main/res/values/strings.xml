@@ -89,7 +89,7 @@
     <string name="trtcvoiceroom_tv_online_no_name">took seat %d</string>
     <string name="trtcvoiceroom_tv_offline_no_name">left seat %d</string>
     <string name="trtcvoiceroom_me">Me</string>
-    <string name="trtcvoiceroom_anchor_leave_room">You want to end the room?</string>
+    <string name="trtcvoiceroom_anchor_leave_room">The room will close after you leave. Leave?</string>
     <string name="trtcvoiceroom_btn_confirm">Confirm</string>
     <string name="trtcvoiceroom_btn_cancel">Wait a bit</string>
     <string name="trtcvoiceroom_room_id">room ID:%d</string>
@@ -100,7 +100,7 @@
     <string name="trtcvoiceroom_changer">Voice changing</string>
     <string name="trtcvoiceroom_reverb">Reverb</string>
     <string name="trtcvoiceroom_back">Back</string>
-    <string name="trtcvoiceroom_sound_effects">Audio Effect</string>
+    <string name="trtcvoiceroom_sound_effects">Sound effect settings</string>
     <string name="trtcvoiceroom_sounds_adjustment">Pitch</string>
     <string name="trtcvoiceroom_request_expired">The request has expired</string>
     <string name="trtcvoiceroom_accept_failed">Failed to accept request</string>
@@ -122,7 +122,7 @@
     <string name="trtcvoiceroom_bg_music_positive_happy">Happy</string>
     <string name="trtcvoiceroom_bg_music_sad_cinematic_piano">Sad Cinematic Piano</string>
     <string name="trtcvoiceroom_bg_music_wonder_world">Wonder World</string>
-    <string name="trtcvoiceroom_create_theme">The room of %s</string>
+    <string name="trtcvoiceroom_create_theme">%s\'s room</string>
     <string name="trtcvoiceroom_audience">Audiences</string>
     <string name="trtcvoiceroom_welcome_visit">"Welcome to Audio Chat Room tryout, To quickly use the feature, visit "</string>
     <string name="trtcvoiceroom_welcome_visit_link">"https://cloud.tencent.com/document/product/647/45737"</string>
