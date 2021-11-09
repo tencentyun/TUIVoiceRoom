@@ -126,6 +126,16 @@ class TRTCVoiceRoomSeatView: UIView {
             make.edges.equalToSuperview()
         }
     }
+    
+    /// 如果在TableCell或者CollectionCell嵌套使用，需在[cell prepareForReuse]调用此方法
+    ///  - Note 重置页面视图状态
+    func prepareForReuse() {
+        avatarImageView.kf.cancelDownloadTask()
+        avatarImageView.image = nil;
+        nameLabel.text = ""
+        speakView.isHidden = true
+        muteImageView.isHidden = true
+    }
 
     func bindInteraction() {
         /// 此方法负责做viewModel和视图的绑定操作

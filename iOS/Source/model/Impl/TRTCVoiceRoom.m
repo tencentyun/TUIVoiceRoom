@@ -13,6 +13,13 @@
 #import "TRTCCloud.h"
 #import "VoiceRoomLocalized.h"
 
+static NSInteger CALL_MOVE_SEAT_LIMIT_TIME = 1000; //moveSeat接口限频，默认1s
+
+/// 移麦进入新麦位
+static NSString *MOVE_SEAT_STATUS_ENTER = @"voiceRoom_moveSeat_status_enter";
+/// 移麦离开原麦位
+static NSString *MOVE_SEAT_STATUS_LEAVE = @"voiceRoom_moveSeat_status_leave";
+
 @interface TRTCVoiceRoom ()<VoiceRoomTRTCServiceDelegate, ITXRoomServiceDelegate>
 
 @property (nonatomic, assign) int mSDKAppID;
@@ -30,6 +37,7 @@
 @property (nonatomic, weak) id<TRTCVoiceRoomDelegate> delegate;
 
 @property (nonatomic, copy, nullable) ActionCallback enterSeatCallback;
+@property (nonatomic, copy, nullable) ActionCallback moveSeatCallback;
 @property (nonatomic, copy, nullable) ActionCallback leaveSeatCallback;
 @property (nonatomic, copy, nullable) ActionCallback pickSeatCallback;
 @property (nonatomic, copy, nullable) ActionCallback kickSeatCallback;
@@ -40,6 +48,10 @@
 @property (nonatomic, readonly)VoiceRoomTRTCService *roomTRTCService;
 
 @property (nonatomic, assign)BOOL isSelfMute;
+// 上一次调用moveSeat时间
+@property (nonatomic, strong) NSDate *lastMoveSeatDate;
+// 移麦场景-用户麦位状态集合
+@property (nonatomic, strong) NSMutableSet *moveSeatStatus;
 @end
 
 @implementation TRTCVoiceRoom
@@ -59,6 +71,7 @@ static dispatch_once_t onceToken;
         self.roomService.delegate = self;
         self.roomTRTCService.delegate =self;
         self.isSelfMute = NO;
+        self.moveSeatStatus = [NSMutableSet set];
     }
     return self;
 }
@@ -216,6 +229,7 @@ static dispatch_once_t onceToken;
         if (!self) {
             return;
         }
+        TRTCLog(@"start login sdkAppID:%d userId:%@ app version:%@", sdkAppID, userId, APP_VERSION);
         if (sdkAppID != 0 && userId && ![userId isEqualToString:@""] && userSig && ![userSig isEqualToString:@""]) {
             self.mSDKAppID = sdkAppID;
             self.userId = userId;
@@ -286,6 +300,7 @@ static dispatch_once_t onceToken;
         if (!self) {
             return;
         }
+        TRTCLog(@"create room roomID: %d app version: %@", roomID, APP_VERSION);
         [self.roomService getSelfInfo];
         if (roomID == 0) {
             TRTCLog(@"crate room fail. params invalid.");
@@ -399,7 +414,7 @@ static dispatch_once_t onceToken;
         }
         [self clearList];
         self.roomID = [NSString stringWithFormat:@"%ld", (long)roomID];
-        TRTCLog(@"start enter room, room id is %ld", (long)roomID);
+        TRTCLog(@"start enter room, room id is %ld app version: %@", (long)roomID, APP_VERSION);
         [self enterTRTCRoomInnerWithRoomId:self.roomID userId:self.userId userSign:self.userSig role:kTRTCRoleAudienceValue callback:^(int code, NSString * _Nonnull message) {
             @strongify(self)
             if (!self) {
@@ -555,6 +570,55 @@ static dispatch_once_t onceToken;
             }
         }];
     }];
+}
+
+- (NSInteger)moveSeat:(NSInteger)seatIndex callback:(ActionCallback)callback{
+    if (self.lastMoveSeatDate) {
+        // 单位毫秒
+        NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:self.lastMoveSeatDate] * 1000;
+        if (duration < CALL_MOVE_SEAT_LIMIT_TIME) {
+            TRTCLog(@"move seat error: call limit %.2f", duration);
+            [self runMainQueue:^{
+                if (callback) {
+                    callback(ERR_CALL_METHOD_LIMIT, [NSString stringWithFormat:@"move seat error: call limit %.2f", duration]);
+                }
+            }];
+            return ERR_CALL_METHOD_LIMIT;
+        }
+    }
+    self.lastMoveSeatDate = [NSDate date];
+    @weakify(self)
+    [self runMainQueue:^{
+        @strongify(self)
+        if (!self) {
+            return;
+        }
+        if (![self isOnSeatWithUserId:self.userId]) {
+            [self runOnDelegateQueue:^{
+                if (callback) {
+                    callback(-1, @"you are not in the seat");
+                }
+            }];
+            return;
+        }
+        self.moveSeatCallback = callback;
+        [self.moveSeatStatus removeAllObjects];
+        [self.moveSeatStatus addObject:MOVE_SEAT_STATUS_ENTER];
+        [self.moveSeatStatus addObject:MOVE_SEAT_STATUS_LEAVE];
+        [self.roomService moveSeat:seatIndex callback:^(int code, NSString * _Nonnull message) {
+            @strongify(self)
+            if (code == 0) {
+                TRTCLog(@"move seat callback success, and wait attrs changed");
+            } else {
+                self.moveSeatCallback = nil;
+                [self.moveSeatStatus removeAllObjects];
+                if (callback) {
+                    callback(code, message);
+                }
+            }
+        }];
+    }];
+    return 0;
 }
 
 - (void)leaveSeat:(ActionCallback)callback {
@@ -733,6 +797,7 @@ static dispatch_once_t onceToken;
 }
 
 - (void)muteLocalAudio:(BOOL)mute{
+    // 更新当前用户静音状态
     self.isSelfMute = mute;
     @weakify(self)
     [self runMainQueue:^{
@@ -923,6 +988,105 @@ static dispatch_once_t onceToken;
        }];
 }
 
+
+#pragma mark - 身份切换
+/// 切换到观众
+- (void)onSwitchToAudienceWithIndex:(NSInteger)index userInfo:(TXVoiceRoomUserInfo *)userInfo{
+    @weakify(self)
+    [self runOnDelegateQueue:^{
+        @strongify(self)
+        if (!self) {
+            return;
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(onAnchorLeaveSeat:user:)]) {
+            VoiceRoomUserInfo *user = [[VoiceRoomUserInfo alloc] init];
+            user.userId = userInfo.userId;
+            user.userName = userInfo.userName;
+            user.userAvatar = userInfo.avatarURL;
+            [self.delegate onAnchorLeaveSeat:index user:user];
+        }
+        if (self.kickSeatCallback) {
+            self.kickSeatCallback(0, @"kick seat success.");
+            self.kickSeatCallback = nil;
+        }
+    }];
+    
+    BOOL isSelfEnterSeat = [userInfo.userId isEqualToString:self.userId];
+    if (isSelfEnterSeat) {
+        [self runOnDelegateQueue:^{
+            @strongify(self)
+            if (!self) {
+                return;
+            }
+            if (self.moveSeatCallback != nil) {
+                [self.moveSeatStatus removeObject:MOVE_SEAT_STATUS_LEAVE];
+                if (self.moveSeatStatus.count == 0) {
+                    self.moveSeatCallback(0, @"move seat success");
+                    self.moveSeatCallback = nil;
+                }
+            } else if (self.leaveSeatCallback != nil) {
+                self.takeSeatIndex = -1;
+                self.leaveSeatCallback(0, @"leave seat success");
+                self.leaveSeatCallback = nil;
+            } else {
+                self.takeSeatIndex = -1;
+            }
+        }];
+    }
+}
+
+/// 切换到主播
+- (void)onSwitchToAnchorWithIndex:(NSInteger)index userInfo:(TXVoiceRoomUserInfo *)userInfo{
+    @weakify(self)
+    [self runMainQueue:^{
+        @strongify(self)
+        if (!self) {
+            return;
+        }
+        [self runOnDelegateQueue:^{
+            @strongify(self)
+            if (!self) {
+                return;
+            }
+            if (self.delegate && [self.delegate respondsToSelector:@selector(onAnchorEnterSeat:user:)]) {
+                VoiceRoomUserInfo *user = [[VoiceRoomUserInfo alloc] init];
+                user.userId = userInfo.userId;
+                user.userName = userInfo.userName;
+                user.userAvatar = userInfo.avatarURL;
+                
+                [self.delegate onAnchorEnterSeat:index user:user];
+            }
+            if (self.pickSeatCallback) {
+                self.pickSeatCallback(0, @"enter seat success.");
+                self.pickSeatCallback = nil;
+            }
+        }];
+        BOOL isSelfEnterSeat = [userInfo.userId isEqualToString:self.userId];
+        if (isSelfEnterSeat) {
+            // 是自己上线了, 切换角色
+            self.takeSeatIndex = index;
+            [self runOnDelegateQueue:^{
+                @strongify(self)
+                if (!self) {
+                    return;
+                }
+                if (self.moveSeatCallback) {
+                    // 移麦场景
+                    [self.moveSeatStatus removeObject:MOVE_SEAT_STATUS_ENTER];
+                    if (self.moveSeatStatus.count == 0) {
+                        self.moveSeatCallback(0, @"move seat success");
+                        self.moveSeatCallback = nil;
+                    }
+                } else if (self.enterSeatCallback){
+                    // 正常上麦
+                    self.enterSeatCallback(0, @"enter seat success");
+                    self.enterSeatCallback = nil;
+                }
+            }];
+        }
+    }];
+}
+
 #pragma mark - VoiceRoomTRTCServiceDelegate
 
 
@@ -932,19 +1096,8 @@ static dispatch_once_t onceToken;
 }
 
 - (void)onTRTCAnchorExit:(NSString *)userId {
-    if (self.roomService.isOwner) {
-        if (self.seatInfoList.count > 0) {
-            NSInteger kickSeatIndex = -1;
-            for (int i = 0; i<self.seatInfoList.count; i+=1) {
-                if ([userId isEqualToString:self.seatInfoList[i].userId]) {
-                    kickSeatIndex = i;
-                    break;
-                }
-            }
-            if (kickSeatIndex != -1) {
-                [self kickSeat:kickSeatIndex callback:nil];
-            }
-        }
+    if ([self.anchorSeatList containsObject:userId]) {
+        [self.anchorSeatList removeObject:userId];
     }
 }
 
@@ -1135,40 +1288,39 @@ static dispatch_once_t onceToken;
         }
         BOOL isSelfEnterSeat = [userInfo.userId isEqualToString:self.userId];
         if (isSelfEnterSeat) {
-            // 是自己上线了
-            self.takeSeatIndex = index;
-            [self.roomTRTCService switchToAnchor];
-            BOOL mute = self.seatInfoList[index].mute;
-            [self.roomTRTCService muteLocalAudio:mute];
-        }
-        [self runOnDelegateQueue:^{
-            @strongify(self)
-            if (!self) {
-                return;
+            // 当前用户
+            // 当前麦位的禁言状态
+            BOOL seatMute = self.seatInfoList[index].mute;
+            if (seatMute) {
+                self.isSelfMute = YES;
             }
-            VoiceRoomUserInfo* user = [[VoiceRoomUserInfo alloc] init];
-            user.userId = userInfo.userId;
-            user.userName = userInfo.userName;
-            user.userAvatar = userInfo.avatarURL;
-            if ([self canDelegateResponseMethod:@selector(onAnchorEnterSeat:user:)]) {
-                [self.delegate onAnchorEnterSeat:index user:user];
-            }
-            if (self.pickSeatCallback) {
-                self.pickSeatCallback(0, @"pick seat success");
-                self.pickSeatCallback = nil;
-            }
-        }];
-        if (isSelfEnterSeat) {
-            [self runOnDelegateQueue:^{
-                @strongify(self)
-                if (!self) {
-                    return;
+            if (self.moveSeatStatus.count == 0) {
+                // 默认上麦场景
+                [self.roomTRTCService muteLocalAudio:seatMute];
+                if (seatMute == NO) {
+                    // 回调更新麦克风静音状态
+                    if (self.delegate && [self.delegate respondsToSelector:@selector(onUserMicrophoneMute:mute:)]) {
+                        [self.delegate onUserMicrophoneMute:userInfo.userId mute:NO];
+                    }
                 }
-                if (self.enterSeatCallback) {
-                    self.enterSeatCallback(0, @"enter seat success.");
-                    self.enterSeatCallback = nil;
+                [self.roomTRTCService switchToAnchorWithCallBack:^(int code, NSString * _Nonnull message) {
+                    @strongify(self)
+                    [self onSwitchToAnchorWithIndex:index userInfo:userInfo];
+                }];
+            } else {
+                // 移麦场景
+                // 移麦场景的静音状态取决于 所移麦位的禁言状态和当前用户的静音状态
+                BOOL userMute = seatMute || self.isSelfMute;
+                [self.roomTRTCService muteLocalAudio:userMute];
+                // 回调更新麦克风静音状态
+                if (self.delegate && [self.delegate respondsToSelector:@selector(onUserMicrophoneMute:mute:)]) {
+                    [self.delegate onUserMicrophoneMute:userInfo.userId mute:userMute];
                 }
-            }];
+                [self onSwitchToAnchorWithIndex:index userInfo:userInfo];
+            }
+        } else {
+            // 非当前用户
+            [self onSwitchToAnchorWithIndex:index userInfo:userInfo];
         }
     }];
 }
@@ -1180,19 +1332,32 @@ static dispatch_once_t onceToken;
         if (!self) {
             return;
         }
-        if (self.takeSeatIndex == index) {
-            [self.roomTRTCService switchToAudience];
+        if (self.takeSeatIndex == index && isClose) {
+            [self.roomTRTCService switchToAudienceWithCallBack:^(int code, NSString * _Nonnull message) {
+                @strongify(self)
+                self.takeSeatIndex = -1;
+                [self runOnDelegateQueue:^{
+                    @strongify(self)
+                    if (!self) {
+                        return;
+                    }
+                    if ([self canDelegateResponseMethod:@selector(onSeatClose:isClose:)]) {
+                        [self.delegate onSeatClose:index isClose:isClose];
+                    }
+                }];
+            }];
             self.takeSeatIndex = -1;
+        } else {
+            [self runOnDelegateQueue:^{
+                @strongify(self)
+                if (!self) {
+                    return;
+                }
+                if ([self canDelegateResponseMethod:@selector(onSeatClose:isClose:)]) {
+                    [self.delegate onSeatClose:index isClose:isClose];
+                }
+            }];
         }
-        [self runOnDelegateQueue:^{
-            @strongify(self)
-            if (!self) {
-                return;
-            }
-            if ([self canDelegateResponseMethod:@selector(onSeatClose:isClose:)]) {
-                [self.delegate onSeatClose:index isClose:isClose];
-            }
-        }];
     }];
 }
 
@@ -1204,25 +1369,22 @@ static dispatch_once_t onceToken;
             return;
         }
         if ([self.userId isEqualToString:userInfo.userId]) {
-            self.takeSeatIndex = -1;
-            [self.roomTRTCService switchToAudience];
-        }
-        VoiceRoomUserInfo* user = [[VoiceRoomUserInfo alloc] init];
-        user.userId = userInfo.userId;
-        user.userName = userInfo.userName;
-        user.userAvatar = userInfo.avatarURL;
-        if ([self canDelegateResponseMethod:@selector(onAnchorLeaveSeat:user:)]) {
-            [self.delegate onAnchorLeaveSeat:index user:user];
-        }
-        if (self.kickSeatCallback) {
-            self.kickSeatCallback(0, @"kick seat success.");
-            self.kickSeatCallback = nil;
-        }
-        if ([self.userId isEqualToString:userInfo.userId]) {
-            if (self.leaveSeatCallback) {
-                self.leaveSeatCallback(0, @"leave seat success.");
-                self.leaveSeatCallback = nil;
+            // 当前用户
+            if (self.moveSeatStatus.count == 0) {
+                // 正常下麦: 需要切换TRTC身份
+                [self.roomTRTCService switchToAudienceWithCallBack:^(int code, NSString * _Nonnull message) {
+                    @strongify(self)
+                    [self onSwitchToAudienceWithIndex:index userInfo:userInfo];
+                }];
+                // 重置本地静音状态
+                self.isSelfMute = NO;
+            } else {
+                // 涉及移麦场景: TRTC不切换用户身份
+                [self onSwitchToAudienceWithIndex:index userInfo:userInfo];
             }
+        } else {
+            // 非当前用户
+            [self onSwitchToAudienceWithIndex:index userInfo:userInfo];
         }
     }];
 }
@@ -1237,8 +1399,18 @@ static dispatch_once_t onceToken;
         if (self.takeSeatIndex == index) {
             if (isMute) {
                 [self.roomTRTCService muteLocalAudio:YES];
+                // 当前用户被禁言，更新本地静音状态
+                self.isSelfMute = YES;
+                // 禁言状态，更新当前用户的静音状态
+                if ([self canDelegateResponseMethod:@selector(onUserMicrophoneMute:mute:)]) {
+                    [self.delegate onUserMicrophoneMute:self.userId mute:YES];
+                }
             } else {
                 [self.roomTRTCService muteLocalAudio:self.isSelfMute];
+                // 非禁言状态，更新当前用户的静音状态
+                if ([self canDelegateResponseMethod:@selector(onUserMicrophoneMute:mute:)]) {
+                    [self.delegate onUserMicrophoneMute:self.userId mute:self.isSelfMute];
+                }
             }
         }
         if ([self canDelegateResponseMethod:@selector(onSeatMute:isMute:)]) {

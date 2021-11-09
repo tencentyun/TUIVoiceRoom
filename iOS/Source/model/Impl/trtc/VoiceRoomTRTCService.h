@@ -55,7 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)switchToAnchor;
 
+- (void)switchToAnchorWithCallBack:(TXCallback _Nullable)callback;
+
 - (void)switchToAudience;
+
+- (void)switchToAudienceWithCallBack:(TXCallback _Nullable)callback;
 
 - (void)setSpeaker:(BOOL)userSpeaker;
 

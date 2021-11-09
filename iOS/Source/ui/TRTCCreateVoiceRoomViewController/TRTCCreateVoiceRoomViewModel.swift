@@ -44,7 +44,7 @@ class TRTCCreateVoiceRoomViewModel {
     var userID: String? {
         return V2TIMManager.sharedInstance()?.getLoginUser()
     }
-    var needRequest: Bool = true
+
     var toneQuality: VoiceRoomToneQuality = .defaultQuality
     
     /// 初始化方法
@@ -61,7 +61,7 @@ class TRTCCreateVoiceRoomViewModel {
         let random = arc4random() % 12 + 1
         return "https://liteav-test-1252463788.cos.ap-guangzhou.myqcloud.com/voice_room/voice_room_cover\(random).png"
     }
-    func createRoom() {
+    func createRoom(needRequest:Bool = true) {
         let userId = userID ?? dependencyContainer.userId
         let coverAvatar = randomBgImageLink()
         let roomId = getRoomId()
@@ -69,6 +69,7 @@ class TRTCCreateVoiceRoomViewModel {
         roomInfo.ownerName = userName
         roomInfo.coverUrl = coverAvatar
         roomInfo.roomName = roomName
+        // 上麦是否需要申请
         roomInfo.needRequest = needRequest
         let vc = self.dependencyContainer.makeVoiceRoomViewController(roomInfo:roomInfo, role: .anchor, toneQuality: self.toneQuality)
         viewResponder?.push(viewController: vc)

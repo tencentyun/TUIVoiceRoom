@@ -61,6 +61,7 @@ static int VOICE_ROOM_SERVICE_CODE_ERROR = -1;
 - (void)exitRoom:(TXCallback _Nullable)callback;
 - (void)takeSeat:(NSInteger)seatIndex callback:(TXCallback _Nullable)callback;
 - (void)leaveSeat:(NSInteger)seatIndex callback:(TXCallback _Nullable)callback;
+- (void)moveSeat:(NSInteger)seatIndex callback:(TXCallback _Nullable)callback;
 - (void)pickSeat:(NSInteger)seatIndex userId:(NSString *)userId callback:(TXCallback _Nullable)callback;
 - (void)kickSeat:(NSInteger)seatIndex callback:(TXCallback _Nullable)callback;
 - (void)muteSeat:(NSInteger)seatIndex mute:(BOOL)mute callback:(TXCallback _Nullable)callback;

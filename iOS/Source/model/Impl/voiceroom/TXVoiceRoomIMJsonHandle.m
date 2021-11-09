@@ -41,6 +41,19 @@
     return result;
 }
 
++ (NSDictionary<NSString *,NSString *> *)getMoveSeatInfoJsonStrWithSourceIndex:(NSInteger)srcIndex sourceSeatInfo:(TXSeatInfo *)srcSeatInfo targetIndex:(NSInteger)targetIndex targetSeatInfo:(TXSeatInfo *)targetSeatInfo{
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithCapacity:2];
+    
+    NSString *sourceJson = [srcSeatInfo mj_JSONString];
+    NSString *sourceKey = [NSString stringWithFormat:@"%@%ld", VOICE_ROOM_KEY_SEAT, (long)srcIndex];
+    [result setValue:sourceJson forKey:sourceKey];
+    
+    NSString *targetJson = [targetSeatInfo mj_JSONString];
+    NSString *targetKey = [NSString stringWithFormat:@"%@%ld", VOICE_ROOM_KEY_SEAT, (long)targetIndex];
+    [result setValue:targetJson forKey:targetKey];
+    return result;
+}
+
 + (TXRoomInfo *)getRoomInfoFromAttr:(NSDictionary<NSString *,NSString *> *)attr {
     NSString *jsonStr = [attr objectForKey:VOICE_ROOM_KEY_ROOM_INFO];
     return [TXRoomInfo mj_objectWithKeyValues:jsonStr];

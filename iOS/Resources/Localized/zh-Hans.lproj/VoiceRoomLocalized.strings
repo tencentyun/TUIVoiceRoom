@@ -42,6 +42,7 @@
 "Demo.TRTC.VoiceRoom.isinxxseat" = "您已经在xxx号麦位上了";
 "Demo.TRTC.VoiceRoom.seatisnotinittocanthandsup" = "麦位信息没有初始化，暂时无法申请上麦";
 "Demo.TRTC.Salon.handsup" = "请求上麦";
+"Demo.TRTC.VoiceRoom.requestmoveseat" = "申请移麦";
 "Demo.TRTC.VoiceRoom.totaxx" = "对Taxxx";
 "Demo.TRTC.VoiceRoom.unmuteone" = "解禁";
 "Demo.TRTC.VoiceRoom.muteone" = "禁言";
@@ -93,6 +94,7 @@
 "Demo.TRTC.VoiceRoom.welcome" = "欢迎体验TRTC语聊房！\n进一步了解如何快速搭建语聊房，请点击：\nxxx";
 "Demo.TRTC.VoiceRoom.roomsubject" = "房间主题";
 "Demo.TRTC.VoiceRoom.enterroomsubject" = "请输入房间主题（最多60字）";
+"Demo.TRTC.VoiceRoom.needrequesttip" = "需要房主同意上麦";
 "Demo.TRTC.VoiceRoom.starttalking" = "开始交谈";
 "Demo.TRTC.VoiceRoom.xxxsroom" = "xxx的房间";
 "Demo.TRTC.VoiceRoom.roomname" = "房间名称";
@@ -103,7 +105,7 @@
 "ASKit.MainMenu.Title" = "音效设置";
 "ASKit.MainMenu.VoiceChangeTitle" = "变声";
 "ASKit.MainMenu.Reverberation" = "混响";
-"ASKit.MusicSelectMenu.Title" = "背景音乐";
+"ASKit.MusicSelectMenu.Title" = "音乐试听";
 "Demo.TRTC.VoiceRoom.useearphones" = "请带上耳机获得更好体验";
 "Demo.TRTC.VoiceRoom.copyrights" = "版权曲库©";
 "ASKit.MainMenu.SelectMusic" = "选择歌曲";

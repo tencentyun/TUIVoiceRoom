@@ -42,6 +42,12 @@ class TRTCVoiceRoomSeatCell: UICollectionViewCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // Cell 即将被重用，UI状态需重置
+        seatView.prepareForReuse()
+    }
+    
     func setCell(model: SeatInfoModel, userMuteMap: [String:Bool]) {
         seatView.setSeatInfo(model: model, userMuteMap: userMuteMap)
     }

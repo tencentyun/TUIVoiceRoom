@@ -25,7 +25,7 @@ public class TRTCVoiceRoomIMManager: NSObject {
             }
             self.isLoaded = true
             self.curUserName = info.nickName ?? ""
-            self.curUserAvatar = info.faceURL
+            self.curUserAvatar = info.faceURL ?? ""
         }, fail: { (code, msg) in
             
         })

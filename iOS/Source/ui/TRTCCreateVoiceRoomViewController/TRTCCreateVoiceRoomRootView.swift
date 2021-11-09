@@ -43,6 +43,21 @@ class TRTCCreateVoiceRoomRootView: UIView {
         return textView
     }()
     
+    /// 上麦需要房主同意 - 提示文本
+    private lazy var needRequestTipLabel:UILabel = {
+        let label = UILabel(frame: .zero)
+        label.textColor = .black
+        label.font = UIFont(name: "PingFangSC-Regular", size: 16)
+        label.text = .needRequestText
+        return label
+    }()
+    /// 上麦需要房主同意 - switch状态开关
+    private lazy var needRequestSwitch:UISwitch = {
+        let view = UISwitch()
+        view.setOn(true, animated: false)
+        return view
+    }()
+    
     private let createBtn : UIButton = {
         let btn = UIButton(type: .custom)
         btn.setTitle(.createText, for: .normal)
@@ -120,6 +135,8 @@ class TRTCCreateVoiceRoomRootView: UIView {
         addSubview(contentView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(textView)
+        contentView.addSubview(needRequestTipLabel)
+        contentView.addSubview(needRequestSwitch)
         contentView.addSubview(createBtn)
     }
     
@@ -140,9 +157,17 @@ class TRTCCreateVoiceRoomRootView: UIView {
             make.top.equalTo(titleLabel.snp.bottom).offset(20)
             make.height.equalTo(176)
         }
+        needRequestTipLabel.snp.makeConstraints { (make) in
+            make.leading.equalTo(20)
+            make.centerY.equalTo(needRequestSwitch)
+        }
+        needRequestSwitch.snp.makeConstraints { (make) in
+            make.trailing.equalTo(-20);
+            make.top.equalTo(textView.snp.bottom).offset(16)
+        }
         createBtn.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
-            make.top.equalTo(textView.snp.bottom).offset(32)
+            make.top.equalTo(needRequestSwitch.snp.bottom).offset(16)
             make.height.equalTo(52)
             make.width.equalTo(160)
             make.bottom.equalToSuperview().offset(-54)
@@ -152,6 +177,8 @@ class TRTCCreateVoiceRoomRootView: UIView {
     private func bindInteraction() {
         createBtn.addTarget(self, action: #selector(createBtnClick), for: .touchUpInside)
         textView.delegate = self
+        
+        needRequestSwitch.addTarget(self, action: #selector(needRequestClick), for: .valueChanged)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -181,6 +208,11 @@ class TRTCCreateVoiceRoomRootView: UIView {
         }
     }
     
+    @objc
+    func needRequestClick() {
+        
+    }
+    
     private func enterRoom() {
         if textView.text == String.placeholderTitleText {
             viewModel.roomName = LocalizeReplaceXX(.defaultCreateText, viewModel.userName)
@@ -188,7 +220,7 @@ class TRTCCreateVoiceRoomRootView: UIView {
         else {
             viewModel.roomName = textView.text
         }
-        viewModel.createRoom()
+        viewModel.createRoom(needRequest: needRequestSwitch.isOn)
     }
 }
 
@@ -282,10 +314,11 @@ extension TRTCCreateVoiceRoomRootView : TRTCCreateVoiceRoomViewResponder {
     }
 }
 
-/// MARK: - internationalization string
+// MARK: - internationalization string
 fileprivate extension String {
     static let titleText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.roomsubject")
     static let placeholderTitleText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.enterroomsubject")
     static let createText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.starttalking")
     static let defaultCreateText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.xxxsroom")
+    static let needRequestText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.needrequesttip")
 }

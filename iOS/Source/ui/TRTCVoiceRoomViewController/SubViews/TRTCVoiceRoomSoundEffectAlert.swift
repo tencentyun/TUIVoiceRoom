@@ -50,7 +50,7 @@ class TRTCVoiceRoomSoundEffectAlert : TRTCVoiceRoomAlertContentView {
         titleLabel.text = .effectTitleText
         
         if viewModel.userType == .anchor {
-            dataSource = [.audition, .vocalVolume, .vocalRiseFall, .voiceChange, .reverberation]
+            dataSource = [.audition, .vocalVolume, .voiceChange, .reverberation]
             totalHeight = 120 * 2 + 52 * 3
         }
         else {

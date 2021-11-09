@@ -41,6 +41,7 @@
 "Demo.TRTC.VoiceRoom.isinxxseat" = "You are already in seat xxx.";
 "Demo.TRTC.VoiceRoom.seatisnotinittocanthandsup" = "Cannot take the seat as the seat information has not been initialized";
 "Demo.TRTC.Salon.handsup" = "Request to Speak";
+"Demo.TRTC.VoiceRoom.requestmoveseat" = "Request move";
 "Demo.TRTC.VoiceRoom.totaxx" = "xxx";
 "Demo.TRTC.VoiceRoom.unmuteone" = "Unmute";
 "Demo.TRTC.VoiceRoom.muteone" = "Mute";
@@ -92,6 +93,7 @@
 "Demo.TRTC.VoiceRoom.welcome" = "Welcome to Audio Chat Room tryout\nTo quickly use the feature, visit \nxxx";
 "Demo.TRTC.VoiceRoom.roomsubject" = "Subject";
 "Demo.TRTC.VoiceRoom.enterroomsubject" = "Enter a room subject (max. 60 characters)";
+"Demo.TRTC.VoiceRoom.needrequesttip" = "Owner's consent is required for speak";
 "Demo.TRTC.VoiceRoom.starttalking" = "Let's go";
 "Demo.TRTC.VoiceRoom.xxxsroom" = "xxx's room";
 "Demo.TRTC.VoiceRoom.roomname" = "Room name";
@@ -102,7 +104,7 @@
 "ASKit.MainMenu.Title" = "Sound effect settings";
 "ASKit.MainMenu.VoiceChangeTitle" = "Voice changing";
 "ASKit.MainMenu.Reverberation" = "Reverb";
-"ASKit.MusicSelectMenu.Title" = "Background music";
+"ASKit.MusicSelectMenu.Title" = "Music Preview";
 "Demo.TRTC.VoiceRoom.useearphones" = "Use earphones for better experience";
 "Demo.TRTC.VoiceRoom.copyrights" = "Music Library ©";
 "ASKit.MainMenu.SelectMusic" = "Select song";

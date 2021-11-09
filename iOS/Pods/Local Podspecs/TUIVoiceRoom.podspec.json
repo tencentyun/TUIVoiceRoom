@@ -1,0 +1,130 @@
+{
+  "name": "TUIVoiceRoom",
+  "version": "1.0.0",
+  "platforms": {
+    "ios": "11.0"
+  },
+  "license": {
+    "type": "Proprietary",
+    "text": "        copyright 2017 tencent Ltd. All rights reserved.\n"
+  },
+  "homepage": "https://cloud.tencent.com/document/product/269/3794",
+  "documentation_url": "https://cloud.tencent.com/document/product/269/9147",
+  "authors": "tencent video cloud",
+  "summary": "TUIVoiceRoom",
+  "xcconfig": {
+    "VALID_ARCHS": "armv7 arm64 x86_64"
+  },
+  "swift_versions": "5.0",
+  "dependencies": {
+    "Alamofire": [
+
+    ],
+    "SnapKit": [
+
+    ],
+    "Toast-Swift": [
+
+    ],
+    "Kingfisher": [
+
+    ],
+    "MJRefresh": [
+
+    ],
+    "MJExtension": [
+
+    ],
+    "TXAppBasic": [
+
+    ],
+    "TXIMSDK_Plus_iOS": [
+      "~> 5.7.1435"
+    ]
+  },
+  "requires_arc": true,
+  "static_framework": true,
+  "source": {
+    "path": "./"
+  },
+  "pod_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
+  },
+  "user_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
+  },
+  "default_subspecs": "TRTC",
+  "subspecs": [
+    {
+      "name": "TRTC",
+      "pod_target_xcconfig": {
+        "HEADER_SEARCH_PATHS": "${PODS_TARGET_SRCROOT}/../../SDK/TXLiteAVSDK_TRTC.framework/Headers/"
+      },
+      "dependencies": {
+        "TXLiteAVSDK_TRTC": [
+
+        ]
+      },
+      "source_files": [
+        "Source/Localized/**/*.{h,m,mm,swift}",
+        "Source/model/**/*.{h,m,mm,swift}",
+        "Source/ui/**/*.{h,m,mm,swift}",
+        "Source/TUIVoiceRoomKit_TRTC/*.{h,m,mm,swift}"
+      ],
+      "ios": {
+        "frameworks": [
+          "AVFoundation",
+          "Accelerate"
+        ]
+      },
+      "libraries": [
+        "c++",
+        "resolv"
+      ],
+      "resource_bundles": {
+        "TUIVoiceRoomKitBundle": [
+          "Resources/*.xcassets",
+          "Resources/localized/**/*.strings"
+        ]
+      }
+    },
+    {
+      "name": "Enterprise",
+      "dependencies": {
+        "TXLiteAVSDK_Enterprise": [
+
+        ]
+      },
+      "pod_target_xcconfig": {
+        "HEADER_SEARCH_PATHS": [
+          "$(PODS_TARGET_SRCROOT)/../../SDK/TXLiteAVSDK_Enterprise.framework/Headers"
+        ]
+      },
+      "source_files": [
+        "Source/Localized/**/*.{h,m,mm,swift}",
+        "Source/model/**/*.{h,m,mm,swift}",
+        "Source/ui/**/*.{h,m,mm,swift}",
+        "Source/TUIVoiceRoomKit_Enterprise/*.{h,m,mm,swift}"
+      ],
+      "ios": {
+        "frameworks": [
+          "AVFoundation",
+          "Accelerate",
+          "AssetsLibrary"
+        ]
+      },
+      "libraries": [
+        "c++",
+        "resolv",
+        "sqlite3"
+      ],
+      "resource_bundles": {
+        "TUIVoiceRoomKitBundle": [
+          "Resources/*.xcassets",
+          "Resources/localized/**/*.strings"
+        ]
+      }
+    }
+  ],
+  "swift_version": "5.0"
+}

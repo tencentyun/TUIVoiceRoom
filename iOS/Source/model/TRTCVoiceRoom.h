@@ -151,6 +151,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enterSeat:(NSInteger)seatIndex callback:(ActionCallback _Nullable)callback NS_SWIFT_NAME(enterSeat(seatIndex:callback:));
 
 /**
+ * @brief 移动麦位（只有麦上用户可以调用）
+ *
+ * @note 移麦成功后，房间内所有成员会收到`onSeatListChange`的事件通知。
+ *
+ * @param seatIndex   需要移动的麦位序号
+ * @param callback    操作回调
+ * @return 操作结果(0为成功,其它为失败,10001为接口调用限频)
+*/
+- (NSInteger)moveSeat:(NSInteger)seatIndex callback:(ActionCallback _Nullable)callback NS_SWIFT_NAME(moveSeat(seatIndex:callback:));
+
+/**
 * 主动下麦（观众端和主播均可调用）
 *
 * 下麦成功后，房间内所有成员会收到`onSeatListChange`和`onAnchorLeaveSeat`的事件通知。

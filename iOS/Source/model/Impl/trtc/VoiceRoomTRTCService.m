@@ -17,6 +17,7 @@
 @property (nonatomic, strong) TRTCParams *mTRTCParms;
 @property (nonatomic, copy) TXCallback enterRoomCallback;
 @property (nonatomic, copy) TXCallback exitRoomCallback;
+@property (nonatomic, copy) TXCallback switchCallback;
 
 @property (nonatomic, strong, readonly)TRTCCloud *mTRTCCloud;
 
@@ -130,7 +131,19 @@
     [self.mTRTCCloud startLocalAudio];
 }
 
+- (void)switchToAnchorWithCallBack:(TXCallback)callback{
+    self.switchCallback = callback;
+    [self.mTRTCCloud switchRole:TRTCRoleAnchor];
+    [self.mTRTCCloud startLocalAudio];
+}
+
 - (void)switchToAudience {
+    [self.mTRTCCloud stopLocalAudio];
+    [self.mTRTCCloud switchRole:TRTCRoleAudience];
+}
+
+- (void)switchToAudienceWithCallBack:(TXCallback)callback{
+    self.switchCallback = callback;
     [self.mTRTCCloud stopLocalAudio];
     [self.mTRTCCloud switchRole:TRTCRoleAudience];
 }
@@ -242,6 +255,14 @@
 - (void)onUserVoiceVolume:(NSArray<TRTCVolumeInfo *> *)userVolumes totalVolume:(NSInteger)totalVolume {
     if ([self canDelegateResponseMethod:@selector(onUserVoiceVolume:totalVolume:)]) {
         [self.delegate onUserVoiceVolume:userVolumes totalVolume:totalVolume];
+    }
+}
+
+- (void)onSwitchRole:(TXLiteAVError)errCode errMsg:(NSString *)errMsg{
+    TRTCLog(@"on sitch role, code:%ld msg:%@", (long)errCode, errMsg);
+    if (_switchCallback) {
+        _switchCallback(errCode, errMsg);
+        _switchCallback = nil;
     }
 }
 

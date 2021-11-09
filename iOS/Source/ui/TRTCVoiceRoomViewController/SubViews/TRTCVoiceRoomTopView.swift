@@ -39,6 +39,13 @@ class TRTCVoiceRoomImageOnlyCell: UICollectionViewCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // Cell即将被重用，重置视图状态
+        headImageView.kf.cancelDownloadTask()
+        headImageView.image = nil
+    }
+    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         headImageView.layer.cornerRadius = headImageView.frame.height*0.5
@@ -251,7 +258,9 @@ class TRTCVoiceRoomTopView: UIView {
         if audienceIndex >= memberAudienceDataSource.count {
             audienceIndex = 0
         }
-        audienceListCollectionView.scrollToItem(at: IndexPath(item: audienceIndex, section: 0), at: .left, animated: true)
+        if memberAudienceDataSource.count > 0 {
+            audienceListCollectionView.scrollToItem(at: IndexPath(item: audienceIndex, section: 0), at: .left, animated: true)
+        }
     }
     @objc func shareBtnClick() {
         
@@ -281,7 +290,8 @@ extension TRTCVoiceRoomTopView : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "audienceListCell", for: indexPath) as! TRTCVoiceRoomImageOnlyCell
         let info = memberAudienceDataSource[indexPath.item]
-        cell.headImageView.kf.setImage(with: URL(string: info.userInfo.userAvatar), placeholder: nil, options: [], completionHandler: nil)
+        let placeholder = UIImage.init(named: "avatar2_100", in: VoiceRoomBundle(), compatibleWith: nil)
+        cell.headImageView.kf.setImage(with: URL(string: info.userInfo.userAvatar), placeholder: placeholder, options: [], completionHandler: nil)
         return cell
     }
 }

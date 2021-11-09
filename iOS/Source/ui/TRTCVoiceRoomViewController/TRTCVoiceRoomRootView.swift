@@ -397,6 +397,14 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
         makeToast(message)
     }
     
+    func showToastActivity(){
+        makeToastActivity(.center)
+    }
+    
+    func hiddenToastActivity() {
+        hideToastActivity()
+    }
+    
     func popToPrevious() {
         rootViewController?.navigationController?.popViewController(animated: true)
     }

@@ -56,6 +56,8 @@ typedef NS_ENUM(NSUInteger, TXVoiceRoomCustomCodeType) {
 
 + (NSDictionary<NSString *, NSString *> *)getSeatInfoJsonStrWithIndex:(NSInteger)index info:(TXSeatInfo *)info;
 
++ (NSDictionary<NSString *, NSString *> *)getMoveSeatInfoJsonStrWithSourceIndex:(NSInteger)srcIndex sourceSeatInfo:(TXSeatInfo *)srcSeatInfo targetIndex:(NSInteger)targetIndex targetSeatInfo:(TXSeatInfo *)targetSeatInfo;
+
 + (TXRoomInfo * _Nullable)getRoomInfoFromAttr:(NSDictionary<NSString *, NSString *> *)attr;
 
 + (NSArray<TXSeatInfo *> * _Nullable)getSeatListFromAttr:(NSDictionary<NSString *, NSString *> *)attr seatSize:(NSUInteger)seatSize;

@@ -32,6 +32,8 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.mute = YES;
+        self.userName = @"";
+        self.userAvatar = @"";
     }
     return self;
 }
