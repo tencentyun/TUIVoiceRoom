@@ -201,6 +201,17 @@ public abstract class TRTCVoiceRoom {
      */
     public abstract void closeSeat(int seatIndex, boolean isClose, TRTCVoiceRoomCallback.ActionCallback callback);
 
+    /**
+     * 移动麦位（只有麦上用户可以调用）
+     *
+     * 移麦成功后，房间内所有成员会收到`onSeatListChange`的事件通知。
+     *
+     * @param seatIndex   需要移动的麦位序号
+     * @param callback    操作回调
+     * @return 操作结果(0为成功,其它为失败,10001为接口调用限频)
+     */
+    public abstract int moveSeat(int seatIndex, TRTCVoiceRoomCallback.ActionCallback callback);
+
     //////////////////////////////////////////////////////////
     //
     //                 本地音频操作接口

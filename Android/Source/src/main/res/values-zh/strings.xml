@@ -136,4 +136,6 @@
     <string name="trtcvoiceroom_audio_reverb_type_lowdeep">低沉</string>
     <string name="trtcvoiceroom_audio_reverb_type_heavymetal">金属声</string>
     <string name="trtcvoiceroom_audio_reverb_type_hongliang">洪亮</string>
+    <string name="trtcvoicerrom_need_request">需要房主同意上麦</string>
+    <string name="trtcvoiceroom_request_move_seat">申请移麦</string>
 </resources>

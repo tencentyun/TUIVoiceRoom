@@ -228,4 +228,18 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/progress_group"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

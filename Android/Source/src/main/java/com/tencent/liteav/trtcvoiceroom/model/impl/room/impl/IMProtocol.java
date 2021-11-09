@@ -90,6 +90,18 @@ public class IMProtocol {
         return map;
     }
 
+    public static HashMap<String, String> getMoveSeatInfoJsonStr(int srcIndex, TXSeatInfo srcSeatInfo, int targetIndex,
+                                                             TXSeatInfo targetSeatInfo) {
+        HashMap<String, String> map  = new HashMap<>();
+        Gson                    gson = new Gson();
+        String                  json = gson.toJson(srcSeatInfo, TXSeatInfo.class);
+        map.put(KEY_SEAT + srcIndex, json);
+        json                         = gson.toJson(targetSeatInfo, TXSeatInfo.class);
+        map.put(KEY_SEAT + targetIndex, json);
+        return map;
+    }
+
+
     public static TXRoomInfo getRoomInfoFromAttr(Map<String, String> map) {
         TXRoomInfo TXRoomInfo;
         Gson       gson = new Gson();

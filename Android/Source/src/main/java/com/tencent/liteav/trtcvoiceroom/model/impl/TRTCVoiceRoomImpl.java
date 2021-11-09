@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.tencent.liteav.audio.TXAudioEffectManager;
+import com.tencent.liteav.debug.GenerateTestUserSig;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
@@ -30,7 +31,13 @@ import java.util.Set;
 public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDelegate, VoiceRoomTRTCServiceDelegate {
     private static final String TAG = TRTCVoiceRoomImpl.class.getName();
 
+    public enum MOVE_SEAT {
+        ENTER, //移麦进入新麦位
+        LEAVE  //移麦离开原麦位
+    }
+
     private static TRTCVoiceRoomImpl     sInstance;
+    private static long  CALL_MOVE_SEAT_LIMIT_TIME = 1000; //moveSeat接口限频，默认1s
     private final  Context               mContext;
     private        TRTCVoiceRoomDelegate mDelegate;
     // 所有调用都切到主线程使用，保证内部多线程安全问题
@@ -40,6 +47,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     private        int                   mSdkAppId;
     private        String                mUserId;
     private        String                mUserSig;
+    private        long                  mLastCallMoveSeatTime;
 
     // 主播列表
     private Set<String>                          mAnchorList;
@@ -50,7 +58,10 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     private TRTCVoiceRoomCallback.ActionCallback mLeaveSeatCallback;
     private TRTCVoiceRoomCallback.ActionCallback mPickSeatCallback;
     private TRTCVoiceRoomCallback.ActionCallback mKickSeatCallback;
+    private TRTCVoiceRoomCallback.ActionCallback mMoveSeatCallback;
     private int                                  mTakeSeatIndex;
+    private Set<MOVE_SEAT>                       mMoveSet;
+    private boolean                              mIsMoveSeat;
 
     public static synchronized TRTCVoiceRoom sharedInstance(Context context) {
         if (sInstance == null) {
@@ -77,6 +88,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         mSeatInfoList = new ArrayList<>();
         mAnchorList = new HashSet<>();
         mAudienceList = new HashSet<>();
+        mMoveSet = new HashSet<>();
         mTakeSeatIndex = -1;
         VoiceRoomTRTCService.getInstance().setDelegate(this);
         VoiceRoomTRTCService.getInstance().init(context);
@@ -88,6 +100,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         mSeatInfoList.clear();
         mAnchorList.clear();
         mAudienceList.clear();
+        mMoveSet.clear();
     }
 
     private void runOnMainThread(Runnable runnable) {
@@ -131,7 +144,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                TRTCLogger.i(TAG, "start login, sdkAppId:" + sdkAppId + " userId:" + userId + " sign is empty:" + TextUtils.isEmpty(userSig));
+                TRTCLogger.i(TAG, "start login, sdkAppId:" + sdkAppId + " userId:" + userId + " sign is empty:" + TextUtils.isEmpty(userSig) + " app version: " + TRTCVoiceRoomDef.APP_VERSION);
                 if (sdkAppId == 0 || TextUtils.isEmpty(userId) || TextUtils.isEmpty(userSig)) {
                     TRTCLogger.e(TAG, "start login fail. params invalid.");
                     if (callback != null) {
@@ -217,7 +230,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                TRTCLogger.i(TAG, "create room, room id:" + roomId + " info:" + roomParam);
+                TRTCLogger.i(TAG, "create room, room id:" + roomId + " info:" + roomParam + " app version: " + TRTCVoiceRoomDef.APP_VERSION);
                 if (roomId == 0) {
                     TRTCLogger.e(TAG, "create room fail. params invalid");
                     return;
@@ -335,7 +348,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                 // 恢复设定
                 clearList();
                 String strRoomId = String.valueOf(roomId);
-                TRTCLogger.i(TAG, "start enter room, room id:" + roomId);
+                TRTCLogger.i(TAG, "start enter room, room id:" + roomId + " app version: " + TRTCVoiceRoomDef.APP_VERSION);
                 enterTRTCRoomInner(strRoomId, mUserId, mUserSig, TRTCCloudDef.TRTCRoleAudience, new TRTCVoiceRoomCallback.ActionCallback() {
                     @Override
                     public void onCallback(final int code, final String msg) {
@@ -531,6 +544,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                     runOnDelegateThread(new Runnable() {
                         @Override
                         public void run() {
+                            TRTCLogger.i(TAG, "you are already in the seat");
                             if (callback != null) {
                                 callback.onCallback(-1, "you are already in the seat");
                             }
@@ -570,6 +584,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                         @Override
                         public void run() {
                             if (callback != null) {
+                                TRTCLogger.i(TAG, "you are not in the seat");
                                 callback.onCallback(-1, "you are not in the seat");
                             }
                         }
@@ -610,7 +625,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                         @Override
                         public void run() {
                             if (callback != null) {
-                                callback.onCallback(-1, "该用户已经是麦上主播了");
+                                TRTCLogger.i(TAG, "this user are in the seat");
+                                callback.onCallback(-1, "this user are in the seat");
                             }
                         }
                     });
@@ -671,7 +687,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                TRTCLogger.i(TAG, "kickSeat " + seatIndex + " " + isMute);
+                TRTCLogger.i(TAG, "muteSeat " + seatIndex + " " + isMute);
                 TXRoomService.getInstance().muteSeat(seatIndex, isMute, new TXCallback() {
                     @Override
                     public void onCallback(final int code, final String msg) {
@@ -710,6 +726,53 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                 });
             }
         });
+    }
+
+    @Override
+    public int moveSeat(final int seatIndex, final TRTCVoiceRoomCallback.ActionCallback callback) {
+        if (System.currentTimeMillis() - mLastCallMoveSeatTime < CALL_MOVE_SEAT_LIMIT_TIME) {
+            TRTCLogger.i(TAG, "moveSeat call limit: " + CALL_MOVE_SEAT_LIMIT_TIME);
+            mLastCallMoveSeatTime = System.currentTimeMillis();
+            return TRTCVoiceRoomDef.ERR_CALL_METHOD_LIMIT;
+        }
+        mLastCallMoveSeatTime = System.currentTimeMillis();
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                TRTCLogger.i(TAG, "moveSeat : " + seatIndex);
+                if (!isOnSeat(mUserId)) {
+                    runOnDelegateThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (callback != null) {
+                                callback.onCallback(-1, "you are not in the seat");
+                            }
+                        }
+                    });
+                    return;
+                }
+                mMoveSeatCallback = callback;
+                mMoveSet.clear();
+                mMoveSet.add(MOVE_SEAT.ENTER);
+                mMoveSet.add(MOVE_SEAT.LEAVE);
+                TXRoomService.getInstance().moveSeat(seatIndex, new TXCallback() {
+                    @Override
+                    public void onCallback(int code, String msg) {
+                        if (code != 0) {
+                            //出错了，恢复callback
+                            mMoveSeatCallback = null;
+                            mMoveSet.clear();
+                            if (callback != null) {
+                                callback.onCallback(code, msg);
+                            }
+                        } else {
+                            TRTCLogger.i(TAG, "move seat callback success, and wait attrs changed.");
+                        }
+                    }
+                });
+            }
+        });
+        return 0;
     }
 
     @Override
@@ -1126,45 +1189,68 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
             @Override
             public void run() {
                 if (userInfo.userId.equals(mUserId)) {
-                    //是自己上线了, 切换角色
-                    mTakeSeatIndex = index;
-                    VoiceRoomTRTCService.getInstance().switchToAnchor();
                     boolean mute = mSeatInfoList.get(index).mute;
-                    VoiceRoomTRTCService.getInstance().muteLocalAudio(mute);
-                    if (!mute) {
-                        mDelegate.onUserMicrophoneMute(userInfo.userId, false);
-                    }
-                }
-                runOnDelegateThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mDelegate != null) {
-                            TRTCVoiceRoomDef.UserInfo info = new TRTCVoiceRoomDef.UserInfo();
-                            info.userId = userInfo.userId;
-                            info.userAvatar = userInfo.avatarURL;
-                            info.userName = userInfo.userName;
-                            mDelegate.onAnchorEnterSeat(index, info);
+                    if (mMoveSet.isEmpty()) {
+                        VoiceRoomTRTCService.getInstance().muteLocalAudio(mute);
+                        if (!mute) {
+                            mDelegate.onUserMicrophoneMute(userInfo.userId, false);
                         }
-                        if (mPickSeatCallback != null) {
-                            mPickSeatCallback.onCallback(0, "pick seat success");
-                            mPickSeatCallback = null;
-                        }
-                    }
-                });
-                if (userInfo.userId.equals(mUserId)) {
-                    //在回调出去
-                    runOnDelegateThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mEnterSeatCallback != null) {
-                                mEnterSeatCallback.onCallback(0, "enter seat success");
-                                mEnterSeatCallback = null;
+                        VoiceRoomTRTCService trtcService = VoiceRoomTRTCService.getInstance();
+                        trtcService.switchToAnchor(new VoiceRoomTRTCService.OnSwitchListener() {
+                            @Override
+                            public void onTRTCSwitchRole(int code, String message) {
+                                onSwitchToAnchor(index, userInfo);
                             }
+                        });
+                    } else { //移麦场景
+                        if (mute) {
+                            VoiceRoomTRTCService.getInstance().muteLocalAudio(true);
+                            mDelegate.onUserMicrophoneMute(userInfo.userId, true);
                         }
-                    });
+                        onSwitchToAnchor(index, userInfo);
+                    }
                 }
             }
         });
+    }
+
+    private void onSwitchToAnchor(final int index, final TXUserInfo userInfo) {
+        runOnDelegateThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDelegate != null) {
+                    TRTCVoiceRoomDef.UserInfo info = new TRTCVoiceRoomDef.UserInfo();
+                    info.userId = userInfo.userId;
+                    info.userAvatar = userInfo.avatarURL;
+                    info.userName = userInfo.userName;
+                    mDelegate.onAnchorEnterSeat(index, info);
+                }
+                if (mPickSeatCallback != null) {
+                    mPickSeatCallback.onCallback(0, "pick seat success");
+                    mPickSeatCallback = null;
+                }
+            }
+        });
+        if (userInfo.userId.equals(mUserId)) {
+            //是自己上线了, 切换角色
+            mTakeSeatIndex = index;
+            //在回调出去
+            runOnDelegateThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mMoveSeatCallback != null) {
+                        mMoveSet.remove(MOVE_SEAT.ENTER);
+                        if (mMoveSet.isEmpty()) {
+                            mMoveSeatCallback.onCallback(0, "move seat success");
+                            mMoveSeatCallback = null;
+                        }
+                    } else if (mEnterSeatCallback != null) {
+                        mEnterSeatCallback.onCallback(0, "enter seat success");
+                        mEnterSeatCallback = null;
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -1173,17 +1259,30 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
             @Override
             public void run() {
                 if (mTakeSeatIndex == index && isClose) {
-                    VoiceRoomTRTCService.getInstance().switchToAudience();
-                    mTakeSeatIndex = -1;
-                }
-                runOnDelegateThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mDelegate != null) {
-                            mDelegate.onSeatClose(index, isClose);
+                    VoiceRoomTRTCService.getInstance().switchToAudience(new VoiceRoomTRTCService.OnSwitchListener() {
+                        @Override
+                        public void onTRTCSwitchRole(int code, String message) {
+                            mTakeSeatIndex = -1;
+                            runOnDelegateThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mDelegate != null) {
+                                        mDelegate.onSeatClose(index, true);
+                                    }
+                                }
+                            });
                         }
-                    }
-                });
+                    });
+                } else {
+                    runOnDelegateThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mDelegate != null) {
+                                mDelegate.onSeatClose(index, isClose);
+                            }
+                        }
+                    });
+                }
             }
         });
     }
@@ -1193,40 +1292,57 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                if (userInfo.userId.equals(mUserId)) {
-                    //自己下线了~
-                    mTakeSeatIndex = -1;
-                    VoiceRoomTRTCService.getInstance().switchToAudience();
-                }
-                runOnDelegateThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mDelegate != null) {
-                            TRTCVoiceRoomDef.UserInfo info = new TRTCVoiceRoomDef.UserInfo();
-                            info.userId = userInfo.userId;
-                            info.userAvatar = userInfo.avatarURL;
-                            info.userName = userInfo.userName;
-                            mDelegate.onAnchorLeaveSeat(index, info);
-                        }
-                        if (mKickSeatCallback != null) {
-                            mKickSeatCallback.onCallback(0, "kick seat success");
-                            mKickSeatCallback = null;
-                        }
-                    }
-                });
-                if (userInfo.userId.equals(mUserId)) {
-                    runOnDelegateThread(new Runnable() {
+                if (userInfo.userId.equals(mUserId) && mMoveSet.isEmpty()) {
+                    VoiceRoomTRTCService trtcService = VoiceRoomTRTCService.getInstance();
+                    trtcService.switchToAudience(new VoiceRoomTRTCService.OnSwitchListener() {
                         @Override
-                        public void run() {
-                            if (mLeaveSeatCallback != null) {
-                                mLeaveSeatCallback.onCallback(0, "enter seat success");
-                                mLeaveSeatCallback = null;
-                            }
+                        public void onTRTCSwitchRole(int code, String message) {
+                            onSwitchToAudience(index, userInfo);
                         }
                     });
+                } else {
+                    onSwitchToAudience(index, userInfo);
                 }
             }
         });
+    }
+    private void onSwitchToAudience(final int index, final TXUserInfo userInfo) {
+        runOnDelegateThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDelegate != null) {
+                    TRTCVoiceRoomDef.UserInfo info = new TRTCVoiceRoomDef.UserInfo();
+                    info.userId = userInfo.userId;
+                    info.userAvatar = userInfo.avatarURL;
+                    info.userName = userInfo.userName;
+                    mDelegate.onAnchorLeaveSeat(index, info);
+                }
+                if (mKickSeatCallback != null) {
+                    mKickSeatCallback.onCallback(0, "kick seat success");
+                    mKickSeatCallback = null;
+                }
+            }
+        });
+        if (userInfo.userId.equals(mUserId)) {
+            runOnDelegateThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mMoveSeatCallback != null) {
+                        mMoveSet.remove(MOVE_SEAT.LEAVE);
+                        if (mMoveSet.isEmpty()) {
+                            mMoveSeatCallback.onCallback(0, "move seat success");
+                            mMoveSeatCallback = null;
+                        }
+                    } else if (mLeaveSeatCallback != null) {
+                        mTakeSeatIndex = -1;
+                        mLeaveSeatCallback.onCallback(0, "leave seat success");
+                        mLeaveSeatCallback = null;
+                    } else {
+                        mTakeSeatIndex = -1;
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -1296,21 +1412,6 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
 
     @Override
     public void onTRTCAnchorExit(String userId) {
-        if (TXRoomService.getInstance().isOwner()) {
-            // 主播是房主
-            if (mSeatInfoList != null) {
-                int kickSeatIndex = -1;
-                for (int i = 0; i < mSeatInfoList.size(); i++) {
-                    if (userId.equals(mSeatInfoList.get(i).userId)) {
-                        kickSeatIndex = i;
-                        break;
-                    }
-                }
-                if (kickSeatIndex != -1) {
-                    kickSeat(kickSeatIndex, null);
-                }
-            }
-        }
         mAnchorList.remove(userId);
     }
 

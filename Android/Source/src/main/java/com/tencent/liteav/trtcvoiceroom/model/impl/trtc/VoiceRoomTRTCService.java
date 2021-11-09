@@ -36,6 +36,7 @@ public class VoiceRoomTRTCService extends TRTCCloudListener {
     private Handler                      mMainHandler;
     private TXCallback                   mEnterRoomCallback;
     private TXCallback                   mExitRoomCallback;
+    private OnSwitchListener             mOnSwitchListener;
 
     public static synchronized VoiceRoomTRTCService getInstance() {
         if (sInstance == null) {
@@ -212,6 +213,16 @@ public class VoiceRoomTRTCService extends TRTCCloudListener {
     }
 
     @Override
+    public void onSwitchRole(int errCode, String errMsg) {
+        super.onSwitchRole(errCode, errMsg);
+        TRTCLogger.d(TAG, "on switch role, code:" + errCode + " msg:" + errMsg);
+        if (mOnSwitchListener != null) {
+            mOnSwitchListener.onTRTCSwitchRole(errCode, errMsg);
+            mOnSwitchListener = null;
+        }
+    }
+
+    @Override
     public void onSetMixTranscodingConfig(int i, String s) {
         super.onSetMixTranscodingConfig(i, s);
         TRTCLogger.i(TAG, "on set mix transcoding, code:" + i + " msg:" + s);
@@ -233,13 +244,15 @@ public class VoiceRoomTRTCService extends TRTCCloudListener {
         mTRTCCloud.enableAudioEarMonitoring(enable);
     }
 
-    public void switchToAnchor() {
+    public void switchToAnchor(OnSwitchListener listener) {
+        mOnSwitchListener = listener;
         mTRTCCloud.switchRole(TRTCCloudDef.TRTCRoleAnchor);
         mTRTCCloud.startLocalAudio();
     }
 
-    public void switchToAudience() {
+    public void switchToAudience(OnSwitchListener listener) {
         mTRTCCloud.stopLocalAudio();
+        mOnSwitchListener = listener;
         mTRTCCloud.switchRole(TRTCCloudDef.TRTCRoleAudience);
     }
 
@@ -273,5 +286,9 @@ public class VoiceRoomTRTCService extends TRTCCloudListener {
 
     public TXAudioEffectManager getAudioEffectManager() {
         return mTRTCCloud.getAudioEffectManager();
+    }
+
+    public interface OnSwitchListener {
+        void onTRTCSwitchRole(int code, String message);
     }
 }

@@ -85,7 +85,7 @@ public class VoiceRoomSeatAdapter extends
                 }
             });
             if (model.isClose) {
-                mImgHead.setImageResource(R.drawable.trtcvoiceroom_ic_lock);
+                ImageLoader.loadImage(context, mImgHead, R.drawable.trtcvoiceroom_ic_lock);
                 mTvName.setText("");
                 mIvMute.setVisibility(View.GONE);
                 mIvTalkBorder.setVisibility(View.GONE);
@@ -93,7 +93,7 @@ public class VoiceRoomSeatAdapter extends
             }
             if (!model.isUsed) {
                 // 占位图片
-                mImgHead.setImageResource(R.drawable.trtcvoiceroom_add_seat);
+                ImageLoader.loadImage(context, mImgHead, R.drawable.trtcvoiceroom_add_seat);
                 mTvName.setText("");
                 mIvMute.setVisibility(View.GONE);
                 mIvTalkBorder.setVisibility(View.GONE);

@@ -3,6 +3,8 @@ package com.tencent.liteav.trtcvoiceroom.ui.room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
@@ -28,10 +30,11 @@ import java.util.Map;
  * @author guanyifeng
  */
 public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
+    private static final int MSG_DISMISS_LOADING = 1001;
     private Map<String, Integer> mInvitationSeatMap;
     private String               mOwnerId;
     private boolean              mIsSeatInitSuccess;
-    private int                  mSelfSeatIndex;
+    private boolean              mIsTakingSeat; //正在进行上麦
 
     public static void enterRoom(Context context, int roomId, String userId, int audioQuality) {
         Intent starter = new Intent(context, VoiceRoomAudienceActivity.class);
@@ -40,6 +43,17 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
         starter.putExtra(VOICEROOM_AUDIO_QUALITY, audioQuality);
         context.startActivity(starter);
     }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == MSG_DISMISS_LOADING) {
+                mHandler.removeMessages(MSG_DISMISS_LOADING);
+                mProgressBar.setVisibility(View.GONE);
+                mIsTakingSeat = false;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +69,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
         enterRoom();
         mBtnMsg.setActivated(true);
         mBtnMsg.setSelected(true);
-        refreshView();
+        refreshView(null);
         mBtnLeaveSeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,12 +78,18 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
         });
     }
 
-    private void refreshView() {
+    private void refreshView(String userId) {
+        boolean isMute;
+        if (userId == null || mSeatUserMuteMap == null || mSeatUserMuteMap.get(userId) == null) {
+            isMute = false;
+        } else {
+            isMute = mSeatUserMuteMap.get(userId);
+        }
         if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
             mBtnMic.setVisibility(View.VISIBLE);
             mBtnLeaveSeat.setVisibility(View.VISIBLE);
-            mBtnMic.setActivated(true);
-            mBtnMic.setSelected(true);
+            mBtnMic.setActivated(!isMute);
+            mBtnMic.setSelected(!isMute);
             mBtnEffect.setVisibility(View.VISIBLE);
             mAnchorAudioPanel.hideManagerView();
         } else {
@@ -122,7 +142,6 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
 
     private void enterRoom() {
         mIsSeatInitSuccess = false;
-        mSelfSeatIndex = -1;
         mCurrentRole = TRTCCloudDef.TRTCRoleAudience;
         mTRTCVoiceRoom.setSelfProfile(mUserName, mUserAvatar, null);
         mTRTCVoiceRoom.enterRoom(mRoomId, new TRTCVoiceRoomCallback.ActionCallback() {
@@ -157,9 +176,6 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             ToastUtils.showLong(R.string.trtcvoiceroom_toast_list_has_not_been_initialized);
             return;
         }
-        if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
-            return;
-        }
         // 判断座位有没有人
         VoiceRoomSeatEntity entity = mVoiceRoomSeatEntityList.get(itemPos);
         if (entity.isClose) {
@@ -184,7 +200,11 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                         PermissionUtils.permission(PermissionConstants.MICROPHONE).callback(new PermissionUtils.FullCallback() {
                             @Override
                             public void onGranted(List<String> permissionsGranted) {
-                                startTakeSeat(itemPos);
+                                if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
+                                    startMoveSeat(itemPos);
+                                } else {
+                                    startTakeSeat(itemPos);
+                                }
                             }
 
                             @Override
@@ -196,7 +216,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                     }
                     dialog.dismiss();
                 }
-            }, getString(R.string.trtcvoiceroom_tv_apply_for_chat));
+            }, getString(mCurrentRole == TRTCCloudDef.TRTCRoleAnchor ? R.string.trtcvoiceroom_request_move_seat : R.string.trtcvoiceroom_tv_apply_for_chat));
             dialog.show();
         }
     }
@@ -243,14 +263,66 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             mInvitationSeatMap.put(inviteId, itemPos);
         } else {
             //不需要的情况下自动上麦
+            if (mIsTakingSeat) {
+                return;
+            }
+            showTakingSeatLoading(true);
             mTRTCVoiceRoom.enterSeat(changeSeatIndexToModelIndex(itemPos), new TRTCVoiceRoomCallback.ActionCallback() {
                 @Override
                 public void onCallback(int code, String msg) {
-                    if (code == 0) {
-
+                    if (code != 0) {
+                        showTakingSeatLoading(false);
                     }
                 }
             });
+        }
+    }
+
+    private void startMoveSeat(int itemPos) {
+        if (mCurrentRole != TRTCCloudDef.TRTCRoleAnchor) {
+            return;
+        }
+        if (mNeedRequest) {
+            //需要申请上麦
+            if (mOwnerId == null) {
+                ToastUtils.showShort(R.string.trtcvoiceroom_toast_the_room_is_not_ready);
+                return;
+            }
+            String inviteId = mTRTCVoiceRoom.sendInvitation(TCConstants.CMD_REQUEST_TAKE_SEAT, mOwnerId, String.valueOf(changeSeatIndexToModelIndex(itemPos)), new TRTCVoiceRoomCallback.ActionCallback() {
+                @Override
+                public void onCallback(int code, String msg) {
+                    if (code == 0) {
+                        ToastUtils.showShort(R.string.trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing);
+                    } else {
+                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_failed_to_send_application, msg));
+                    }
+                }
+            });
+            mInvitationSeatMap.put(inviteId, itemPos);
+        } else {
+            //不需要的情况下自动上麦
+            if (mIsTakingSeat) {
+                return;
+            }
+            showTakingSeatLoading(true);
+            mTRTCVoiceRoom.moveSeat(changeSeatIndexToModelIndex(itemPos), new TRTCVoiceRoomCallback.ActionCallback() {
+                @Override
+                public void onCallback(int code, String msg) {
+                    if (code != 0) {
+                        showTakingSeatLoading(false);
+                    }
+                }
+            });
+        }
+    }
+
+    private void showTakingSeatLoading(boolean isShow) {
+        mIsTakingSeat = isShow;
+        mProgressBar.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        if (isShow) {
+            mHandler.sendEmptyMessageDelayed(MSG_DISMISS_LOADING, 10000);
+        } else {
+            mHandler.removeMessages(MSG_DISMISS_LOADING);
         }
     }
 
@@ -315,14 +387,31 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
         if (seatIndex != null) {
             VoiceRoomSeatEntity entity = mVoiceRoomSeatEntityList.get(seatIndex);
             if (!entity.isUsed) {
-                mTRTCVoiceRoom.enterSeat(changeSeatIndexToModelIndex(seatIndex), new TRTCVoiceRoomCallback.ActionCallback() {
-                    @Override
-                    public void onCallback(int code, String msg) {
-                        if (code == 0) {
-
+                if (mIsTakingSeat) {
+                    return;
+                }
+                showTakingSeatLoading(true);
+                if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
+                    mTRTCVoiceRoom.moveSeat(changeSeatIndexToModelIndex(seatIndex), new TRTCVoiceRoomCallback.ActionCallback() {
+                        @Override
+                        public void onCallback(int code, String msg) {
+                            if (code != 0) {
+                                showTakingSeatLoading(false);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    mTRTCVoiceRoom.enterSeat(changeSeatIndexToModelIndex(seatIndex), new TRTCVoiceRoomCallback.ActionCallback() {
+                        @Override
+                        public void onCallback(int code, String msg) {
+                            if (code != 0) {
+                                showTakingSeatLoading(false);
+                            }
+                        }
+                    });
+                }
+
+
             }
         }
     }
@@ -336,22 +425,22 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
     public void onAnchorEnterSeat(int index, TRTCVoiceRoomDef.UserInfo user) {
         super.onAnchorEnterSeat(index, user);
         if (user.userId.equals(mSelfUserId)) {
+            showTakingSeatLoading(false);
             mCurrentRole = TRTCCloudDef.TRTCRoleAnchor;
-            mSelfSeatIndex = index;
-            refreshView();
+            refreshView(user.userId);
         }
     }
 
     @Override
     public void onAnchorLeaveSeat(int index, TRTCVoiceRoomDef.UserInfo user) {
         super.onAnchorLeaveSeat(index, user);
-        if (user.userId.equals(mSelfUserId)) {
+        String userId = user.userId;
+        if (userId.equals(mSelfUserId) && !isInSeat(userId)) {
             mCurrentRole = TRTCCloudDef.TRTCRoleAudience;
-            mSelfSeatIndex = -1;
             if (mAnchorAudioPanel != null) {
                 mAnchorAudioPanel.reset();
             }
-            refreshView();
+            refreshView(user.userId);
         }
     }
 

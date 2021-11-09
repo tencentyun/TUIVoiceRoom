@@ -115,6 +115,8 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     protected AppCompatImageButton      mBtnLeaveSeat;
     protected AppCompatImageButton      mBtnMore;
     protected ImageView                 mIvAudienceMove;
+    protected View                      mProgressBar;
+
 
     protected AudioEffectPanel          mAnchorAudioPanel;
     protected SelectMemberView          mViewSelectMember;
@@ -139,6 +141,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     private int mRvAudienceScrollPosition;
     private boolean mIsMainSeatMute;
     private int mSelfSeatIndex = -1;
+    private Map<Integer, String> mSeatInfoMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,6 +331,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         mBtnLeaveSeat = (AppCompatImageButton) findViewById(R.id.btn_leave_seat);
         mBtnMore = (AppCompatImageButton) findViewById(R.id.btn_more);
         mIvAudienceMove = (ImageView) findViewById(R.id.iv_audience_move);
+        mProgressBar = findViewById(R.id.progress_group);
         mViewSelectMember = new SelectMemberView(this);
         mConfirmDialogFragment = new ConfirmDialogFragment();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
@@ -347,6 +351,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         mRvImMsg.setAdapter(mMsgListAdapter);
         mSeatUserMuteMap = new HashMap<>();
         mVoiceRoomSeatEntityList = new ArrayList<>();
+        mSeatInfoMap = new HashMap<>();
         for (int i = 1; i < MAX_SEAT_SIZE; i++) {
             VoiceRoomSeatEntity seatEntity = new VoiceRoomSeatEntity();
             seatEntity.index = i;
@@ -482,7 +487,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
             }
             // 接下来是座位区域的列表
             VoiceRoomSeatEntity oldSeatEntity = mVoiceRoomSeatEntityList.get(i - 1);
-            if (newSeatInfo.userId != null && !newSeatInfo.userId.equals(oldSeatEntity.userId)) {
+            if (!TextUtils.isEmpty(newSeatInfo.userId) && !newSeatInfo.userId.equals(oldSeatEntity.userId)) {
                 //userId相同，可以不用重新获取信息了
                 //但是如果有新的userId进来，那么应该去拿一下主播的详细信息
                 userids.add(newSeatInfo.userId);
@@ -574,6 +579,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
             msgEntity.content =  getString(R.string.trtcvoiceroom_tv_online_no_name, index);
             showImMsg(msgEntity);
             mAudienceListAdapter.removeMember(user.userId);
+            mSeatInfoMap.put(index, user.userId);
             if (user.userId.equals(mSelfUserId)) {
                 mSelfSeatIndex = index;
             }
@@ -594,7 +600,8 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
             entity.userId = user.userId;
             entity.userAvatar = user.userAvatar;
             mAudienceListAdapter.addMember(entity);
-            if (user.userId.equals(mSelfUserId)) {
+            mSeatInfoMap.remove(index);
+            if (user.userId.equals(mSelfUserId) && !isInSeat(user.userId)) {
                 mSelfSeatIndex = -1;
             }
         }
@@ -638,7 +645,6 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     @Override
     public void onUserMicrophoneMute(String userId, boolean mute) {
         Log.d(TAG, "onUserMicrophoneMute userId:"+userId + " mute:"+mute);
-        mSeatUserMuteMap.put(userId, mute);
         updateMuteStatusView(userId, mute);
     }
 
@@ -663,7 +669,9 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         }
         if (userId.equals(mSelfUserId)) {
             mBtnMic.setSelected(!mute);
+            mBtnMic.setActivated(!mute);
         }
+        mSeatUserMuteMap.put(userId, mute);
     }
 
     private VoiceRoomSeatEntity findSeatEntityFromUserId(String userId)  {
@@ -838,4 +846,14 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         });
     }
 
+    //在所有麦位上查询是否在麦位上
+    protected boolean isInSeat(String userId) {
+        if (TextUtils.isEmpty(userId)) {
+            return false;
+        }
+        for (Map.Entry<Integer, String> entity : mSeatInfoMap.entrySet()) {
+            return userId.equals(entity.getValue());
+        }
+        return false;
+    }
 }
