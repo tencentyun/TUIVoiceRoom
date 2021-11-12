@@ -83,12 +83,13 @@ extension VoiceRoomMainViewController {
         let cancelAction = UIAlertAction.init(title: TRTCVoiceRoomLocalize("App.PortalViewController.cancel"), style: .cancel, handler: nil)
         let sureAction = UIAlertAction.init(title: TRTCVoiceRoomLocalize("App.PortalViewController.determine"), style: .default) { (action) in
             ProfileManager.shared.removeLoginCache()
-            V2TIMManager.sharedInstance()?.logout({
-                TRTCVoiceRoom.shared().logout()
-                AppUtils.shared.appDelegate.showLoginViewController()
-            }, fail: { (errCode, errMsg) in
-                debugPrint("errCode = \(errCode), errMsg = \(errMsg ?? "")")
-            })
+            TRTCVoiceRoom.shared().logout { (code, desc) in
+                if code == 0 {
+                    AppUtils.shared.appDelegate.showLoginViewController()
+                } else {
+                    debugPrint("code: \(code) desc: \(desc)")
+                }
+            }
         }
         alertVC.addAction(cancelAction)
         alertVC.addAction(sureAction)
