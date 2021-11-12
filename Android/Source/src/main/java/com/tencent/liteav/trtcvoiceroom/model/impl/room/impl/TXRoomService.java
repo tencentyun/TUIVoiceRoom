@@ -88,7 +88,7 @@ public class TXRoomService extends V2TIMSDKListener {
         // 未初始化 IM 先初始化 IM
         if (!mIsInitIMSDK) {
             V2TIMSDKConfig config = new V2TIMSDKConfig();
-            mIsInitIMSDK = V2TIMManager.getInstance().initSDK(mContext, sdkAppId, config, this);
+            mIsInitIMSDK = V2TIMManager.getInstance().initSDK(mContext, sdkAppId, config);
             if (!mIsInitIMSDK) {
                 TRTCLogger.e(TAG, "init im sdk error.");
                 if (callback != null) {
@@ -99,21 +99,14 @@ public class TXRoomService extends V2TIMSDKListener {
         }
         mIsInitIMSDK = true;
         // 登陆到 IM
-        String loginedUserId = V2TIMManager.getInstance().getLoginUser();
-        if (loginedUserId != null && loginedUserId.equals(userId)) {
+        String loggedUserId = V2TIMManager.getInstance().getLoginUser();
+        if (loggedUserId != null && loggedUserId.equals(userId)) {
             // 已经登录过了
             mIsLogin = true;
             mSelfUserId = userId;
             TRTCLogger.i(TAG, "login im success.");
             if (callback != null) {
                 callback.onCallback(0, "login im success.");
-            }
-            return;
-        }
-        if (isLogin()) {
-            TRTCLogger.e(TAG, "start login fail, you have been login, can't login twice.");
-            if (callback != null) {
-                callback.onCallback(CODE_ERROR, "start login fail, you have been login, can't login twice.");
             }
             return;
         }
@@ -183,6 +176,8 @@ public class TXRoomService extends V2TIMSDKListener {
             }
             return;
         }
+        mIsLogin = false;
+        mSelfUserId = "";
         V2TIMManager.getInstance().logout(new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
@@ -194,8 +189,6 @@ public class TXRoomService extends V2TIMSDKListener {
 
             @Override
             public void onSuccess() {
-                mIsLogin = false;
-                mSelfUserId = "";
                 TRTCLogger.i(TAG, "logout im success.");
                 if (callback != null) {
                     callback.onCallback(0, "login im success.");
@@ -347,9 +340,20 @@ public class TXRoomService extends V2TIMSDKListener {
         V2TIMManager.getGroupManager().initGroupAttributes(mRoomId, IMProtocol.getInitRoomMap(mTXRoomInfo, mTXSeatInfoList), new V2TIMCallback() {
             @Override
             public void onError(int code, String message) {
-                TRTCLogger.d(TAG, "init room info and seat failed. code:" + code);
+                TRTCLogger.e(TAG, "init room info and seat failed. code:" + code);
                 if (code == TRTCVoiceRoomDef.ERR_SVR_GROUP_ATTRIBUTE_WRITE_CONFLICT) {
-                    getGroupAttrs(callback);
+                    getGroupAttrs(new TXCallback() {
+                        @Override
+                        public void onCallback(int code, String msg) {
+                            if (callback != null) {
+                                if (code == 0) {
+                                    callback.onCallback(0, "create room success.");
+                                } else {
+                                    callback.onCallback(code, msg);
+                                }
+                            }
+                        }
+                    });
                 } else {
                     if (callback != null) {
                         callback.onCallback(code, message);
@@ -515,6 +519,12 @@ public class TXRoomService extends V2TIMSDKListener {
             }
             return;
         }
+        if (TextUtils.isEmpty(mSelfUserId)) {
+            if (callback != null) {
+                callback.onCallback(-1, "self userId is null");
+            }
+            return;
+        }
         // 修改属性列表
         TXSeatInfo changeInfo = new TXSeatInfo();
         changeInfo.status = TXSeatInfo.STATUS_USED;
@@ -550,6 +560,13 @@ public class TXRoomService extends V2TIMSDKListener {
     }
 
     public void pickSeat(int index, String userId, TXCallback callback) {
+        if (TextUtils.isEmpty(userId)) {
+            if (callback != null) {
+                callback.onCallback(-1, "userId is null");
+            }
+            return;
+        }
+
         if (!isOwner()) {
             TRTCLogger.e(TAG, "only owner could pick seat");
             if (callback != null) {
@@ -572,7 +589,6 @@ public class TXRoomService extends V2TIMSDKListener {
             }
             return;
         }
-
 
         TXSeatInfo changeInfo = new TXSeatInfo();
         changeInfo.status = TXSeatInfo.STATUS_USED;
@@ -749,17 +765,21 @@ public class TXRoomService extends V2TIMSDKListener {
                 mIsEnterRoom = true;
                 mOwnerUserId = mTXRoomInfo.ownerId;
                 mTXRoomInfo = IMProtocol.getRoomInfoFromAttr(attrMap);
+                mTXRoomInfo.roomId = mRoomId;
                 if (mTXRoomInfo == null) {
                     TRTCLogger.e(TAG, "group room info is empty");
+                    callback.onCallback(-1, "group room info is empty");
                     return;
                 }
                 if (mTXRoomInfo.seatSize == null) {
                     mTXRoomInfo.seatSize = 0;
                 }
-                mDelegate.onRoomInfoChange(mTXRoomInfo);
+                if (mDelegate != null) {
+                    mDelegate.onRoomInfoChange(mTXRoomInfo);
+                }
                 onSeatAttrMapChanged(attrMap, mTXRoomInfo.seatSize);
                 if (callback != null) {
-                    callback.onCallback(0, "enter room success.");
+                    callback.onCallback(0, "success");
                 }
             }
         });
@@ -801,7 +821,7 @@ public class TXRoomService extends V2TIMSDKListener {
     }
 
     private void modifyGroupAttrs(HashMap<String, String> map, final TXCallback callback) {
-        TRTCLogger.d(TAG, "modify group attrs, map:" + map);
+        TRTCLogger.i(TAG, "modify group attrs, map:" + map);
         V2TIMManager.getGroupManager().setGroupAttributes(mRoomId, map, new V2TIMCallback() {
             @Override
             public void onError(int code, String message) {
@@ -1258,7 +1278,7 @@ public class TXRoomService extends V2TIMSDKListener {
 
         @Override
         public void onGroupAttributeChanged(String groupID, Map<String, String> groupAttributeMap) {
-            TRTCLogger.d(TAG, "onGroupAttributeChanged :" + groupAttributeMap);
+            TRTCLogger.i(TAG, "onGroupAttributeChanged :" + groupAttributeMap);
             if (!groupID.equals(mRoomId)) {
                 return;
             }
@@ -1277,7 +1297,7 @@ public class TXRoomService extends V2TIMSDKListener {
             if (mDelegate != null) {
                 SignallingData signallingData = IMProtocol.convert2SignallingData(data);
                 if (!isVoiceRoomData(signallingData)) {
-                    TRTCLogger.d(TAG, "this is not the voice room sense ");
+                    TRTCLogger.i(TAG, "this is not the voice room sense ");
                     return;
                 }
                 SignallingData.DataInfo dataInfo = signallingData.getData();
@@ -1298,7 +1318,7 @@ public class TXRoomService extends V2TIMSDKListener {
             TRTCLogger.i(TAG, "recv accept invitation: " + inviteID + " from " + invitee);
             SignallingData signallingData = IMProtocol.convert2SignallingData(data);
             if (!isVoiceRoomData(signallingData)) {
-                TRTCLogger.d(TAG, "this is not the voice room sense ");
+                TRTCLogger.i(TAG, "this is not the voice room sense ");
                 return;
             }
             if (mDelegate != null) {
@@ -1311,7 +1331,7 @@ public class TXRoomService extends V2TIMSDKListener {
             TRTCLogger.i(TAG, "recv reject invitation: " + inviteID + " from " + invitee);
             SignallingData signallingData = IMProtocol.convert2SignallingData(data);
             if (!isVoiceRoomData(signallingData)) {
-                TRTCLogger.d(TAG, "this is not the voice room sense ");
+                TRTCLogger.i(TAG, "this is not the voice room sense ");
                 return;
             }
             if (mDelegate != null) {
@@ -1324,7 +1344,7 @@ public class TXRoomService extends V2TIMSDKListener {
             TRTCLogger.i(TAG, "recv cancel invitation: " + inviteID + " from " + inviter);
             SignallingData signallingData = IMProtocol.convert2SignallingData(data);
             if (!isVoiceRoomData(signallingData)) {
-                TRTCLogger.d(TAG, "this is not the voice room sense ");
+                TRTCLogger.i(TAG, "this is not the voice room sense ");
                 return;
             }
             if (mDelegate != null) {
