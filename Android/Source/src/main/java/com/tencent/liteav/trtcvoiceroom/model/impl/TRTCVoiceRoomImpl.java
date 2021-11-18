@@ -1209,6 +1209,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                         }
                         onSwitchToAnchor(index, userInfo);
                     }
+                } else {
+                    onSwitchToAnchor(index, userInfo);
                 }
             }
         });
