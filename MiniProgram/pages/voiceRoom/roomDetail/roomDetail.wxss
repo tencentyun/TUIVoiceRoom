@@ -1,0 +1,463 @@
+.room-container {
+    background-color: #000;
+    background-size: cover;
+    height: 100%;
+    padding: 20rpx 20rpx 0;
+    box-sizing: border-box;
+    background-size: 100% 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* title css */
+
+.group-title {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 40rpx;
+    padding: 10rpx 20rpx;
+    color: #ffffff;
+    display: inline-block;
+
+}
+
+.group-title .room-name {
+    font-weight: bold;
+    font-size: 26rpx;
+    display: flex;
+}
+
+.room-name-number {
+    width: 46rpx;
+    margin-left: 16rpx;
+    display: flex;
+}
+
+.room-name-number image {
+    width: 26rpx;
+    height: 100%;
+    margin-right: 5rpx;
+}
+
+.group-title .room-id {
+    color: #ecdada;
+    font-size: 22rpx;
+}
+
+/* group-content */
+.group-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 32%;
+    margin-top: 10rpx;
+}
+
+.group-content .message-content {
+    flex: 6;
+}
+
+.group-content .user-list {
+    flex: 2;
+    height: 86%;
+    /* padding-right: 16rpx; */
+}
+
+.user-list .scroll {
+    height: 100%;
+}
+
+.group-content .user-item {
+    display: flex;
+    height: 116rpx;
+    padding: 10rpx 0;
+}
+
+.user-item .avatar-container {
+    display: flex;
+    align-items: center;
+}
+
+.user-item .avatar {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 50rpx;
+    margin-right: 10rpx;
+}
+
+.user-item .number {
+    width: 35rpx;
+    border-radius: 26rpx;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 10rpx;
+}
+
+.number .index {
+    height: 60%;
+    font-size: 26rpx;
+    line-height: 30rpx;
+}
+
+.number .status {
+    height: 46rpx;
+    /* width: 100%; */
+    /* height: 70%; */
+}
+
+.number .status image {
+    width: 100%;
+    height: 100%;
+}
+
+.user-list .sum-number {
+    height: 46rpx;
+    width: 110rpx;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 26rpx;
+    color: #ffffff;
+    text-align: center;
+    line-height: 46rpx;
+    margin-top: 12rpx;
+}
+
+.group-content .message-content {
+    /* margin-left: 20rpx; */
+    height: 100%;
+}
+
+.message-content .scroll {
+    height: 100%;
+}
+
+.message-content .message-info {
+    /* background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 0 30rpx 30rpx; */
+    margin-bottom: 3vh;
+    display: flex;
+    align-items: center;
+}
+
+.message-info .avatar {
+    margin-right: 20rpx;
+    display: flex;
+    align-items: center;
+}
+
+.message-info .avatar image {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50rpx;
+    background-image: url(https://web.sdk.qcloud.com/component/miniApp/resources/default_avatar.png);
+    background-size: 100% 100%;
+}
+
+.message-info .content {
+    flex: 1;
+}
+
+
+.message-info .name {
+    color: #e0d4d4;
+    font-size: 26rpx;
+}
+
+.message-info .text {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 0 30rpx 30rpx;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 10rpx 20rpx;
+    color: #fff;
+    word-break: break-word;
+}
+
+.message-info .system-text {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 0 30rpx 30rpx;
+    display: inline-block;
+    display: flex;
+    box-sizing: border-box;
+    padding: 10rpx 20rpx;
+    color: #00dcff;
+    font-weight: bold;
+    font-size: 28rpx;
+}
+
+
+/* message-send */
+.message-send {
+    position: absolute;
+    bottom: 66rpx;
+    box-sizing: border-box;
+    height: 80rpx;
+    display: flex;
+    color: #ffffff;
+    padding-right: 20rpx;
+    /* padding-bottom: 20rpx; */
+    width: 100%;
+}
+
+.message-send .button-group {
+    display: flex;
+    flex: 1;
+}
+
+.message-send .message-input {
+    flex: 2;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    max-width: 600rpx;
+    width: 500rpx;
+}
+
+.message-input textarea {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 40rpx;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10rpx 18rpx;
+    flex: 5;
+}
+
+.message-input .send {
+    flex: 1;
+    font-size: 12px;
+    line-height: 70rpx;
+    height: 70rpx;
+    border-radius: 50rpx;
+    margin-left: 20rpx;
+}
+
+.message-send .voice {
+    max-width: 120rpx;
+    height: 100%;
+    flex: 1;
+    width: 80rpx;
+    /* margin-left: 30rpx; */
+    /* padding: 17rpx; */
+    box-sizing: border-box;
+    /* background: rgba(255, 255, 255, 0.3); */
+    /* border-radius: 40rpx; */
+}
+
+/* 麦位weat */
+.weat-position {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+}
+
+.weat-position .weat {
+    flex: 25%;
+    height: 200rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+.weat-position .weat image {
+    border-radius: 60rpx;
+    height: 120rpx;
+    width: 120rpx;
+    background: rgba(255, 255, 255, 0.3);
+    box-sizing: border-box;
+    padding: 20rpx;
+
+}
+
+.weat-position .weat image.avatar {
+    padding: 0;
+    z-index: 2;
+    background-image: url(https://web.sdk.qcloud.com/component/miniApp/resources/default_avatar.png);
+    background-size: 100% 100%;
+}
+
+.weat-position .weat image.avatar.isPushing {
+    padding: 0;
+    z-index: 2;
+    border: 4px solid green;
+}
+
+.weat-position .weat view {
+    font-size: 26rpx;
+}
+
+.weat-position .weat .avatar {
+    position: relative;
+}
+
+.weat .avatar .mute {
+    height: 40rpx;
+    width: 40rpx;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    padding: 0;
+    z-index: 3;
+}
+
+.weat-list .owner {
+    text-align: center;
+}
+
+.weat-list .owner .weat {
+    text-align: center;
+    color: gold;
+    font-size: 30rpx;
+    display: inline-block;
+    position: relative;
+}
+
+.weat-list .owner .weat .mute {
+    height: 50rpx;
+    width: 50rpx;
+    position: absolute;
+    bottom: 60rpx;
+    right: 0;
+    background-color: white;
+    z-index: 2;
+    border-radius: 100rpx;
+}
+
+.weat-list .owner .weat image.avatar {
+    height: 200rpx;
+    width: 200rpx;
+    border-radius: 100rpx;
+    background-image: url(https://web.sdk.qcloud.com/component/miniApp/resources/default_avatar.png);
+    background-size: 100% 100%;
+}
+
+.weat-list .owner .weat image.isPushing {
+    position: absolute;
+    left: 0;
+    border: 4px solid green;
+    box-sizing: border-box;
+    height: 200rpx;
+    width: 200rpx;
+    border-radius: 100rpx;
+}
+
+
+/* 遮罩层mask */
+.mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* 群成员列表 */
+.groupMemberList {
+    z-index: 2;
+    background: #fff;
+    height: 800rpx;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    border-radius: 60rpx 60rpx 0 0;
+    padding: 60rpx 30rpx;
+    box-sizing: border-box;
+}
+
+.groupMemberList-title {
+    display: flex;
+    align-items: center;
+}
+
+.groupMemberList-list .scroll {
+    height: 580rpx;
+}
+
+.groupMemberList-title .text {
+    font-size: 48rpx;
+    font-weight: bold;
+    flex: 9;
+}
+
+.groupMemberList-title .lock {
+    font-size: 30rpx;
+    font-weight: 400;
+    /* flex: 2; */
+    display: flex;
+    align-items: center;
+    background-color: #ecf0ff;
+    padding: 16rpx 22rpx 16rpx 16rpx;
+    border-radius: 40rpx;
+}
+
+.groupMemberList-title .lock image {
+    height: 50rpx;
+    width: 50rpx;
+    margin-right: 10rpx;
+}
+
+
+.groupMemberList-list .list-info {
+    display: flex;
+    align-items: center;
+    height: 120rpx;
+    margin: 20rpx 0px;
+}
+
+.groupMemberList-list .list-info .avatar {
+    width: 120rpx;
+}
+
+.groupMemberList-list .list-info .avatar image {
+    height: 120rpx;
+    width: 120rpx;
+    border-radius: 60rpx;
+    background-image: url(https://web.sdk.qcloud.com/component/miniApp/resources/default_avatar.png);
+    background-size: 100% 100%;
+}
+
+.groupMemberList-list .list-info .name {
+    flex: 8;
+    margin-left: 30rpx;
+    color: #666;
+}
+
+.groupMemberList-list .list-info .invite button {
+    border-radius: 50rpx;
+    width: 160rpx;
+    height: 72rpx;
+    background-color: #29CC85;
+}
+
+.takeSeatMessage {
+    display: flex;
+    align-items: center;
+}
+
+.takeSeatMessage button {
+    background-color: #29CC85;
+    border-radius: 30rpx;
+    margin-left: 60rpx;
+}
+
+.live-container {
+    display: none;
+}
