@@ -1,0 +1,16 @@
+<view class='container-box'>
+  <view class="input-box">
+    <text>用户ID</text>
+    <input type="number" value="{{userID}}" bindinput='bindUserID' maxlength="20" placeholder="请输入用户ID" />
+  </view>
+  <view class="input-box">
+    <text>房间号</text>
+    <input type="number" value="{{roomID}}" bindinput='bindRoomID' maxlength="20" placeholder="请输入房间号" />
+  </view>
+  <view class="button-group">
+    <button type="primary" bindtap="login" wx:if="{{!isLogin}}">登录</button>
+    <button type="primary" disabled="{{true}}" bindtap="login" wx:else>已登录</button>
+    <button type="primary" bindtap="enterRoom">进入房间</button>
+    <button type="primary" bindtap="createRoom">创建房间</button>
+  </view>
+</view>

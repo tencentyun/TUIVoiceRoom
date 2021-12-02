@@ -1,0 +1,27 @@
+.container-box {}
+
+.input-box {
+  background-color: #dfe1e8;
+  margin: 50rpx 20rpx;
+  padding: 30rpx 22rpx;
+  display: flex;
+  border-radius: 30rpx;
+}
+
+.input-box text {
+  font-weight: bold;
+}
+
+.input-box input {
+  margin-left: 20rpx;
+}
+
+.button-group {
+  /* margin-top: 400rpx; */
+}
+
+.container-box .button-group button {
+  background-color: #006eff;
+  border-radius: 50px;
+  margin-bottom: 20rpx;
+}
