@@ -6,8 +6,8 @@
          <th>听众麦位操作</th>  
      </tr>
 <tr>
-<td><img src="https://web.sdk.qcloud.com/trtc/miniapp/asset/voice-room/voiceRoom_pick_seat.gif"/></td>
-<td><img src="https://web.sdk.qcloud.com/trtc/miniapp/asset/voice-room/voiceRoom_take_seat.gif"/></td>
+<td><img src="./voiceRoom_pick_seat.gif"/></td>
+<td><img src="./voiceRoom_take_seat.gif"/></td>
 </tr>
 </table>
 
@@ -41,11 +41,8 @@
 
 
 [](id:ui.step2)
-### 步骤2：下载 SDK 和 Demo 源码
-1. 根据实际业务需求下载 SDK 及配套的 Demo 源码。
-2. 下载完成后，单击【已下载，下一步】。
-![](https://main.qcloudimg.com/raw/a4f5a2ac1f49d67b4c6968d8b22cdeb0.png)
-
+### 步骤2：下载 App 源码
+单击进入 [TUIVoiceRoom](https://github.com/tencentyun/TUIVoiceRoom)，Clone 或者下载源码。
 
 [](id:ui.step3)
 ### 步骤3：配置 Demo 工程文件
@@ -68,7 +65,7 @@
 ###  步骤4：编译运行
 1. 打开微信开发者工具，选择【小程序】，单击新建图标，选择【导入项目】。
 2. 填写您微信小程序的 AppID，单击【导入】。
-![](https://main.qcloudimg.com/raw/a06f3651a1399eabaa802a607b9a9cf8.png)
+![](https://qcloudimg.tencent-cloud.cn/raw/2143f7b6b0f698649916423f2eda56dd.png)
 >!此处应输入您微信小程序的 AppID，而非 SDKAppID。
 3. 单击【预览】，生成二维码，通过手机微信扫码二维码即可进入小程序。
 [](id:model)
