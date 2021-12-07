@@ -383,7 +383,8 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
     }
     
     func showAudienceAlert(seat: SeatInfoModel) {
-        let audienceList = viewModel.memberAudienceList
+        // 过滤掉房主信息
+        let audienceList = viewModel.memberAudienceList.filter({$0.userInfo.userId != viewModel.roomInfo.ownerId})
         let alert = TRTCVoiceRoomAudienceAlert(viewModel: viewModel, seatModel: seat, audienceList: audienceList)
         addSubview(alert)
         alert.snp.makeConstraints { (make) in
