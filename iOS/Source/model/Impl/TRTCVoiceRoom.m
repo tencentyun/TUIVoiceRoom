@@ -1291,9 +1291,6 @@ static dispatch_once_t onceToken;
             // 当前用户
             // 当前麦位的禁言状态
             BOOL seatMute = self.seatInfoList[index].mute;
-            if (seatMute) {
-                self.isSelfMute = YES;
-            }
             if (self.moveSeatStatus.count == 0) {
                 // 默认上麦场景
                 [self.roomTRTCService muteLocalAudio:seatMute];
@@ -1309,12 +1306,12 @@ static dispatch_once_t onceToken;
                 }];
             } else {
                 // 移麦场景
-                // 移麦场景的静音状态取决于 所移麦位的禁言状态和当前用户的静音状态
-                BOOL userMute = seatMute || self.isSelfMute;
-                [self.roomTRTCService muteLocalAudio:userMute];
-                // 回调更新麦克风静音状态
-                if (self.delegate && [self.delegate respondsToSelector:@selector(onUserMicrophoneMute:mute:)]) {
-                    [self.delegate onUserMicrophoneMute:userInfo.userId mute:userMute];
+                if (seatMute) {
+                    [self.roomTRTCService muteLocalAudio:YES];
+                    // 回调更新麦克风静音状态
+                    if (self.delegate && [self.delegate respondsToSelector:@selector(onUserMicrophoneMute:mute:)]) {
+                        [self.delegate onUserMicrophoneMute:userInfo.userId mute:YES];
+                    }
                 }
                 [self onSwitchToAnchorWithIndex:index userInfo:userInfo];
             }
@@ -1399,8 +1396,6 @@ static dispatch_once_t onceToken;
         if (self.takeSeatIndex == index) {
             if (isMute) {
                 [self.roomTRTCService muteLocalAudio:YES];
-                // 当前用户被禁言，更新本地静音状态
-                self.isSelfMute = YES;
                 // 禁言状态，更新当前用户的静音状态
                 if ([self canDelegateResponseMethod:@selector(onUserMicrophoneMute:mute:)]) {
                     [self.delegate onUserMicrophoneMute:self.userId mute:YES];
