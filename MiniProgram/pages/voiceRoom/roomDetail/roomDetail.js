@@ -23,7 +23,7 @@ Page({
     audioPlayerListObject: {},
   },
   onLoad(options) {
-    this.TRTC = new TRTC(this);
+    this.TRTC = new TRTC(this, { TUIScene: 'TUIVoiceRoom' });
     this.EVENT = this.TRTC.EVENT;
     const pusher = this.TRTC.createPusher({
       beautyLevel: 9,
