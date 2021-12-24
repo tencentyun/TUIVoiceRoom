@@ -50,7 +50,7 @@
     if (!self.isInitIMSDK) {
         V2TIMSDKConfig *config = [[V2TIMSDKConfig alloc] init];
         config.logLevel = V2TIM_LOG_ERROR;
-        self.isInitIMSDK = [self.imManager initSDK:sdkAppId config:config listener:self];
+        self.isInitIMSDK = [self.imManager initSDK:sdkAppId config:config];
         if (!self.isInitIMSDK) {
             if (callback) {
                 callback(VOICE_ROOM_SERVICE_CODE_ERROR, @"init im sdk error.");
@@ -58,10 +58,13 @@
             return;
         }
     }
-    if (self.isLogin) {
-        self.selfUserId = userId;
+    NSString *loggedUserId = [self.imManager getLoginUser];
+    if (loggedUserId && [loggedUserId isEqualToString:userId]) {
+        // 已经登陆了
+        self.isLogin = YES;
+        self.selfUserId = loggedUserId;
         if (callback) {
-            callback(VOICE_ROOM_SERVICE_CODE_ERROR, @"start login fail, you have been login, can not login twice.");
+            callback(0, @"start login im success, but you have been login.");
         }
         return;
     }
@@ -124,19 +127,20 @@
         }
         return;
     }
+    self.isLogin = NO;
+    self.selfUserId = @"";
     @weakify(self)
     [self.imManager logout:^{
         @strongify(self)
         if (!self) {
             return;
         }
-        self.isLogin = false;
         if (callback) {
-            callback(0, @"logout success");
+            callback(0, @"im logout success");
         }
     } fail:^(int code, NSString *desc) {
         if (callback) {
-            callback(code, desc ?: @"logout error");
+            callback(code, desc);
         }
     }];
 }
@@ -328,6 +332,10 @@
             
         };
     }
+    if (!_selfUserId || ![_selfUserId isKindOfClass:[NSString class]] || _selfUserId.length == 0) {
+        callback(-1, @"selfUserId is empty");
+        return;
+    }
     if (seatIndex >=0 && seatIndex < self.seatInfoList.count) {
         TXSeatInfo* info = self.seatInfoList[seatIndex];
         if (info.status == kTXSeatStatusUsed) {
@@ -419,6 +427,10 @@
 - (void)pickSeat:(NSInteger)seatIndex userId:(NSString *)userId callback:(TXCallback)callback {
     if (!callback) {
         callback = ^(int code, NSString* message){};
+    }
+    if (!_selfUserId || ![_selfUserId isKindOfClass:[NSString class]] || _selfUserId.length == 0) {
+        callback(-1, @"selfUserId is empty");
+        return;
     }
     if (!self.isOwner) {
         callback(-1, @"seat info list is empty or index error.");

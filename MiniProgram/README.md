@@ -42,7 +42,7 @@
 
 [](id:ui.step2)
 ### 步骤2：下载 App 源码
-单击进入 [TUIVoiceRoom](https://github.com/tencentyun/TUIVoiceRoom/tree/main/MiniProgram)，Clone 或者下载源码。
+单击进入 [TUIVoiceRoom](https://github.com/tencentyun/TUIVoiceRoom)，Clone 或者下载源码。
 
 [](id:ui.step3)
 ### 步骤3：配置 Demo 工程文件
@@ -63,9 +63,9 @@
 [](id:ui.step4)
 
 ###  步骤4：编译运行
-1. 打开微信开发者工具，选择**小程序**，单击新建图标，选择**导入项目**。
-2. 填写您微信小程序的 AppID，单击**导入**。
-![](https://main.qcloudimg.com/raw/a06f3651a1399eabaa802a607b9a9cf8.png)
+1. 打开微信开发者工具，选择【小程序】，单击新建图标，选择【导入项目】。
+2. 填写您微信小程序的 AppID，单击【导入】。
+![](https://qcloudimg.tencent-cloud.cn/raw/2143f7b6b0f698649916423f2eda56dd.png)
 >!此处应输入您微信小程序的 AppID，而非 SDKAppID。
 3. 单击**预览**，生成二维码，通过手机微信扫码二维码即可进入小程序。
 [](id:model)

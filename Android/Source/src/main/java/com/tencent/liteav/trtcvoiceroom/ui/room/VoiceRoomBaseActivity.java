@@ -522,43 +522,15 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         mTRTCVoiceRoom.getUserInfoList(userids, new TRTCVoiceRoomCallback.UserListCallback() {
             @Override
             public void onCallback(int code, String msg, List<TRTCVoiceRoomDef.UserInfo> list) {
+                if (isFinishing()) {
+                    return;
+                }
                 // 解析所有人的userinfo
                 Map<String, TRTCVoiceRoomDef.UserInfo> map = new HashMap<>();
                 for (TRTCVoiceRoomDef.UserInfo userInfo : list) {
                     map.put(userInfo.userId, userInfo);
                 }
-                for (int i = 0; i < seatInfoList.size(); i++) {
-                    TRTCVoiceRoomDef.SeatInfo newSeatInfo = seatInfoList.get(i);
-                    TRTCVoiceRoomDef.UserInfo userInfo    = map.get(newSeatInfo.userId);
-                    if (userInfo == null) {
-                        continue;
-                    }
-                    boolean isUserMute = mSeatUserMuteMap.get(userInfo.userId);
-                    // 底层返回的第一个座位是房主哦！特殊处理一下
-                    if (i == 0) {
-                        if (newSeatInfo.status == STATUS_USED) {
-                            //主播上线啦
-                            ImageLoader.loadImage(mContext, mImgHead, userInfo.userAvatar, R.drawable.trtcvoiceroom_ic_head);
-                            ImageLoader.loadImage(mContext, mIvAnchorHead, userInfo.userAvatar, R.drawable.trtcvoiceroom_ic_head);
-                            if (TextUtils.isEmpty(userInfo.userName)) {
-                                mTvName.setText(userInfo.userId);
-                            } else {
-                                mTvName.setText(userInfo.userName);
-                            }
-                            updateMuteStatusView(userInfo.userId, isUserMute);
-                        } else {
-                            mTvName.setText(getString(R.string.trtcvoiceroom_tv_the_anchor_is_not_online));
-                        }
-                    } else {
-                        // 接下来是座位区域的列表
-                        VoiceRoomSeatEntity seatEntity = mVoiceRoomSeatEntityList.get(i - 1);
-                        if (userInfo.userId.equals(seatEntity.userId)) {
-                            seatEntity.userName = userInfo.userName;
-                            seatEntity.userAvatar = userInfo.userAvatar;
-                            seatEntity.isUserMute = isUserMute;
-                        }
-                    }
-                }
+                parseSeatInfoList(seatInfoList, map);
                 mVoiceRoomSeatAdapter.notifyDataSetChanged();
                 if (!isInitSeat) {
                     getAudienceList();
@@ -566,6 +538,44 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
                 }
             }
         });
+    }
+
+    private void parseSeatInfoList(List<TRTCVoiceRoomDef.SeatInfo> seatInfoList,
+                                   Map<String, TRTCVoiceRoomDef.UserInfo> map) {
+        for (int i = 0; i < seatInfoList.size(); i++) {
+            TRTCVoiceRoomDef.SeatInfo newSeatInfo = seatInfoList.get(i);
+            TRTCVoiceRoomDef.UserInfo userInfo = map.get(newSeatInfo.userId);
+            if (userInfo == null) {
+                continue;
+            }
+            boolean isUserMute = mSeatUserMuteMap.get(userInfo.userId);
+            // 底层返回的第一个座位是房主哦！特殊处理一下
+            if (i == 0) {
+                if (newSeatInfo.status == STATUS_USED) {
+                    //主播上线啦
+                    ImageLoader.loadImage(mContext, mImgHead, userInfo.userAvatar,
+                            R.drawable.trtcvoiceroom_ic_head);
+                    ImageLoader.loadImage(mContext, mIvAnchorHead, userInfo.userAvatar,
+                            R.drawable.trtcvoiceroom_ic_head);
+                    if (TextUtils.isEmpty(userInfo.userName)) {
+                        mTvName.setText(userInfo.userId);
+                    } else {
+                        mTvName.setText(userInfo.userName);
+                    }
+                    updateMuteStatusView(userInfo.userId, isUserMute);
+                } else {
+                    mTvName.setText(getString(R.string.trtcvoiceroom_tv_the_anchor_is_not_online));
+                }
+            } else {
+                // 接下来是座位区域的列表
+                VoiceRoomSeatEntity seatEntity = mVoiceRoomSeatEntityList.get(i - 1);
+                if (userInfo.userId.equals(seatEntity.userId)) {
+                    seatEntity.userName = userInfo.userName;
+                    seatEntity.userAvatar = userInfo.userAvatar;
+                    seatEntity.isUserMute = isUserMute;
+                }
+            }
+        }
     }
 
     @Override

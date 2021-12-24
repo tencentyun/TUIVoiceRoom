@@ -6,7 +6,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.tencent.liteav.audio.TXAudioEffectManager;
-import com.tencent.liteav.debug.GenerateTestUserSig;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
@@ -37,7 +36,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     private static TRTCVoiceRoomImpl     sInstance;
-    private static long  CALL_MOVE_SEAT_LIMIT_TIME = 1000; //moveSeat接口限频，默认1s
+    private static long                  CALL_MOVE_SEAT_LIMIT_TIME = 1000; //moveSeat接口限频，默认1s
     private final  Context               mContext;
     private        TRTCVoiceRoomDelegate mDelegate;
     // 所有调用都切到主线程使用，保证内部多线程安全问题
@@ -61,7 +60,6 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     private TRTCVoiceRoomCallback.ActionCallback mMoveSeatCallback;
     private int                                  mTakeSeatIndex;
     private Set<MOVE_SEAT>                       mMoveSet;
-    private boolean                              mIsMoveSeat;
 
     public static synchronized TRTCVoiceRoom sharedInstance(Context context) {
         if (sInstance == null) {
@@ -140,11 +138,13 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void login(final int sdkAppId, final String userId, final String userSig, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public void login(final int sdkAppId, final String userId, final String userSig,
+                      final TRTCVoiceRoomCallback.ActionCallback callback) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                TRTCLogger.i(TAG, "start login, sdkAppId:" + sdkAppId + " userId:" + userId + " sign is empty:" + TextUtils.isEmpty(userSig) + " app version: " + TRTCVoiceRoomDef.APP_VERSION);
+                TRTCLogger.i(TAG, "start login, sdkAppId:" + sdkAppId + " userId:" + userId + " sign is empty:"
+                        + TextUtils.isEmpty(userSig) + " app version: " + TRTCVoiceRoomDef.APP_VERSION);
                 if (sdkAppId == 0 || TextUtils.isEmpty(userId) || TextUtils.isEmpty(userSig)) {
                     TRTCLogger.e(TAG, "start login fail. params invalid.");
                     if (callback != null) {
@@ -202,7 +202,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void setSelfProfile(final String userName, final String avatarURL, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public void setSelfProfile(final String userName, final String avatarURL,
+                               final TRTCVoiceRoomCallback.ActionCallback callback) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -226,11 +227,13 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void createRoom(final int roomId, final TRTCVoiceRoomDef.RoomParam roomParam, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public void createRoom(final int roomId, final TRTCVoiceRoomDef.RoomParam roomParam,
+                           final TRTCVoiceRoomCallback.ActionCallback callback) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                TRTCLogger.i(TAG, "create room, room id:" + roomId + " info:" + roomParam + " app version: " + TRTCVoiceRoomDef.APP_VERSION);
+                TRTCLogger.i(TAG, "create room, room id:" + roomId + " info:" + roomParam + " app version: "
+                        + TRTCVoiceRoomDef.APP_VERSION);
                 if (roomId == 0) {
                     TRTCLogger.e(TAG, "create room fail. params invalid");
                     return;
@@ -240,10 +243,10 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
 
                 clearList();
 
-                final String           roomName       = (roomParam == null ? "" : roomParam.roomName);
-                final String           roomCover      = (roomParam == null ? "" : roomParam.coverUrl);
-                final boolean          isNeedRequest  = (roomParam != null && roomParam.needRequest);
-                final int              seatCount      = (roomParam == null ? 8 : roomParam.seatCount);
+                final String roomName = (roomParam == null ? "" : roomParam.roomName);
+                final String roomCover = (roomParam == null ? "" : roomParam.coverUrl);
+                final boolean isNeedRequest = (roomParam != null && roomParam.needRequest);
+                final int seatCount = (roomParam == null ? 8 : roomParam.seatCount);
                 final List<TXSeatInfo> txSeatInfoList = new ArrayList<>();
                 if (roomParam != null && roomParam.seatInfoList != null) {
                     for (TRTCVoiceRoomDef.SeatInfo seatInfo : roomParam.seatInfoList) {
@@ -261,7 +264,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                     }
                 }
                 // 创建房间
-                TXRoomService.getInstance().createRoom(strRoomId, roomName, roomCover, isNeedRequest, txSeatInfoList, new TXCallback() {
+                TXRoomService.getInstance().createRoom(strRoomId, roomName, roomCover, isNeedRequest, txSeatInfoList,
+                        new TXCallback() {
                     @Override
                     public void onCallback(final int code, final String msg) {
                         TRTCLogger.i(TAG, "create room in service, code:" + code + " msg:" + msg);
@@ -348,18 +352,14 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                 // 恢复设定
                 clearList();
                 String strRoomId = String.valueOf(roomId);
-                TRTCLogger.i(TAG, "start enter room, room id:" + roomId + " app version: " + TRTCVoiceRoomDef.APP_VERSION);
-                enterTRTCRoomInner(strRoomId, mUserId, mUserSig, TRTCCloudDef.TRTCRoleAudience, new TRTCVoiceRoomCallback.ActionCallback() {
+                TRTCLogger.i(TAG, "start enter room, room id:" + roomId + " app version: "
+                        + TRTCVoiceRoomDef.APP_VERSION);
+                enterTRTCRoomInner(strRoomId, mUserId, mUserSig, TRTCCloudDef.TRTCRoleAudience,
+                        new TRTCVoiceRoomCallback.ActionCallback() {
                     @Override
                     public void onCallback(final int code, final String msg) {
-                        TRTCLogger.i(TAG, "trtc enter room finish, room id:" + roomId + " code:" + code + " msg:" + msg);
-                        //                        runOnMainThread(new Runnable() {
-                        //                            @Override
-                        //                            public void run() {
-                        //                                if (code == 0) {
-                        //                                }
-                        //                            }
-                        //                        });
+                        TRTCLogger.i(TAG, "trtc enter room finish, room id:" + roomId + " code:" + code
+                                + " msg:" + msg);
                         runOnDelegateThread(new Runnable() {
                             @Override
                             public void run() {
@@ -373,7 +373,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                 TXRoomService.getInstance().enterRoom(strRoomId, new TXCallback() {
                     @Override
                     public void onCallback(final int code, final String msg) {
-                        TRTCLogger.i(TAG, "enter room service finish, room id:" + roomId + " code:" + code + " msg:" + msg);
+                        TRTCLogger.i(TAG, "enter room service finish, room id:" + roomId + " code:"
+                                + code + " msg:" + msg);
                         runOnMainThread(new Runnable() {
                             @Override
                             public void run() {
@@ -475,7 +476,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                 TXRoomService.getInstance().getUserInfo(userIdList, new TXUserListCallback() {
                     @Override
                     public void onCallback(final int code, final String msg, final List<TXUserInfo> list) {
-                        TRTCLogger.i(TAG, "get audience list finish, code:" + code + " msg:" + msg + " list:" + (list != null ? list.size() : 0));
+                        TRTCLogger.i(TAG, "get audience list finish, code:" + code + " msg:" + msg
+                                + " list:" + (list != null ? list.size() : 0));
                         runOnDelegateThread(new Runnable() {
                             @Override
                             public void run() {
@@ -508,7 +510,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                 TXRoomService.getInstance().getAudienceList(new TXUserListCallback() {
                     @Override
                     public void onCallback(final int code, final String msg, final List<TXUserInfo> list) {
-                        TRTCLogger.i(TAG, "get audience list finish, code:" + code + " msg:" + msg + " list:" + (list != null ? list.size() : 0));
+                        TRTCLogger.i(TAG, "get audience list finish, code:" + code + " msg:" + msg + " list:"
+                                + (list != null ? list.size() : 0));
                         runOnDelegateThread(new Runnable() {
                             @Override
                             public void run() {
@@ -614,7 +617,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void pickSeat(final int seatIndex, final String userId, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public void pickSeat(final int seatIndex, final String userId,
+                         final TRTCVoiceRoomCallback.ActionCallback callback) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -683,7 +687,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void muteSeat(final int seatIndex, final boolean isMute, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public void muteSeat(final int seatIndex, final boolean isMute,
+                         final TRTCVoiceRoomCallback.ActionCallback callback) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -706,7 +711,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void closeSeat(final int seatIndex, final boolean isClose, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public void closeSeat(final int seatIndex, final boolean isClose,
+                          final TRTCVoiceRoomCallback.ActionCallback callback) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -817,7 +823,6 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
 
     /**
      * 静音本地
-     * <p>
      * 直接调用 TRTC 设置：TXTRTCLiveRoom.muteLocalAudio
      *
      * @param mute
@@ -926,7 +931,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void sendRoomCustomMsg(final String cmd, final String message, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public void sendRoomCustomMsg(final String cmd, final String message,
+                                  final TRTCVoiceRoomCallback.ActionCallback callback) {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -949,7 +955,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public String sendInvitation(final String cmd, final String userId, final String content, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    public String sendInvitation(final String cmd, final String userId, final String content,
+                                 final TRTCVoiceRoomCallback.ActionCallback callback) {
         TRTCLogger.i(TAG, "sendInvitation to " + userId + " cmd:" + cmd + " content:" + content);
         return TXRoomService.getInstance().sendInvitation(cmd, userId, content, new TXCallback() {
             @Override
@@ -1035,7 +1042,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         });
     }
 
-    private void enterTRTCRoomInner(final String roomId, final String userId, final String userSig, final int role, final TRTCVoiceRoomCallback.ActionCallback callback) {
+    private void enterTRTCRoomInner(final String roomId, final String userId, final String userSig, final int role,
+                                    final TRTCVoiceRoomCallback.ActionCallback callback) {
         // 进入 TRTC 房间
         TRTCLogger.i(TAG, "enter trtc room.");
         VoiceRoomTRTCService.getInstance().enterRoom(mSdkAppId, roomId, userId, userSig, role, new TXCallback() {
@@ -1089,7 +1097,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     }
 
     @Override
-    public void onRoomRecvRoomCustomMsg(final String roomId, final String cmd, final String message, final TXUserInfo userInfo) {
+    public void onRoomRecvRoomCustomMsg(final String roomId, final String cmd, final String message,
+                                        final TXUserInfo userInfo) {
         runOnDelegateThread(new Runnable() {
             @Override
             public void run() {
@@ -1308,6 +1317,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
             }
         });
     }
+
     private void onSwitchToAudience(final int index, final TXUserInfo userInfo) {
         runOnDelegateThread(new Runnable() {
             @Override
