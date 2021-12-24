@@ -6,8 +6,8 @@
          <th>听众麦位操作</th>  
      </tr>
 <tr>
-<td><img src="https://web.sdk.qcloud.com/trtc/miniapp/asset/voice-room/voiceRoom_pick_seat.gif"/></td>
-<td><img src="https://web.sdk.qcloud.com/trtc/miniapp/asset/voice-room/voiceRoom_take_seat.gif"/></td>
+<td><img src="./voiceRoom_pick_seat.gif"/></td>
+<td><img src="./voiceRoom_take_seat.gif"/></td>
 </tr>
 </table>
 
