@@ -7,6 +7,7 @@ App({
         userId: '',
         userSig: '',
       },
+      TUIScene: 'TUIVoiceRoom',
     };
   },
 });

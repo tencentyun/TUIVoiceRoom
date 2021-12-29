@@ -184,6 +184,11 @@ class VoiceRoom {
         }
     }
     init(options) {
+        wx.setStorage({
+            key:'TUIScene',
+            data:'TUIVoiceRoom'
+        })
+        wx.TUIScene = 'TUIVoiceRoom'
         this.#events = {}
         this.SDKAppID = options.SDKAppID
         this.userId = options.userId
