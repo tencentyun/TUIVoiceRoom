@@ -235,25 +235,23 @@ class VoiceRoom {
             name: roomParam.roomName,
             groupID: roomId
         }).then(() => {
-            return Promise.all([
-                this.tim.updateGroupProfile({
-                    groupID: roomId,
-                    avatar: roomParam.coverUrl,
-                    name: roomParam.roomName, // 修改群名称
-                    introduction: roomParam.roomName
-                }),
-                this.tim.joinGroup({ groupID: roomId })
-            ])
+            return this.tim.updateGroupProfile({
+                groupID: roomId,
+                avatar: roomParam.coverUrl,
+                name: roomParam.roomName, // 修改群名称
+                introduction: roomParam.roomName
+            }).then(() => {
+                return this.tim.joinGroup({ groupID: roomId })
+            })
         }, (imError) => {
-            return Promise.all([
-                this.tim.updateGroupProfile({
-                    groupID: roomId,
-                    avatar: roomParam.coverUrl,
-                    name: roomParam.roomName, // 修改群名称
-                    introduction: roomParam.roomName,
-                }),
-                this.tim.joinGroup({ groupID: roomId })
-            ])
+            return this.tim.updateGroupProfile({
+                groupID: roomId,
+                avatar: roomParam.coverUrl,
+                name: roomParam.roomName, // 修改群名称
+                introduction: roomParam.roomName
+            }).then(() => {
+                return this.tim.joinGroup({ groupID: roomId })
+            })
         }).then(() => {
             return this.tim.initGroupAttributes({
                 groupID: roomId,
