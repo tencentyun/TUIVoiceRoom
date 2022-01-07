@@ -378,17 +378,7 @@ static dispatch_once_t onceToken;
                 }
             }
         }];
-        [self.roomService exitRoom:^(int code, NSString * _Nonnull message) {
-            @strongify(self)
-            if (!self) {
-                return;
-            }
-            if (code != 0) {
-                if ([self canDelegateResponseMethod:@selector(onError:message:)]) {
-                    [self.delegate onError:code message:message];
-                }
-            }
-        }];
+        // 在公开群（Public）、会议（Meeting）和直播群（AVChatRoom）中，群主是不可以退群的，群主只能调用 dismissGroup 解散群组。
         [self.roomService destroyRoom:^(int code, NSString * _Nonnull message) {
             @strongify(self)
             if (!self) {

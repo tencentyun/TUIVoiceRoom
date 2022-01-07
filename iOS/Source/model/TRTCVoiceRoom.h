@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
 * 退出房间
-*
+* - note 房主是不可以退出房间的，房主只能调用 destroyRoom 销毁房间。
 * - parameter callback 退出房间是否成功的结果回调
 */
 - (void)exitRoom:(ActionCallback _Nullable)callback NS_SWIFT_NAME(exitRoom(callback:));
