@@ -107,7 +107,7 @@
         return nil;
     }
     for (TXSeatInfo *seatInfo in self.seatInfoList) {
-        if (seatInfo.user == self.selfUserId) {
+        if (seatInfo.user && [seatInfo.user isEqualToString: self.selfUserId]) {
             return seatInfo;
         }
     }

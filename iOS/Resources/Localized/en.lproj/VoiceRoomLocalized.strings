@@ -93,7 +93,7 @@
 "Demo.TRTC.VoiceRoom.welcome" = "Welcome to Audio Chat Room tryout\nTo quickly use the feature, visit \nxxx";
 "Demo.TRTC.VoiceRoom.roomsubject" = "Subject";
 "Demo.TRTC.VoiceRoom.enterroomsubject" = "Enter a room subject (max. 60 characters)";
-"Demo.TRTC.VoiceRoom.needrequesttip" = "Owner's consent is required for speak";
+"Demo.TRTC.VoiceRoom.needrequesttip" = "Require owner's consent to speak";
 "Demo.TRTC.VoiceRoom.starttalking" = "Let's go";
 "Demo.TRTC.VoiceRoom.xxxsroom" = "xxx's room";
 "Demo.TRTC.VoiceRoom.roomname" = "Room name";
