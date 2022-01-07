@@ -1,6 +1,6 @@
 <resources>
     <string name="trtcvoiceroom_room_title">Room Id: %d</string>
-    <string name="trtcvoiceroom_numer_format" >%d watching</string>
+    <string name="trtcvoiceroom_numer_format">%d watching</string>
     <string name="trtcvoiceroom_agree">Agree</string>
     <string name="trtcvoiceroom_warning_not_empty">The input field must not be empty</string>
     <string name="trtcvoiceroom_warning_room_name_too_long">Room name is too long</string>
@@ -91,7 +91,7 @@
     <string name="trtcvoiceroom_me">Me</string>
     <string name="trtcvoiceroom_anchor_leave_room">The room will close after you leave. Leave?</string>
     <string name="trtcvoiceroom_btn_confirm">Confirm</string>
-    <string name="trtcvoiceroom_btn_cancel">Wait a bit</string>
+    <string name="trtcvoiceroom_btn_cancel">Cancel</string>
     <string name="trtcvoiceroom_room_id">room ID:%d</string>
     <string name="trtcvoiceroom_bgm_title">Background music</string>
     <string name="trtcvoiceroom_select_song">Select song</string>
@@ -101,12 +101,12 @@
     <string name="trtcvoiceroom_reverb">Reverb</string>
     <string name="trtcvoiceroom_back">Back</string>
     <string name="trtcvoiceroom_sound_effects">Sound effect settings</string>
-    <string name="trtcvoiceroom_sounds_adjustment">Pitch</string>
+    <string name="trtcvoiceroom_sounds_adjustment">Music tone</string>
     <string name="trtcvoiceroom_request_expired">The request has expired</string>
     <string name="trtcvoiceroom_accept_failed">Failed to accept request</string>
     <string name="trtcvoiceroom_seat_unmuted">Seat unmuted</string>
     <string name="trtcvoiceroom_audience_leave_room">Are you sure you want to leave?</string>
-    <string name="trtcvoiceroom_sound_audition">Music Preview</string>
+    <string name="trtcvoiceroom_sound_audition">Music</string>
     <string name="trtcvoiceroom_put_on_your_headphones">Use earphones for better experience</string>
     <string name="trtcvoiceroom_copyright_sounds">Music Library ©</string>
     <string name="trtcvoiceroom_room_theme">Subject</string>
@@ -136,6 +136,6 @@
     <string name="trtcvoiceroom_audio_reverb_type_lowdeep">Deep</string>
     <string name="trtcvoiceroom_audio_reverb_type_heavymetal">Metallic</string>
     <string name="trtcvoiceroom_audio_reverb_type_hongliang">Resonant</string>
-    <string name="trtcvoicerrom_need_request">Need the consent of owner</string>
-    <string name="trtcvoiceroom_request_move_seat">Request move</string>
+    <string name="trtcvoicerrom_need_request">Require owner\'s consent to speak</string>
+    <string name="trtcvoiceroom_request_move_seat">Request move</string>s
 </resources>
