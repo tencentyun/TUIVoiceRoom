@@ -88,8 +88,8 @@
     <string name="trtcvoiceroom_me">我</string>
     <string name="trtcvoiceroom_tv_online_no_name">上%d号麦</string>
     <string name="trtcvoiceroom_tv_offline_no_name">下%d号麦</string>
-    <string name="trtcvoiceroom_btn_confirm">我确定</string>
-    <string name="trtcvoiceroom_btn_cancel">再等等</string>
+    <string name="trtcvoiceroom_btn_confirm">确定</string>
+    <string name="trtcvoiceroom_btn_cancel">取消</string>
     <string name="trtcvoiceroom_room_id">房间ID:%d</string>
     <string name="trtcvoiceroom_bgm_title">背景音乐</string>
     <string name="trtcvoiceroom_select_song">选择歌曲</string>
