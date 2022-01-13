@@ -7,3 +7,6 @@ build/
 /captures
 .externalNativeBuild
 .cxx
+*.codecc/
+/build.yml
+tui*/
