@@ -7,3 +7,7 @@ build/
 /captures
 .externalNativeBuild
 .cxx
+*.codecc/
+/build.yml
+tuicore/
+TUICalling/Source/
