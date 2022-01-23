@@ -8,7 +8,7 @@
 - [Karaoke-TUIKaraoke](https://github.com/tencentyun/TUIKaraoke/)
 - [视频互动直播-TUILiveRoom](https://github.com/tencentyun/TUILiveRoom/)
 - [实时语音/视频通话-TUICalling](https://github.com/tencentyun/TUICalling/)
-- [多人视频会议-TUIMeeting](https://github.com/tencentyun/TUIMeeting/)
+- [多人音视频互动-TUIRoom](https://github.com/tencentyun/TUIRoom/)
 - [语音沙龙-TUIChatSalon](https://github.com/tencentyun/TUIChatSalon/)
 
 更多组件化方案，敬请期待，也欢迎加入我们的QQ交流群：592465424，期待一起交流&学习！
