@@ -7,12 +7,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SwitchCompat;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,6 +31,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.tencent.liteav.audio.TXAudioEffectManager;
+import com.tencent.liteav.basic.IntentUtils;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
@@ -46,65 +51,65 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     private static final String TAG = AudioEffectPanel.class.getSimpleName();
 
-    private static final int AUDIO_REVERB_TYPE_0 = 0;
-    private static final int AUDIO_REVERB_TYPE_1 = 1;
-    private static final int AUDIO_REVERB_TYPE_2 = 2;
-    private static final int AUDIO_REVERB_TYPE_3 = 3;
-    private static final int AUDIO_REVERB_TYPE_4 = 4;
-    private static final int AUDIO_REVERB_TYPE_5 = 5;
-    private static final int AUDIO_REVERB_TYPE_6 = 6;
-    private static final int AUDIO_REVERB_TYPE_7 = 7;
-    private static final int AUDIO_VOICECHANGER_TYPE_0 = 0;
-    private static final int AUDIO_VOICECHANGER_TYPE_1 = 1;
-    private static final int AUDIO_VOICECHANGER_TYPE_2 = 2;
-    private static final int AUDIO_VOICECHANGER_TYPE_3 = 3;
-    private static final int AUDIO_VOICECHANGER_TYPE_4 = 4;
-    private static final int AUDIO_VOICECHANGER_TYPE_5 = 5;
-    private static final int AUDIO_VOICECHANGER_TYPE_6 = 6;
-    private static final int AUDIO_VOICECHANGER_TYPE_7 = 7;
-    private static final int AUDIO_VOICECHANGER_TYPE_8 = 8;
-    private static final int AUDIO_VOICECHANGER_TYPE_9 = 9;
+    private static final int AUDIO_REVERB_TYPE_0        = 0;
+    private static final int AUDIO_REVERB_TYPE_1        = 1;
+    private static final int AUDIO_REVERB_TYPE_2        = 2;
+    private static final int AUDIO_REVERB_TYPE_3        = 3;
+    private static final int AUDIO_REVERB_TYPE_4        = 4;
+    private static final int AUDIO_REVERB_TYPE_5        = 5;
+    private static final int AUDIO_REVERB_TYPE_6        = 6;
+    private static final int AUDIO_REVERB_TYPE_7        = 7;
+    private static final int AUDIO_VOICECHANGER_TYPE_0  = 0;
+    private static final int AUDIO_VOICECHANGER_TYPE_1  = 1;
+    private static final int AUDIO_VOICECHANGER_TYPE_2  = 2;
+    private static final int AUDIO_VOICECHANGER_TYPE_3  = 3;
+    private static final int AUDIO_VOICECHANGER_TYPE_4  = 4;
+    private static final int AUDIO_VOICECHANGER_TYPE_5  = 5;
+    private static final int AUDIO_VOICECHANGER_TYPE_6  = 6;
+    private static final int AUDIO_VOICECHANGER_TYPE_7  = 7;
+    private static final int AUDIO_VOICECHANGER_TYPE_8  = 8;
+    private static final int AUDIO_VOICECHANGER_TYPE_9  = 9;
     private static final int AUDIO_VOICECHANGER_TYPE_10 = 10;
     private static final int AUDIO_VOICECHANGER_TYPE_11 = 11;
 
-    private Context mContext;
-    private Button    mBtnSelectedSong;
-    private ImageView mIvSelectedSong;
-    private RecyclerView           mRVAuidoChangeType;
-    private RecyclerView           mRVAudioReverbType;
-    private RecyclerView           mRVAudioBGM;
-    private SeekBar mSbMicVolume;
-    private SeekBar mSbBGMVolume;
-    private SeekBar mSbPitchLevel;
-    private RecyclerViewAdapter    mChangerRVAdapter;
-    private RecyclerViewAdapter    mReverbRVAdapter;
-    private BGMRecyclerViewAdapter mBGMRVAdapter;
-    private List<ItemEntity> mChangerItemEntityList;
-    private List<ItemEntity> mReverbItemEntityList;
-    private TextView mTVBGMBack;
-    private LinearLayout mMainAudioEffectPanel;
-    private LinearLayout mBGMPanel;
-    private List<BGMItemEntity> mBGMItemEntityList;
-    private TextView mTvBGMVolume;
-    private TextView mTvPitchLevel;
-    private TextView mTvMicVolume;
-    private TextView mTvStartTime;
-    private TextView mTvTotalTime;
-    private TextView mTvBGM;
-    private TextView mTvActor;
-    private TextView mMusicDescription;
-    private View mMusicVolumeGroup;
-    private View mMusicToneGroup;
-    private SwitchCompat mSwitchMusiceAudiction;
-    private LinearLayout mLayoutSelectBGM;
-    private LinearLayout mMainPanel;
-    private ImageButton mImgbtnBGMPlay;
-    private TXAudioEffectManager mAudioEffectManager;
-    private TRTCVoiceRoom mTRTCVoiceRoom;
-    private BGMListener mBGMPlayListenr;
-    private static final String ONLINE_BGM_FIRST = "https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/app/res/bgm/trtc/PositiveHappyAdvertising.mp3";
-    private static final String ONLINE_BGM_SECOND = "https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/app/res/bgm/trtc/SadCinematicPiano.mp3";
-    private static final String ONLINE_BGM_THIRD = "https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/app/res/bgm/trtc/WonderWorld.mp3";
+    private              Context                mContext;
+    private              Button                 mBtnSelectedSong;
+    private              ImageView              mIvSelectedSong;
+    private              RecyclerView           mRVAuidoChangeType;
+    private              RecyclerView           mRVAudioReverbType;
+    private              RecyclerView           mRVAudioBGM;
+    private              SeekBar                mSbMicVolume;
+    private              SeekBar                mSbBGMVolume;
+    private              SeekBar                mSbPitchLevel;
+    private              RecyclerViewAdapter    mChangerRVAdapter;
+    private              RecyclerViewAdapter    mReverbRVAdapter;
+    private              BGMRecyclerViewAdapter mBGMRVAdapter;
+    private              List<ItemEntity>       mChangerItemEntityList;
+    private              List<ItemEntity>       mReverbItemEntityList;
+    private              TextView               mTVBGMBack;
+    private              LinearLayout           mMainAudioEffectPanel;
+    private              LinearLayout           mBGMPanel;
+    private              List<BGMItemEntity>    mBGMItemEntityList;
+    private              TextView               mTvBGMVolume;
+    private              TextView               mTvPitchLevel;
+    private              TextView               mTvMicVolume;
+    private              TextView               mTvStartTime;
+    private              TextView               mTvTotalTime;
+    private              TextView               mTvBGM;
+    private              TextView               mTvActor;
+    private              TextView               mMusicDescription;
+    private              View                   mMusicVolumeGroup;
+    private              View                   mMusicToneGroup;
+    private              SwitchCompat           mSwitchMusiceAudiction;
+    private              LinearLayout           mLayoutSelectBGM;
+    private              LinearLayout           mMainPanel;
+    private              ImageButton            mImgbtnBGMPlay;
+    private              TXAudioEffectManager   mAudioEffectManager;
+    private              TRTCVoiceRoom          mTRTCVoiceRoom;
+    private              BGMListener            mBGMPlayListenr;
+    private static final String                 ONLINE_BGM_FIRST  = "https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/app/res/bgm/trtc/PositiveHappyAdvertising.mp3";
+    private static final String                 ONLINE_BGM_SECOND = "https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/app/res/bgm/trtc/SadCinematicPiano.mp3";
+    private static final String                 ONLINE_BGM_THIRD  = "https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/app/res/bgm/trtc/WonderWorld.mp3";
 
     private int     mBGMId     = -1;
     private float   mPitch     = 0;
@@ -112,10 +117,10 @@ public class AudioEffectPanel extends BottomSheetDialog {
     private boolean mIsPause   = false;
     private boolean mIsPlayEnd = false;
 
-    private int     mBGMVolume = 100;
+    private int mBGMVolume = 100;
 
     private int mVoiceChangerPosition = 0;
-    private int mVoiceReverbPosition = 0;
+    private int mVoiceReverbPosition  = 0;
 
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -163,7 +168,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
     private void initView() {
         mMainPanel = (LinearLayout) findViewById(R.id.ll_panel);
         mSwitchMusiceAudiction = (SwitchCompat) findViewById(R.id.switch_music_audition);
-        mTvBGMVolume =  (TextView) findViewById(R.id.tv_bgm_volume);
+        mTvBGMVolume = (TextView) findViewById(R.id.tv_bgm_volume);
         mTvMicVolume = (TextView) findViewById(R.id.tv_mic_volume);
         mTvPitchLevel = (TextView) findViewById(R.id.tv_pitch_level);
         mTvActor = (TextView) findViewById(R.id.tv_actor);
@@ -337,7 +342,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://cloud.tencent.com/product/ame"));
-                mContext.startActivity(intent);
+                IntentUtils.safeStartActivity(mContext, intent);
             }
         });
         if (!isZh(mContext)) {
@@ -346,7 +351,8 @@ public class AudioEffectPanel extends BottomSheetDialog {
     }
 
     private TXAudioEffectManager.TXVoiceChangerType translateChangerType(int type) {
-        TXAudioEffectManager.TXVoiceChangerType changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
+        TXAudioEffectManager.TXVoiceChangerType changerType = TXAudioEffectManager
+                .TXVoiceChangerType.TXLiveVoiceChangerType_0;
         switch (type) {
             case AUDIO_VOICECHANGER_TYPE_0:
                 changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
@@ -384,12 +390,15 @@ public class AudioEffectPanel extends BottomSheetDialog {
             case AUDIO_VOICECHANGER_TYPE_11:
                 changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_11;
                 break;
+            default:
+                break;
         }
         return changerType;
     }
 
     private TXAudioEffectManager.TXVoiceReverbType translateReverbType(int type) {
-        TXAudioEffectManager.TXVoiceReverbType reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
+        TXAudioEffectManager.TXVoiceReverbType reverbType = TXAudioEffectManager
+                .TXVoiceReverbType.TXLiveVoiceReverbType_0;
         switch (type) {
             case AUDIO_REVERB_TYPE_0:
                 reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
@@ -414,6 +423,9 @@ public class AudioEffectPanel extends BottomSheetDialog {
                 break;
             case AUDIO_REVERB_TYPE_7:
                 reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_7;
+                break;
+            default:
+                Log.w(TAG, "translateReverbType wrong type : " + type);
                 break;
         }
         return reverbType;
@@ -449,29 +461,49 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     private List<ItemEntity> createAudioChangeItems() {
         List<ItemEntity> list = new ArrayList<>();
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_no_effect), R.drawable.trtcvoiceroom_no_select_normal, R.drawable.trtcvoiceroom_no_select_hover, AUDIO_VOICECHANGER_TYPE_0));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_child), R.drawable.trtcvoiceroom_changetype_child_normal,  R.drawable.trtcvoiceroom_changetype_child_hover, AUDIO_VOICECHANGER_TYPE_1));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_luoli), R.drawable.trtcvoiceroom_changetype_luoli_normal, R.drawable.trtcvoiceroom_changetype_luoli_hover, AUDIO_VOICECHANGER_TYPE_2));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_dashu), R.drawable.trtcvoiceroom_changetype_dashu_normal, R.drawable.trtcvoiceroom_changetype_dashu_hover, AUDIO_VOICECHANGER_TYPE_3));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_kongling), R.drawable.trtcvoiceroom_reverbtype_kongling_normal, R.drawable.trtcvoiceroom_reverbtype_kongling_hover, AUDIO_VOICECHANGER_TYPE_11));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_no_effect),
+                R.drawable.trtcvoiceroom_no_select_normal,
+                R.drawable.trtcvoiceroom_no_select_hover, AUDIO_VOICECHANGER_TYPE_0));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_child),
+                R.drawable.trtcvoiceroom_changetype_child_normal,
+                R.drawable.trtcvoiceroom_changetype_child_hover, AUDIO_VOICECHANGER_TYPE_1));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_luoli),
+                R.drawable.trtcvoiceroom_changetype_luoli_normal,
+                R.drawable.trtcvoiceroom_changetype_luoli_hover, AUDIO_VOICECHANGER_TYPE_2));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_dashu),
+                R.drawable.trtcvoiceroom_changetype_dashu_normal,
+                R.drawable.trtcvoiceroom_changetype_dashu_hover, AUDIO_VOICECHANGER_TYPE_3));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_change_type_kongling),
+                R.drawable.trtcvoiceroom_reverbtype_kongling_normal,
+                R.drawable.trtcvoiceroom_reverbtype_kongling_hover, AUDIO_VOICECHANGER_TYPE_11));
         return list;
     }
 
     private List<ItemEntity> createReverbItems() {
         List<ItemEntity> list = new ArrayList<>();
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_no_effect), R.drawable.trtcvoiceroom_no_select_normal, R.drawable.trtcvoiceroom_no_select_hover, AUDIO_REVERB_TYPE_0));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_ktv), R.drawable.trtcvoiceroom_reverbtype_ktv_normal, R.drawable.trtcvoiceroom_reverbtype_ktv_hover, AUDIO_REVERB_TYPE_1));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_lowdeep), R.drawable.trtcvoiceroom_reverbtype_lowdeep_normal, R.drawable.trtcvoiceroom_reverbtype_lowdeep_hover, AUDIO_REVERB_TYPE_4));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_heavymetal), R.drawable.trtcvoiceroom_reverbtype_heavymetal_normal, R.drawable.trtcvoiceroom_reverbtype_heavymetal_hover, AUDIO_REVERB_TYPE_6));
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_hongliang), R.drawable.trtcvoiceroom_reverbtype_hongliang_normal, R.drawable.trtcvoiceroom_reverbtype_hongliang_hover, AUDIO_REVERB_TYPE_5));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_no_effect),
+                R.drawable.trtcvoiceroom_no_select_normal,
+                R.drawable.trtcvoiceroom_no_select_hover, AUDIO_REVERB_TYPE_0));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_ktv),
+                R.drawable.trtcvoiceroom_reverbtype_ktv_normal,
+                R.drawable.trtcvoiceroom_reverbtype_ktv_hover, AUDIO_REVERB_TYPE_1));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_lowdeep),
+                R.drawable.trtcvoiceroom_reverbtype_lowdeep_normal,
+                R.drawable.trtcvoiceroom_reverbtype_lowdeep_hover, AUDIO_REVERB_TYPE_4));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_heavymetal),
+                R.drawable.trtcvoiceroom_reverbtype_heavymetal_normal,
+                R.drawable.trtcvoiceroom_reverbtype_heavymetal_hover, AUDIO_REVERB_TYPE_6));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.trtcvoiceroom_audio_reverb_type_hongliang),
+                R.drawable.trtcvoiceroom_reverbtype_hongliang_normal,
+                R.drawable.trtcvoiceroom_reverbtype_hongliang_hover, AUDIO_REVERB_TYPE_5));
         return list;
     }
 
     public class ItemEntity {
-        public String mTitle;
-        public int    mIconId;
-        public int    mSelectIconId;
-        public int    mType;
+        public String  mTitle;
+        public int     mIconId;
+        public int     mSelectIconId;
+        public int     mType;
         public boolean mIsSelected = false;
 
         public ItemEntity(String title, int iconId, int selectIconId, int type) {
@@ -482,11 +514,12 @@ public class AudioEffectPanel extends BottomSheetDialog {
         }
     }
 
+
     public class RecyclerViewAdapter extends
             RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-        private Context context;
-        private List<ItemEntity> list;
+        private Context             context;
+        private List<ItemEntity>    list;
         private OnItemClickListener onItemClickListener;
 
         public RecyclerViewAdapter(Context context, List<ItemEntity> list,
@@ -498,7 +531,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private CircleImageView mItemImg;
-            private TextView mTitleTv;
+            private TextView        mTitleTv;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -532,7 +565,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            Context context  = parent.getContext();
+            Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.trtcvoiceroom_audio_main_entry_item, parent, false);
             ViewHolder viewHolder = new ViewHolder(view);
@@ -554,8 +587,10 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     private List<BGMItemEntity> createBGMItems() {
         List<BGMItemEntity> list = new ArrayList<>();
-        list.add(new BGMItemEntity(mContext.getString(R.string.trtcvoiceroom_bg_music_positive_happy), ONLINE_BGM_FIRST));
-        list.add(new BGMItemEntity(mContext.getString(R.string.trtcvoiceroom_bg_music_sad_cinematic_piano), ONLINE_BGM_SECOND));
+        list.add(new BGMItemEntity(mContext.getString(R.string.trtcvoiceroom_bg_music_positive_happy),
+                ONLINE_BGM_FIRST));
+        list.add(new BGMItemEntity(mContext.getString(R.string.trtcvoiceroom_bg_music_sad_cinematic_piano),
+                ONLINE_BGM_SECOND));
         list.add(new BGMItemEntity(mContext.getString(R.string.trtcvoiceroom_bg_music_wonder_world), ONLINE_BGM_THIRD));
         return list;
     }
@@ -570,10 +605,11 @@ public class AudioEffectPanel extends BottomSheetDialog {
         }
     }
 
+
     public class BGMRecyclerViewAdapter extends
             RecyclerView.Adapter<BGMRecyclerViewAdapter.ViewHolder> {
 
-        private Context mContext;
+        private Context             mContext;
         private List<BGMItemEntity> list;
         private OnItemClickListener onItemClickListener;
 
@@ -585,7 +621,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private Button mItemImg;
+            private Button   mItemImg;
             private TextView mTitleTv;
             private TextView mTextActor;
 
@@ -612,7 +648,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            Context context  = parent.getContext();
+            Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.trtcvoiceroom_audio_bgm_entry_item, parent, false);
             ViewHolder viewHolder = new ViewHolder(view);
@@ -632,9 +668,11 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     }
 
+
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
+
 
     private class BGMListener implements TXAudioEffectManager.TXMusicPlayObserver {
 
@@ -648,7 +686,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mTvStartTime.setText(Utils.formattedTime(curPtsMS /1000) + "");
+                    mTvStartTime.setText(Utils.formattedTime(curPtsMS / 1000) + "");
                 }
             });
         }
@@ -769,12 +807,14 @@ public class AudioEffectPanel extends BottomSheetDialog {
                 mTvActor.setText(model.mTitle);
                 mTvStartTime.setVisibility(VISIBLE);
                 mTvTotalTime.setVisibility(VISIBLE);
-                mTvTotalTime.setText("/" + Utils.formattedTime(mAudioEffectManager.getMusicDurationInMS(model.mPath)/1000) + "");
+                mTvTotalTime.setText("/" + Utils.formattedTime(
+                        mAudioEffectManager.getMusicDurationInMS(model.mPath) / 1000) + "");
                 mImgbtnBGMPlay.setVisibility(VISIBLE);
                 mImgbtnBGMPlay.setImageResource(R.drawable.trtcvoiceroom_bgm_pause);
             }
         });
-        final TXAudioEffectManager.AudioMusicParam audioMusicParam = new TXAudioEffectManager.AudioMusicParam(position, model.mPath);
+        final TXAudioEffectManager.AudioMusicParam audioMusicParam = new TXAudioEffectManager
+                .AudioMusicParam(position, model.mPath);
         audioMusicParam.publish = true; //上行
         mAudioEffectManager.startPlayMusic(audioMusicParam);
         mBGMPlayListenr = new BGMListener();
@@ -809,10 +849,12 @@ public class AudioEffectPanel extends BottomSheetDialog {
     public boolean isZh(Context context) {
         Locale locale = context.getResources().getConfiguration().locale;
         String language = locale.getLanguage();
-        if (language.endsWith("zh"))
+        if (language.endsWith("zh")) {
             return true;
-        else
+        } else {
             return false;
+        }
+
     }
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
