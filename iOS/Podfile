@@ -5,6 +5,6 @@ target 'TUIVoiceRoomApp' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   pod 'TXAppBasic', :path => "TXAppBasic/"
-  pod 'TXLiteAVSDK_TRTC'
-  pod 'TUIVoiceRoom', :path => "./", :subspecs => ["TRTC"]
+  pod 'TXLiteAVSDK_TRTC_Preview', :podspec => 'https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/pod/liteavsdkspec/TXLiteAVSDK_TRTC_Preview.podspec'
+  pod 'TUIVoiceRoom', :path => "./", :subspecs => ["TRTC_Preview"]
 end
