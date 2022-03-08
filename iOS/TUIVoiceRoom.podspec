@@ -32,10 +32,21 @@ Pod::Spec.new do |spec|
   }
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 
-  spec.default_subspec = 'TRTC'
+ spec.default_subspec = 'TRTC'
  spec.subspec 'TRTC' do |trtc|
    trtc.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_TARGET_SRCROOT}/../../SDK/TXLiteAVSDK_TRTC.framework/Headers/'}
    trtc.dependency 'TXLiteAVSDK_TRTC'
+   trtc.source_files = 'Source/Localized/**/*.{h,m,mm,swift}', 'Source/model/**/*.{h,m,mm,swift}', 'Source/ui/**/*.{h,m,mm,swift}', 'Source/TUIVoiceRoomKit_TRTC/*.{h,m,mm,swift}'
+   trtc.ios.framework = ['AVFoundation', 'Accelerate']
+   trtc.library = 'c++', 'resolv'
+   trtc.resource_bundles = {
+     'TUIVoiceRoomKitBundle' => ['Resources/*.xcassets', 'Resources/localized/**/*.strings' ]
+   }
+ end
+
+ spec.subspec 'TRTC_Preview' do |trtc|
+   trtc.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_TARGET_SRCROOT}/../../SDK/TXLiteAVSDK_TRTC.framework/Headers/'}
+   trtc.dependency 'TXLiteAVSDK_TRTC_Preview'
    trtc.source_files = 'Source/Localized/**/*.{h,m,mm,swift}', 'Source/model/**/*.{h,m,mm,swift}', 'Source/ui/**/*.{h,m,mm,swift}', 'Source/TUIVoiceRoomKit_TRTC/*.{h,m,mm,swift}'
    trtc.ios.framework = ['AVFoundation', 'Accelerate']
    trtc.library = 'c++', 'resolv'
