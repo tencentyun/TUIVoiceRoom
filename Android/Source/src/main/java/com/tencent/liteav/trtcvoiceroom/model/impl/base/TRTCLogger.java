@@ -1,26 +1,27 @@
 package com.tencent.liteav.trtcvoiceroom.model.impl.base;
 
-import com.tencent.liteav.basic.log.TXCLog;
+
+import android.util.Log;
 
 public class TRTCLogger {
 
     public static void e(String tag, String message) {
-        TXCLog.e(tag, message);
+        Log.e(tag, message);
         callback("e", tag, message);
     }
 
     public static void w(String tag, String message) {
-        TXCLog.w(tag, message);
+        Log.w(tag, message);
         callback("w", tag, message);
     }
 
     public static void i(String tag, String message) {
-        TXCLog.i(tag, message);
+        Log.i(tag, message);
         callback("i", tag, message);
     }
 
     public static void d(String tag, String message) {
-        TXCLog.d(tag, message);
+        Log.d(tag, message);
         callback("d", tag, message);
     }
 
