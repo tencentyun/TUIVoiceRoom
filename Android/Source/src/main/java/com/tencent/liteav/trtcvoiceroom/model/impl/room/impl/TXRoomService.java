@@ -272,7 +272,7 @@ public class TXRoomService extends V2TIMSDKListener {
                     msg = mContext.getString(R.string.trtcvoiceroom_group_member_limit);
                 }
                 //特殊处理
-                if (code == 10025 || code == 10021) {
+                if (code == 10025) {
                     // 10025 表明群主是自己，那么认为创建房间成功
                     // 群组 ID 已被其他人使用，此时走进房逻辑
                     setGroupInfo(roomId, roomName, coverUrl, mSelfUserName);
