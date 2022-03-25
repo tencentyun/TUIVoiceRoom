@@ -39,12 +39,7 @@ const pageOptions = {
       wx.hideLoading();
       this.setData({ isLogin: true });
     });
-    wx.aegis.reportEvent({
-      name: 'login',
-      ext1: 'login-success',
-      ext2: 'wxTUIVoiceRoomExternal',
-      ext3: Signature.sdkAppID,
-    })
+    getApp().aegisReportEvent('login', 'login-success')
     wx.$VoiceRoom = voiceRoom;
   },
   enterRoom() {
