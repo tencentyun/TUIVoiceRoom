@@ -26,7 +26,7 @@ App({
       wx.aegis.reportEvent({
         name,
         ext1,
-        ext2: 'wxTRTCMiniprogram',
+        ext2: 'wxTUIVoiceRoomExternal',
         ext3: genTestUserSig('').sdkAppID,
       });
       if(typeof this.aegisReportEvent[name] !== 'object') {
