@@ -1,5 +1,7 @@
 // app.js
 import Aegis from './static/aegis'
+import { genTestUserSig } from './debug/GenerateTestUserSig'
+
 App({
   onLaunch() {
     this.globalData = {
