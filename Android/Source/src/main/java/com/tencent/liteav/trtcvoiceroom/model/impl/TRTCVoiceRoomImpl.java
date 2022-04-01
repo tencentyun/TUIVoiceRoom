@@ -88,8 +88,8 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
         mAudienceList = new HashSet<>();
         mMoveSet = new HashSet<>();
         mTakeSeatIndex = -1;
-        VoiceRoomTRTCService.getInstance().setDelegate(this);
         VoiceRoomTRTCService.getInstance().init(context);
+        VoiceRoomTRTCService.getInstance().setDelegate(this);
         TXRoomService.getInstance().init(context);
         TXRoomService.getInstance().setDelegate(this);
     }

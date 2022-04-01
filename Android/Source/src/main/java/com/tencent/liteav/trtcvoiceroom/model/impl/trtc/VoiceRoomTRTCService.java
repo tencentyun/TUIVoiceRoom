@@ -47,8 +47,8 @@ public class VoiceRoomTRTCService extends TRTCCloudListener {
     }
 
     public void init(Context context) {
-        TRTCLogger.i(TAG, "init context:" + context);
         mTRTCCloud = TRTCCloud.sharedInstance(context);
+        TRTCLogger.i(TAG, "init context:" + context);
         mTXBeautyManager = mTRTCCloud.getBeautyManager();
         mMainHandler = new Handler(Looper.getMainLooper());
     }
