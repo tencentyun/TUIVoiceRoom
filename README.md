@@ -1,4 +1,5 @@
 # 语音聊天室
+_中文 | [English](README.en.md)_/
 
 ## 概述
 
