@@ -99,9 +99,9 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
     lazy var bgmDataSource: [TRTCMusicModel] = {
         var res : [TRTCMusicModel] = []
         let urls = [
-            @"https://dldir1.qq.com/hudongzhibo/TUIKit/resource/music/PositiveHappyAdvertising.mp3",
-            @"https://dldir1.qq.com/hudongzhibo/TUIKit/resource/music/SadCinematicPiano.mp3",
-            @"https://dldir1.qq.com/hudongzhibo/TUIKit/resource/music/WonderWorld.mp3"]
+            "https://dldir1.qq.com/hudongzhibo/TUIKit/resource/music/PositiveHappyAdvertising.mp3",
+            "https://dldir1.qq.com/hudongzhibo/TUIKit/resource/music/SadCinematicPiano.mp3",
+            "https://dldir1.qq.com/hudongzhibo/TUIKit/resource/music/WonderWorld.mp3"]
         let names : [String] = [
             .musicTitle1Text,
             .musicTitle2Text,
