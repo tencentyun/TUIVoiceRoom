@@ -10,8 +10,8 @@ import UIKit
 import ImSDK_Plus
 
 public enum VoiceRoomRole {
-    case anchor // 主播
-    case audience // 观众
+    case anchor
+    case audience
 }
 
 public enum VoiceRoomToneQuality: Int {
@@ -47,8 +47,6 @@ class TRTCCreateVoiceRoomViewModel {
 
     var toneQuality: VoiceRoomToneQuality = .defaultQuality
     
-    /// 初始化方法
-    /// - Parameter container: 依赖管理容器，负责VoiceRoom模块的依赖管理
     init(container: TRTCVoiceRoomEnteryControl) {
         self.dependencyContainer = container
     }
@@ -69,7 +67,7 @@ class TRTCCreateVoiceRoomViewModel {
         roomInfo.ownerName = userName
         roomInfo.coverUrl = coverAvatar
         roomInfo.roomName = roomName
-        // 上麦是否需要申请
+        // Whether users need to request to speak
         roomInfo.needRequest = needRequest
         let vc = self.dependencyContainer.makeVoiceRoomViewController(roomInfo:roomInfo, role: .anchor, toneQuality: self.toneQuality)
         viewResponder?.push(viewController: vc)

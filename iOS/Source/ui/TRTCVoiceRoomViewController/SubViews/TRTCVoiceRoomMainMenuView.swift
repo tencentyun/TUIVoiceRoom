@@ -77,10 +77,6 @@ class TRTCVoiceRoomMainMenuView: UIView {
     private let icons: [IconTuple]
     var dataSource: [IconTuple] = []
     weak var delegate: TRTCVoiceRoomMainMenuDelegate?
-    /// 初始化方法
-    /// - Parameters:
-    ///   - frame: 视图frame
-    ///   - icons: 视图菜单icons（最多5个，最少1个）
     init(frame: CGRect = .zero, icons: [IconTuple] ) {
         icons.forEach { (tuple) in
             if tuple.type == .mute {
@@ -111,15 +107,15 @@ class TRTCVoiceRoomMainMenuView: UIView {
         return collectionView
     }()
     
-    // MARK: - 视图的生命周期
+    // MARK: - ViewLifeCycler
     override func didMoveToWindow() {
         super.didMoveToWindow()
         guard !isViewReady else {
             return
         }
         isViewReady = true
-        constructViewHierarchy() // 视图层级布局
-        activateConstraints() // 生成约束（此时有可能拿不到父视图正确的frame）
+        constructViewHierarchy()
+        activateConstraints()
         bindInteraction()
     }
     
@@ -128,13 +124,11 @@ class TRTCVoiceRoomMainMenuView: UIView {
     }
 
     func constructViewHierarchy() {
-        /// 此方法内只做add子视图操作
         addSubview(menuStack)
         menuStack.addSubview(collectionView)
     }
 
     func activateConstraints() {
-        /// 此方法内只给子视图做布局,使用:AutoLayout布局
         menuStack.snp.makeConstraints { (make) in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
@@ -147,7 +141,6 @@ class TRTCVoiceRoomMainMenuView: UIView {
     }
 
     func bindInteraction() {
-        /// 此方法负责做viewModel和视图的绑定操作
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(TRTCVoiceRoomMainMenuViewCell.self, forCellWithReuseIdentifier: "TRTCVoiceRoomMainMenuViewCell")
@@ -252,8 +245,8 @@ class TRTCVoiceRoomMainMenuViewCell: UICollectionViewCell {
             return
         }
         isViewReady = true
-        constructViewHierarchy() // 视图层级布局
-        activateConstraints() // 生成约束（此时有可能拿不到父视图正确的frame）
+        constructViewHierarchy()
+        activateConstraints()
     }
     
     func constructViewHierarchy() {

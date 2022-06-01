@@ -7,12 +7,11 @@ This document describes how to quickly run the TUIVoiceRoom demo project to try 
     
 ```
 TUIVoiceRoom
-├─ App              // Audio chat room homepage UI code and used images and internationalization string resources
-├─ Debug            // Key business code required for project debugging and running
-├─ Login            // Login UI and business logic code
-├─ Resources        // Images and internationalization string resources required by the audio chat room feature
-├─ Source           // Core business logic code of audio chat room
-└─ TXAppBasic       // Dependent basic components of the project
+├─ Example                   // Project module, which provides the TUIVoiceRoom testing page
+├─ Resources                 // Images and internationalization string resources required by the audio chat room feature
+├─ Source                    // Core business logic code of audio chat room
+├─ TXAppBasic                // Dependent basic components of the project
+└─ TUIVoiceRoom.podspec      // CocoaPods podspec file of the TUIRoom component
 ```
     
 ## Environment Requirements
@@ -34,13 +33,13 @@ TUIVoiceRoom
 ### Step 2. Download the source code and configure the project
 
 1. Clone or directly download the source code in the repository. **Feel free to star our project if you like it.**
-2. The SDK is integrated by using `Cocoapods` by default. `pod 'TXLiteAVSDK_TRTC'` depended on by the SDK has been added to the `Podfile` file in the project directory. You only need to open Terminal, enter the project directory, and run `pod install`, and the SDK will be automatically integrated.
+2. The SDK is integrated by using `Cocoapods` by default. `pod 'TXLiteAVSDK_TRTC'` depended on by the SDK has been added to the `Example/Podfile` file in the project directory. You only need to open Terminal, enter the project directory, and run `pod install`, and the SDK will be automatically integrated.
 
 ```
 pod install
 ```
 >?If the error message `CocoaPods could not find compatible versions for pod "TXIMSDK_Plus_iOS"` is reported for version inconsistence, run `pod update TXIMSDK_Plus_iOS`.
-3. Open the demo project `TUIVoiceRoomApp.xcworkspace` with Xcode 11.0 or later and find the `TUIVoiceRoom/Debug/GenerateTestUserSig.swift` file in the project.
+3. Open the demo project `Example/TUIVoiceRoomApp.xcworkspace` with Xcode 11.0 or later and find the `Example/Debug/GenerateTestUserSig.swift` file in the project.
 4. Set parameters in `GenerateTestUserSig.swift`:
 <ul>
 <li>SDKAPPID: 0 by default. Replace it with your actual `SDKAPPID`.</li>
@@ -51,7 +50,7 @@ pod install
 
 ### Step 3. Compile and run the application
 
-Open the demo project `TUIVoiceRoom/TUIVoiceRoomApp.xcworkspace` with Xcode 11.0 or later and click **Run**.
+Open the demo project `Example/TUIVoiceRoomApp.xcworkspace` with Xcode 11.0 or later and click **Run**.
 
 
 ### Step 4. Try out the demo

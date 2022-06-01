@@ -151,7 +151,6 @@ class TRTCVoiceRoomTipsTableCell: UITableViewCell {
     }
 
     func constructViewHierarchy() {
-        /// 此方法内只做add子视图操作
         contentView.addSubview(containerView)
         containerView.addSubview(contentLabel)
         containerView.addSubview(acceptButton)
@@ -269,7 +268,6 @@ class TRTCVoiceRoomTipsTableCell: UITableViewCell {
     func updateCell() {
         if self.acceptAction != nil {
             acceptButton.isHidden = false
-            // 重新布局
             contentLabel.snp.remakeConstraints { (make) in
                 make.left.equalToSuperview().offset(16)
                 make.right.equalToSuperview().offset(-80)

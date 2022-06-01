@@ -8,12 +8,11 @@ _中文 | [English](README.en.md)_
     
 ```
 TUIVoiceRoom
-├─ App              // 语音聊天室主页UI代码以及用到的图片及国际化字符串资源文件夹
-├─ Debug            // 工程调试运行所需的关键业务代码文件夹
-├─ Login            // 登录UI及业务逻辑代码文件夹
-├─ Resources        // 语音聊天室功能所需的图片、国际化字符串资源文件夹
-├─ Source           // 语音聊天室核心业务逻辑代码文件夹
-└─ TXAppBasic       // 工程依赖的基础组件
+├─ Example                   // 工程模块，主要提供 TUIVoiceRoom 的测试页面
+├─ Resources                 // 语音聊天室功能所需的图片、国际化字符串资源文件夹
+├─ Source                    // 语音聊天室核心业务逻辑代码文件夹
+├─ TXAppBasic                // 工程依赖的基础组件
+└─ TUIVoiceRoom.podspec      // TUIVoiceRoom 组件 pod 接入文件
 ```
     
 ## 环境准备
@@ -35,13 +34,13 @@ TUIVoiceRoom
 ### 第二步：下载源码，配置工程
 
 1. 克隆或者直接下载此仓库源码，**欢迎 Star**，感谢~~
-2. SDK集成方式默认使用`Cocoapods`，工程目录下`Podfile`文件内已帮您添加了SDK的依赖`pod 'TXLiteAVSDK_TRTC'`，您只需要打开终端进入到工程目录下执行`pod install`，SDK就会自动集成。
+2. SDK集成方式默认使用`Cocoapods`，工程目录下`Example/Podfile`文件内已帮您添加了SDK的依赖`pod 'TXLiteAVSDK_TRTC'`，您只需要打开终端进入到工程目录下执行`pod install`，SDK就会自动集成。
 
 ```
 pod install
 ```
 >?遇到`CocoaPods could not find compatible versions for pod "TXIMSDK_Plus_iOS"`版本不一致，执行 `pod update TXIMSDK_Plus_iOS` 即可。
-3. 使用Xcode(11.0及以上)打开源码工程`TUIVoiceRoomApp.xcworkspace`，工程内找到`TUIVoiceRoom/Debug/GenerateTestUserSig.swift`文件 。
+3. 使用Xcode(11.0及以上)打开源码工程`Example/TUIVoiceRoomApp.xcworkspace`，工程内找到`Example/Debug/GenerateTestUserSig.swift`文件 。
 4. 设置`GenerateTestUserSig.swift`文件中的相关参数：
 <ul>
 <li>SDKAPPID：默认为 0 ，请设置为实际申请的SDKAPPID。</li>
@@ -52,7 +51,7 @@ pod install
 
 ### 第三步：编译运行
 
-使用 Xcode（11.0及以上的版本）打开源码工程 `TUIVoiceRoom/TUIVoiceRoomApp.xcworkspace`，单击【运行】即可开始调试本 App。
+使用 Xcode（11.0及以上的版本）打开源码工程 `Example/TUIVoiceRoomApp.xcworkspace`，单击【运行】即可开始调试本 App。
 
 
 ### 第四步：示例体验

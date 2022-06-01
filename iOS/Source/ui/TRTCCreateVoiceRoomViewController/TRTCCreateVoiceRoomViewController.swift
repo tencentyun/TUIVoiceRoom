@@ -9,7 +9,6 @@
 import UIKit
 
 public class TRTCCreateVoiceRoomViewController: UIViewController {
-    // 依赖管理者
     let dependencyContainer: TRTCVoiceRoomEnteryControl
     
     init(dependencyContainer: TRTCVoiceRoomEnteryControl) {
@@ -54,7 +53,6 @@ public class TRTCCreateVoiceRoomViewController: UIViewController {
         
     }
     
-    /// 取消
     @objc func cancel() {
         navigationController?.popViewController(animated: true)
     }

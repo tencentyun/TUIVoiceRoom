@@ -3,15 +3,15 @@
 //  TRTCVoiceRoomDemo
 //
 //  Created by abyyxwang on 2020/6/8.
-//Copyright © 2020 tencent. All rights reserved.
+//  Copyright © 2020 tencent. All rights reserved.
 //
 import UIKit
+import TUICore
 
 protocol TRTCVoiceRoomViewModelFactory {
    func makeVoiceRoomViewModel(roomInfo: VoiceRoomInfo, roomType: VoiceRoomViewType) -> TRTCVoiceRoomViewModel
 }
 
-/// TRTC voice room 聊天室
 public class TRTCVoiceRoomViewController: UIViewController {
     // MARK: - properties:
     let viewModelFactory: TRTCVoiceRoomViewModelFactory
@@ -49,6 +49,13 @@ public class TRTCVoiceRoomViewController: UIViewController {
         } else {
             model.createRoom(toneQuality: toneQuality.rawValue)
         }
+#if RTCube_APPSTORE
+        let selector = NSSelectorFromString("showAlertUserLiveTips")
+        if responds(to: selector) {
+            perform(selector)
+        }
+#endif
+        TUILogin.add(self)
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -77,20 +84,41 @@ public class TRTCVoiceRoomViewController: UIViewController {
     }
     
     deinit {
+        TUILogin.remove(self)
         TRTCLog.out("deinit \(type(of: self))")
     }
     
-    /// 取消
     @objc func cancel() {
-        // 取消后直接返回首页
         if viewModel?.roomType == VoiceRoomViewType.anchor {
             presentAlert(title: .exitText, message: .sureToExitText) { [weak self] in
                 guard let `self` = self else { return }
-                self.viewModel?.exitRoom() // 主播销毁房间
+                self.viewModel?.exitRoom() // The anchor terminates the room
             }
         } else {
             self.viewModel?.exitRoom()
         }
+    }
+}
+
+extension TRTCVoiceRoomViewController: TUILoginListener {
+    public func onConnecting() {
+        
+    }
+    
+    public func onConnectSuccess() {
+        
+    }
+    
+    public func onConnectFailed(_ code: Int32, err: String!) {
+        
+    }
+    
+    public func onKickedOffline() {
+        viewModel?.exitRoom()
+    }
+    
+    public func onUserSigExpired() {
+        
     }
 }
 

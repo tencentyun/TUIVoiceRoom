@@ -3,19 +3,21 @@
 //  TRTCVoiceRoomOCDemo
 //
 //  Created by abyyxwang on 2020/6/30.
-//  Copyright © 2020 tencent. All rights reserved.
+//  Copyright © 2020 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-//当前app module定义的版本号
-static NSString *APP_VERSION = @"9.5.0";
-/// 群属性写冲突，请先拉取最新的群属性后再尝试写操作，IMSDK5.6及其以上版本支持，麦位信息已经发生变化，需要重新拉取
+/// Version number defined by the current app module
+static NSString *APP_VERSION = @"app_version_1.0";
+/// Group attribute write conflict. Get the latest group attribute first before writing. This error code is supported in IM SDK 5.6 or later. The seat information has changed and needs to be pulled again.
 static int ERR_SVR_GROUP_ATTRIBUTE_WRITE_CONFLICT = 10056;
-/// 接口调用限频
+/// API call frequency limit
 static int ERR_CALL_METHOD_LIMIT = 10001;
+/// Connect Tencent timeout
+static int ERR_CONNECT_SERVICE_TIMEOUT = 10002;
 
 @interface VoiceRoomSeatInfo : NSObject
 

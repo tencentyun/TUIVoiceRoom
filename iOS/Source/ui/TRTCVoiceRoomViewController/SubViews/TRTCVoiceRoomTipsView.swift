@@ -33,24 +33,21 @@ class TRTCVoiceRoomTipsView: UIView {
         return tableView
     }()
     
-    // MARK: - 视图生命周期函数
     override func didMoveToWindow() {
         super.didMoveToWindow()
         guard !isViewReady else {
             return
         }
         isViewReady = true
-        constructViewHierarchy() // 视图层级布局
-        activateConstraints() // 生成约束（此时有可能拿不到父视图正确的frame）
+        constructViewHierarchy()
+        activateConstraints()
     }
     
     func constructViewHierarchy() {
-        /// 此方法内只做add子视图操作
         addSubview(tipsTableView)
     }
 
     func activateConstraints() {
-        /// 此方法内只给子视图做布局,使用:AutoLayout布局
         tipsTableView.snp.makeConstraints { (make) in
             make.left.right.bottom.top.equalToSuperview()
         }

@@ -52,20 +52,18 @@ class TRTCVoiceRoomMsgInputView: UIView {
             return
         }
         isViewReady = true
-        constructViewHierarchy() // 视图层级布局
-        activateConstraints() // 生成约束（此时有可能拿不到父视图正确的frame）
+        constructViewHierarchy()
+        activateConstraints()
     }
     
 
     func constructViewHierarchy() {
-        /// 此方法内只做add子视图操作
         addSubview(containerView)
         containerView.addSubview(msgTextFiled)
         containerView.addSubview(sendButton)
     }
 
     func activateConstraints() {
-        /// 此方法内只给子视图做布局,使用:AutoLayout布局
         msgTextFiled.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(20)
             make.bottom.top.equalToSuperview()
@@ -84,7 +82,6 @@ class TRTCVoiceRoomMsgInputView: UIView {
     }
 
     func bindInteraction() {
-        /// 此方法负责做viewModel和视图的绑定操作
         NotificationCenter.default.addObserver(self, selector: #selector(keyBoardShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyBoardHiden(sender:)), name: UIResponder.keyboardDidHideNotification, object: nil)
         sendButton.addTarget(self, action: #selector(msgSend(sender:)), for: .touchUpInside)
