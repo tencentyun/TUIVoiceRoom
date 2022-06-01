@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import ImSDK_Plus
+import TUICore
 
 @objc class LoginResultModel: NSObject, Codable {
     @objc var token: String
@@ -107,13 +108,12 @@ import ImSDK_Plus
     ///   - success: 成功
     ///   - failed: 失败
     @objc func IMLogin(userSig: String, success: @escaping ()->Void, failed: @escaping (_ error: String)->Void) {
-        V2TIMManager.sharedInstance()?.initSDK(Int32(SDKAPPID), config: nil, listener: nil)
         guard let userID = curUserModel?.userId else {
             failed("userID wrong")
             return
         }
         let user = String(userID)
-        V2TIMManager.sharedInstance()?.login(user, userSig: userSig, succ: {
+        TUILogin.login(Int32(SDKAPPID), userID: user, userSig: userSig) {
             debugPrint("login success")
             V2TIMManager.sharedInstance()?.getUsersInfo([userID], succ: { [weak self] (infos) in
                 guard let `self` = self else { return }
@@ -129,12 +129,10 @@ import ImSDK_Plus
                 failed(err ?? "")
                 debugPrint("get user info failed, code:\(code), error: \(err ?? "nil")")
             })
-            
-            
-        }, fail: { (code, errorDes) in
+        } fail: { (code, errorDes) in
             failed(errorDes ?? "")
             debugPrint("login failed, code:\(code), error: \(errorDes ?? "nil")")
-        })
+        }
     }
     
     @objc func curUserID() -> String? {

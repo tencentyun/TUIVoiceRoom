@@ -41,7 +41,6 @@ class TRTCVoiceRoomImageOnlyCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        // Cell即将被重用，重置视图状态
         headImageView.kf.cancelDownloadTask()
         headImageView.image = nil
     }
@@ -114,6 +113,12 @@ class TRTCVoiceRoomTopView: UIView {
         btn.adjustsImageWhenHighlighted = false
         return btn
     }()
+    private let reportBtn : UIButton = {
+        let btn = UIButton(type: .custom)
+        btn.setImage(UIImage(named: "voiceroom_report", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.adjustsImageWhenHighlighted = false
+        return btn
+    }()
     private let audienceListCollectionView : UICollectionView = {
         let layout = TRTCVoiceRoomAudienceListLayout()
         layout.itemSize = CGSize(width: 24, height: 24)
@@ -176,10 +181,15 @@ class TRTCVoiceRoomTopView: UIView {
         addSubview(closeBtn)
         addSubview(audienceListCollectionView)
         addSubview(nextBtn)
+#if RTCube_APPSTORE
+        if !viewModel.isOwner {
+            addSubview(reportBtn)
+        }
+#endif
     }
     
     private func activateConstraints() {
-        activateConstraintsRoomView() // 顶部房间信息区域
+        activateConstraintsRoomView()
         closeBtn.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview().offset(-20)
             make.centerY.equalTo(roomContainerView)
@@ -201,6 +211,13 @@ class TRTCVoiceRoomTopView: UIView {
             make.trailing.equalToSuperview().offset(-20)
             make.size.equalTo(CGSize(width: 24, height: 24))
             make.centerY.equalTo(audienceListCollectionView)
+        }
+        if reportBtn.superview != nil {
+            reportBtn.snp.makeConstraints { (make) in
+                make.trailing.equalTo(closeBtn.snp.leading).offset(-10)
+                make.centerY.equalTo(closeBtn)
+                make.size.equalTo(CGSize(width: 32, height: 32))
+            }
         }
     }
     
@@ -237,13 +254,14 @@ class TRTCVoiceRoomTopView: UIView {
         closeBtn.addTarget(self, action: #selector(closeBtnClick), for: .touchUpInside)
         shareBtn.addTarget(self, action: #selector(shareBtnClick), for: .touchUpInside)
         nextBtn.addTarget(self, action: #selector(nextBtnClick), for: .touchUpInside)
+        reportBtn.addTarget(self, action: #selector(reportBtnClick), for: .touchUpInside)
     }
     
     @objc func closeBtnClick() {
         if viewModel.roomType == VoiceRoomViewType.anchor {
             viewModel.viewResponder?.showAlert(info: (String.exitText, String.sureToExitText), sureAction: { [weak self] in
                 guard let `self` = self else { return }
-                self.viewModel.exitRoom() // 主播销毁房间
+                self.viewModel.exitRoom() 
             }, cancelAction: {
                 
             })
@@ -264,6 +282,12 @@ class TRTCVoiceRoomTopView: UIView {
     }
     @objc func shareBtnClick() {
         
+    }
+    @objc func reportBtnClick() {
+        let selector = NSSelectorFromString("showReportAlertWithRoomId:")
+        if responds(to: selector) {
+            perform(selector, with: viewModel.roomInfo.roomID.description)
+        }
     }
 }
 

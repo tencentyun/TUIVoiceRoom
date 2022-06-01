@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT void TUIVoiceRoomLog(NSString *format, ...);
 
-// 使用TRTCCloud apiLog，日志会写入本地
 #define TRTCLog(fmt, ...) TUIVoiceRoomLog((@"TRTC LOG:%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 @class TXVoiceRoomUserInfo;

@@ -101,20 +101,19 @@ class TRTCVoiceRoomRootView: UIView {
         TRTCLog.out("reset audio settings")
     }
     
-    // MARK: - 视图生命周期
+    // MARK: - ViewLifecycle
     override func didMoveToWindow() {
         super.didMoveToWindow()
         guard !isViewReady else {
             return
         }
         isViewReady = true
-        constructViewHierarchy() // 视图层级布局
-        activateConstraints() // 生成约束（此时有可能拿不到父视图正确的frame）
+        constructViewHierarchy()
+        activateConstraints()
         bgView.kf.setImage(with: URL(string: viewModel.roomInfo.coverUrl), placeholder: nil, options: [.backgroundDecode], completionHandler: nil)
     }
     
     func constructViewHierarchy() {
-        /// 此方法内只做add子视图操作
         backgroundLayer.frame = bounds;
         layer.insertSublayer(backgroundLayer, at: 0)
         addSubview(bgView)
@@ -146,7 +145,6 @@ class TRTCVoiceRoomRootView: UIView {
     func bindInteraction() {
         seatCollection.delegate = self
         seatCollection.dataSource = self
-        /// 此方法负责做viewModel和视图的绑定操作
         mainMenuView.delegate = self
     }
 }
@@ -165,15 +163,12 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomMainMenuDelegate {
     func menuView(menu: TRTCVoiceRoomMainMenuView, click item: IconTuple) -> Bool {
         switch item.type {
         case .message:
-            // 消息框
             viewModel.openMessageTextInput()
             break
         case .bgmusic:
-            // 音效
             showBgMusicAlert()
             break
         case .mute:
-            // 麦克风
             if viewModel.isOwner {
                 if let user = viewModel.masterAnchor?.seatUser {
                     viewModel.userMuteMap[user.userId] = item.isSelect
@@ -206,7 +201,7 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomMainMenuDelegate {
 extension TRTCVoiceRoomRootView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let model = viewModel.anchorSeatList[indexPath.row]
-        model.action?(indexPath.row + 1) // 转换座位号输入
+        model.action?(indexPath.row + 1)
     }
 }
 
@@ -219,7 +214,6 @@ extension TRTCVoiceRoomRootView: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TRTCVoiceRoomSeatCell", for: indexPath)
         let model = viewModel.anchorSeatList[indexPath.item]
         if let seatCell = cell as? TRTCVoiceRoomSeatCell {
-            // 配置 seatCell 信息
             seatCell.setCell(model: model, userMuteMap: viewModel.userMuteMap)
         }
         return cell
@@ -383,7 +377,6 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
     }
     
     func showAudienceAlert(seat: SeatInfoModel) {
-        // 过滤掉房主信息
         let audienceList = viewModel.memberAudienceList.filter({$0.userInfo.userId != viewModel.roomInfo.ownerId})
         let alert = TRTCVoiceRoomAudienceAlert(viewModel: viewModel, seatModel: seat, audienceList: audienceList)
         addSubview(alert)
@@ -460,7 +453,17 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
         }
     }
     
-    
+    func showConnectTimeoutAlert() {
+        let alertController = UIAlertController.init(title: .alertText, message: .timeoutText, preferredStyle: .alert)
+        let sureAlertAction = UIAlertAction.init(title: .acceptText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.exitRoom()
+        }
+        alertController.addAction(sureAlertAction)
+        rootViewController?.present(alertController, animated: true, completion: {
+            
+        })
+    }
 }
 
 /// MARK: - internationalization string
@@ -472,6 +475,8 @@ fileprivate extension String {
     static let selectText = VoiceRoomLocalize("Demo.TRTC.Salon.pleaseselect")
     static let cancelText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
     static let seatmutedText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.onseatmuted")
+    static let alertText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.prompt")
+    static let timeoutText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.connecttimeout")
 }
 
 

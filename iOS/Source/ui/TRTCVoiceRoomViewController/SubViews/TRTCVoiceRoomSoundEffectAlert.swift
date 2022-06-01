@@ -9,13 +9,13 @@
 import Foundation
 
 enum AudioEffectType {
-    case audition // 试听
-    case copyright // 版权
-    case musicVolume // 音乐音量
-    case vocalVolume // 人声音量
-    case vocalRiseFall // 人声升降调
-    case voiceChange // 变声
-    case reverberation // 混响
+    case audition
+    case copyright
+    case musicVolume
+    case vocalVolume
+    case vocalRiseFall
+    case voiceChange
+    case reverberation 
 }
 
 // MARK: - Sound Effect

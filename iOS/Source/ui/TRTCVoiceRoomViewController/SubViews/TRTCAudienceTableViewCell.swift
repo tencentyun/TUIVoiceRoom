@@ -60,7 +60,6 @@ class TRTCAudienceTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    // MARK: - 视图的生命周期函数
     override func didMoveToWindow() {
         super.didMoveToWindow()
         guard !isViewReady else {
@@ -73,7 +72,6 @@ class TRTCAudienceTableViewCell: UITableViewCell {
     }
     
     func constructViewHierarchy() {
-        /// 此方法内只做add子视图操作
         addSubview(iconView)
         addSubview(nameLabel)
         addSubview(inviateButton)

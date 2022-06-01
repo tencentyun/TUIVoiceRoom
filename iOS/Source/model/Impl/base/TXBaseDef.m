@@ -11,7 +11,6 @@
 
 @interface TRTCCloud (VoiceRoomLog)
 
-// 打印一些关键log到本地日志中
 - (void)apiLog:(NSString *)log;
 
 @end

@@ -13,10 +13,10 @@
 #import "txvoiceroomCommonDef.h"
 #import "VoiceRoomLocalized.h"
 #import "TRTCVoiceRoomDef.h"
+#import "TUILogin.h"
 
 @interface TXVoiceRoomService ()<V2TIMSDKListener, V2TIMSimpleMsgListener, V2TIMGroupListener, V2TIMSignalingListener>
 
-@property (nonatomic, assign) BOOL isInitIMSDK;
 @property (nonatomic, assign) BOOL isLogin;
 @property (nonatomic, assign) BOOL isEnterRoom;
 
@@ -47,20 +47,9 @@
                    userId:(NSString *)userId
                   userSig:(NSString *)userSig
                  callback:(TXCallback)callback {
-    if (!self.isInitIMSDK) {
-        V2TIMSDKConfig *config = [[V2TIMSDKConfig alloc] init];
-        config.logLevel = V2TIM_LOG_ERROR;
-        self.isInitIMSDK = [self.imManager initSDK:sdkAppId config:config];
-        if (!self.isInitIMSDK) {
-            if (callback) {
-                callback(VOICE_ROOM_SERVICE_CODE_ERROR, @"init im sdk error.");
-            }
-            return;
-        }
-    }
-    NSString *loggedUserId = [self.imManager getLoginUser];
+    NSString *loggedUserId = [TUILogin getUserID];
     if (loggedUserId && [loggedUserId isEqualToString:userId]) {
-        // 已经登陆了
+        // the user has been login.
         self.isLogin = YES;
         self.selfUserId = loggedUserId;
         if (callback) {
@@ -69,7 +58,7 @@
         return;
     }
     @weakify(self)
-    [self.imManager login:userId userSig:userSig succ:^{
+    [TUILogin login:sdkAppId userID:userId userSig:userSig succ:^{
         @strongify(self)
         if (!self) {
             return;
@@ -79,9 +68,9 @@
         if (callback) {
             callback(0, @"im login success.");
         }
-    } fail:^(int code, NSString *desc) {
+    } fail:^(int code, NSString *msg) {
         if (callback) {
-            callback(code, desc ?: @"im login error");
+            callback(code, msg ?: @"im login error");
         }
     }];
 }
@@ -130,7 +119,7 @@
     self.isLogin = NO;
     self.selfUserId = @"";
     @weakify(self)
-    [self.imManager logout:^{
+    [TUILogin logout:^{
         @strongify(self)
         if (!self) {
             return;
@@ -138,9 +127,9 @@
         if (callback) {
             callback(0, @"im logout success");
         }
-    } fail:^(int code, NSString *desc) {
+    } fail:^(int code, NSString *msg) {
         if (callback) {
-            callback(code, desc);
+            callback(code, (msg ?: @"im logout error"));
         }
     }];
 }
@@ -214,8 +203,6 @@
         }
         
         if (code == 10025 || code == 10021) {
-            // 表明群主是自己，认为创建成功
-            // 群ID已被他人使用，走进房的逻辑
             [self setGroupInfoWithRoomId:roomId roomName:roomName coverUrl:coverUrl userName:self.selfUserName];
             [self.imManager joinGroup:roomId msg:@"" succ:^{
                 TRTCLog(@"gorup has benn created. join group success");
@@ -264,6 +251,8 @@
             [self unInitIMListener];
             [self cleanRoomStatus];
         } else {
+            [self unInitIMListener];
+            [self cleanRoomStatus];
             if (callback) {
                 callback(code, desc ?: @"destroy room failed");
             }
@@ -404,12 +393,10 @@
             return;
         }
         NSInteger sourceSeatIndex = [self.seatInfoList indexOfObject:sourceSeatInfo];
-        // 之前的麦位信息修改
         TXSeatInfo *sourceChangeInfo = [[TXSeatInfo alloc] init];
         sourceChangeInfo.status = kTXSeatStatusUnused;
         sourceChangeInfo.user = @"";
         sourceChangeInfo.mute = sourceSeatInfo.mute;
-        // 需要移动的麦位信息
         TXSeatInfo *targetChangeInfo = [[TXSeatInfo alloc] init];
         targetChangeInfo.status = kTXSeatStatusUsed;
         targetChangeInfo.user = self.selfUserId;
@@ -885,6 +872,7 @@
     if (![groupID isEqualToString:self.mRoomId]) {
         return;
     }
+    [self unInitIMListener];
     [self cleanRoomStatus];
     if ([self canDelegateResponseMethod:@selector(onRoomDestroyWithRoomId:)]) {
         [self.delegate onRoomDestroyWithRoomId:groupID];
@@ -920,10 +908,7 @@
 }
 
 
-#pragma mark - 群属性麦位更新
-/// 群属性回调麦位信息更新
-/// @param attributes 群属性信息
-/// @param seatSize 麦位数量
+#pragma mark - GroupAttributesChange
 - (void)onSeatAttrMapChangedWithAttributes:(NSDictionary<NSString *, NSString *> *)attributes seatSize:(NSInteger)seatSize{
     
     // 解析 seatInfo
@@ -946,7 +931,6 @@
                     }
                     break;
                 case kTXSeatStatusUsed:
-                    // 正常上麦
                     [self onSeatTakeWithIndex:i user:new.user];
                     break;
                 case kTXSeatStatusClose:
@@ -962,8 +946,6 @@
     }
 }
 
-/// 更新本地群属性信息
-/// @param callback 回调
 - (void)getGroupAttrsWithCallBack:(TXCallback _Nullable)callback{
     @weakify(self)
     [self.imManager getGroupAttributes:self.mRoomId keys:nil succ:^(NSMutableDictionary<NSString *,NSString *> *groupAttributeList) {
@@ -978,10 +960,9 @@
             return;
         }
         TRTCLog(@"get group attrs success, now update data");
-        // 解析roomInfo
         TXRoomInfo* roomInfo = [TXVoiceRoomIMJsonHandle getRoomInfoFromAttr:groupAttributeList];
         if (roomInfo) {
-            roomInfo.memberCount = -1; // 当前房间的MemberCount无法从这个接口正确获取。
+            roomInfo.memberCount = -1;
             self.roomInfo = roomInfo;
         } else {
             TRTCLog(@"init room info is empty, enter room failed.");
@@ -993,11 +974,9 @@
 
         self.isEnterRoom = YES;
         self.ownerUserId = self.roomInfo.ownerId;
-        // 回调 更新roomInfo
         if ([self canDelegateResponseMethod:@selector(onRoomInfoChange:)]) {
             [self.delegate onRoomInfoChange:self.roomInfo];
         }
-        // 更新麦位信息
         [self onSeatAttrMapChangedWithAttributes:groupAttributeList seatSize:self.roomInfo.seatSize];
         if (callback) {
             callback(0, @"enter room success");
@@ -1135,8 +1114,7 @@
 }
 
 - (void)initImListener {
-    [self.imManager setGroupListener:self];
-    // 设置前先remove下，防止在单例的情况下重复设置
+    [self.imManager addGroupListener:self];
     [self.imManager removeSignalingListener:self];
     [self.imManager removeSimpleMsgListener:self];
     [self.imManager addSignalingListener:self];
@@ -1144,7 +1122,7 @@
 }
 
 - (void)unInitIMListener {
-    [self.imManager setGroupListener:nil];
+    [self.imManager removeGroupListener:nil];
     [self.imManager removeSignalingListener:self];
     [self.imManager removeSimpleMsgListener:self];
 }
@@ -1212,11 +1190,10 @@
         if (!groupAttributeList) {
             return;
         }
-        // 解析 roomInfo
         TXRoomInfo* roomInfo = [TXVoiceRoomIMJsonHandle getRoomInfoFromAttr:groupAttributeList];
         if (roomInfo) {
             roomInfo.roomId = roomId;
-            roomInfo.memberCount = -1; // 当前房间的MemberCount无法从这个接口正确获取。
+            roomInfo.memberCount = -1;
             self.roomInfo = roomInfo;
         } else {
             TRTCLog(@"group room info is empty, enter room failed.");
@@ -1232,7 +1209,6 @@
         if ([self canDelegateResponseMethod:@selector(onRoomInfoChange:)]) {
             [self.delegate onRoomInfoChange:self.roomInfo];
         }
-        // 解析 seatInfo
         self.seatInfoList = [TXVoiceRoomIMJsonHandle getSeatListFromAttr:groupAttributeList seatSize:self.roomInfo.seatSize];
         if ([self canDelegateResponseMethod:@selector(onSeatInfoListChange:)]) {
             [self.delegate onSeatInfoListChange:self.seatInfoList];

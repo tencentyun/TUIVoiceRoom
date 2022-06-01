@@ -17,134 +17,134 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TRTCVoiceRoomDelegate <NSObject>
 
-/// 错误回调
-/// @param code 错误码
-/// @param message 错误信息
+/// Callback for error
+/// @param code Error code
+/// @param message Error message
 - (void)onError:(int)code
                 message:(NSString*)message
 NS_SWIFT_NAME(onError(code:message:));
 
-/// 警告回调
-/// @param code 警告码
-/// @param message 警告信息
+/// Callback for warning
+/// @param code Warning code
+/// @param message Warning message
 - (void)onWarning:(int)code
                   message:(NSString *)message
 NS_SWIFT_NAME(onWarning(code:message:));
 
-/// Debug日志
-/// @param message 信息
+/// Debugging log
+/// @param message Message
 - (void)onDebugLog:(NSString *)message
 NS_SWIFT_NAME(onDebugLog(message:));
 
-/// 房间销毁回调
-/// @param message 销毁信息
+/// Callback for room termination
+/// @param message Termination message
 - (void)onRoomDestroy:(NSString *)message
 NS_SWIFT_NAME(onRoomDestroy(message:));
 
-/// 房间信息变更回调
-/// @param roomInfo 房间信息
+/// Callback for room information change
+/// @param roomInfo Room information
 - (void)onRoomInfoChange:(VoiceRoomInfo *)roomInfo
 NS_SWIFT_NAME(onRoomInfoChange(roomInfo:));
 
-/// 房间作为变更回调
-/// @param seatInfolist 座位列表信息
+/// Callback for room seat change
+/// @param seatInfolist Seat list information
 - (void)onSeatInfoChange:(NSArray<VoiceRoomSeatInfo *> *)seatInfolist
 NS_SWIFT_NAME(onSeatListChange(seatInfoList:));
 
-/// 主播上麦回调
-/// @param index 麦位号
-/// @param user 用户信息
+/// Callback for anchor mic-on
+/// @param index Seat number
+/// @param user User information
 - (void)onAnchorEnterSeat:(NSInteger)index
                               user:(VoiceRoomUserInfo *)user
 NS_SWIFT_NAME(onAnchorEnterSeat(index:user:));
 
-/// 主播下麦回调
-/// @param index 麦位号
-/// @param user 用户信息
+/// Callback for anchor mic-off
+/// @param index Seat number
+/// @param user User information
 - (void)onAnchorLeaveSeat:(NSInteger)index
                      user:(VoiceRoomUserInfo *)user
 NS_SWIFT_NAME(onAnchorLeaveSeat(index:user:));
 
-/// 座位静音状态回调
-/// @param index 座位号
-/// @param isMute 静音状态
+/// Callback for seat mute status
+/// @param index Seat number
+/// @param isMute Mute status
 - (void)onSeatMute:(NSInteger)index
             isMute:(BOOL)isMute
 NS_SWIFT_NAME(onSeatMute(index:isMute:));
 
-/// 用户麦克风是否静音回调
-/// @param userId 用户id
-/// @param mute 是否静音
+/// Whether a user's mic was muted.
+/// @param userId User ID
+/// @param mute Muted or unmuted
 - (void)onUserMicrophoneMute:(NSString *)userId mute:(BOOL)mute
 NS_SWIFT_NAME(onUserMicrophoneMute(userId:mute:));
 
-/// 座位关闭回调
-/// @param index 座位号
-/// @param isClose 是否关闭
+/// Callback for seat closure
+/// @param index Seat number
+/// @param isClose Whether it is closed
 - (void)onSeatClose:(NSInteger)index
             isClose:(BOOL)isClose
 NS_SWIFT_NAME(onSeatClose(index:isClose:));
 
-/// 观众进房回调
-/// @param userInfo 观众信息
+/// Callback for audience member's room entry
+/// @param userInfo Audience member information
 - (void)onAudienceEnter:(VoiceRoomUserInfo *)userInfo
 NS_SWIFT_NAME(onAudienceEnter(userInfo:));
 
-/// 观众退房回调
-/// @param userInfo 观众信息
+/// Callback for audience member's room exit
+/// @param userInfo Audience member information
 - (void)onAudienceExit:(VoiceRoomUserInfo *)userInfo
 NS_SWIFT_NAME(onAudienceExit(userInfo:));
 
-/// 上麦成员的音量变化
-/// @param userVolumes 各个用户音量信息
-/// @param totalVolume 整体音量信息
+/// Volume level change of speakers
+/// @param userVolumes Volume level information of each user
+/// @param totalVolume Overall volume level information
 - (void)onUserVolumeUpdate:(NSArray<TRTCVolumeInfo *> *)userVolumes totalVolume:(NSInteger)totalVolume
 NS_SWIFT_NAME(onUserVolumeUpdate(userVolumes:totalVolume:));
 
-/// 文本消息接收回调
-/// @param message 消息内容
-/// @param userInfo 消息发送方信息
+/// Callback for text chat message receipt
+/// @param message Message content
+/// @param userInfo Sender information
 - (void)onRecvRoomTextMsg:(NSString *)message
                  userInfo:(VoiceRoomUserInfo *)userInfo
 NS_SWIFT_NAME(onRecvRoomTextMsg(message:userInfo:));
 
-/// 自定义消息（信令消息）接收回调
-/// @param cmd 信令
-/// @param message 消息内容
-/// @param userInfo 发送方信息
+/// Callback for custom message (command message) receipt
+/// @param cmd Command
+/// @param message Message content
+/// @param userInfo Sender information
 - (void)onRecvRoomCustomMsg:(NSString *)cmd
                     message:(NSString *)message
                    userInfo:(VoiceRoomUserInfo *)userInfo
 NS_SWIFT_NAME(onRecvRoomCustomMsg(cmd:message:userInfo:));
 
-/// 邀请信息接收回调
-/// @param identifier 目标用户ID
-/// @param inviter 邀请者ID
-/// @param cmd 信令
-/// @param content 内容
+/// Callback for invitation message receipt
+/// @param identifier Invitee ID
+/// @param inviter Inviter ID
+/// @param cmd Command
+/// @param content Content
 - (void)onReceiveNewInvitation:(NSString *)identifier
                        inviter:(NSString *)inviter
                            cmd:(NSString *)cmd
                        content:(NSString *)content
 NS_SWIFT_NAME(onReceiveNewInvitation(identifier:inviter:cmd:content:));
 
-/// 邀请被接受回调
-/// @param identifier 目标用户ID
-/// @param invitee 邀请者ID
+/// Callback for invitation acceptance
+/// @param identifier Invitee ID
+/// @param inviter Inviter ID
 - (void)onInviteeAccepted:(NSString *)identifier
                   invitee:(NSString *)invitee
 NS_SWIFT_NAME(onInviteeAccepted(identifier:invitee:));
 
-/// 邀请被拒绝回调
-/// @param identifier 目标用户ID
-/// @param invitee 邀请者ID
+/// Callback for invitation decline
+/// @param identifier Invitee ID
+/// @param inviter Inviter ID
 - (void)onInviteeRejected:(NSString *)identifier
                   invitee:(NSString *)invitee
 NS_SWIFT_NAME(onInviteeRejected(identifier:invitee:));
 
-/// 邀请被取消回调
-/// @param identifier 目标用户ID
-/// @param invitee 邀请者ID
+/// Callback for invitation cancellation
+/// @param identifier Invitee ID
+/// @param inviter Inviter ID
 - (void)onInvitationCancelled:(NSString *)identifier
                       invitee:(NSString *)invitee NS_SWIFT_NAME(onInvitationCancelled(identifier:invitee:));
 
