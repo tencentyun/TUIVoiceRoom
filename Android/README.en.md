@@ -7,9 +7,9 @@ This document describes how to quickly run the TUIVoiceRoom demo project to make
 
 ```
 TUIVoiceRoom
-├─ App          // Main panel, which provides entries of various scenarios
-├─ Debug        // Debugging code
-└─ Source       // Video meeting business logic
+├─ app           // Main panel, which provides entries of various scenarios
+├─ debug         // Debugging code
+└─ tuivoicerooom // Video meeting business logic
 ```
 
 ## Environment Requirements
@@ -31,7 +31,7 @@ TUIVoiceRoom
 [](id:ui.step2)
 ### Step 2. Download the source code and configure the project
 1. Clone or directly download the source code in the repository. **Feel free to star our project if you like it.**
-2. Find and open the `Android/Debug/src/main/java/com/tencent/liteav/debug/GenerateTestUserSig.java` file.
+2. Find and open the `Android/debug/src/main/java/com/tencent/liteav/debug/GenerateTestUserSig.java` file.
 3. Set parameters in `GenerateTestUserSig.java`:
 	<img src="https://main.qcloudimg.com/raw/f9b23b8632058a75b78d1f6fdcdca7da.png" width="900">
 	- SDKAPPID: A placeholder by default. Set it to the `SDKAppID` that you noted down in step 1.
