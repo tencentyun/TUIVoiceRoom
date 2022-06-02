@@ -23,6 +23,5 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api project(":Source")
-    api project(':Debug')
+    api project(":tuivoiceroom")
 }

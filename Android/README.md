@@ -9,9 +9,9 @@ _中文 | [English](README.en.md)_
 
 ```
 TUIVoiceRoom
-├─ App          // 主面板，语音聊天室场景入口
-├─ Debug        // 调试相关
-└─ Source       // 语音聊天室业务逻辑
+├─ app          // 主面板，语音聊天室场景入口
+├─ debug        // 调试相关
+└─ tuivoiceroom // 语音聊天室业务逻辑
 ```
 
 ## 环境准备
@@ -33,7 +33,7 @@ TUIVoiceRoom
 [](id:ui.step2)
 ### 第二步：下载源码，配置工程
 1. 克隆或者直接下载此仓库源码，**欢迎 Star**，感谢~~
-2. 找到并打开 `Android/Debug/src/main/java/com/tencent/liteav/debug/GenerateTestUserSig.java` 文件。
+2. 找到并打开 `Android/debug/src/main/java/com/tencent/liteav/debug/GenerateTestUserSig.java` 文件。
 3. 配置 `GenerateTestUserSig.java` 文件中的相关参数：
 	<img src="https://main.qcloudimg.com/raw/f9b23b8632058a75b78d1f6fdcdca7da.png" width="900">
 	- SDKAPPID：默认为占位符（PLACEHOLDER），请设置为步第一步中记录下的 SDKAppID。
@@ -64,9 +64,9 @@ Tips：TUIVoiceRoom 使用体验，至少需要两台设备，如果用户A/B分
 - 步骤1：输入用户名(请确保用户名唯一性，不能与其他用户重复)，比如222；
 - 步骤2、输入用户 A 创建的房间号（设备A第4步记录的房间号），点击加入房间；
 
-| 步骤1 | 步骤2 | 
+| 步骤1 | 步骤2 |
 |---------|---------|
-| <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/user_b.png" width="320"/> | <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuivoiceroom_enter_room.png" width="320"/> | 
+| <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/user_b.png" width="320"/> | <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuivoiceroom_enter_room.png" width="320"/> |
 
 ## 常见问题
 

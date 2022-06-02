@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private TRTCVoiceRoom  mTRTCVoiceRoom;
     private RelativeLayout mButtonCreateRoom;
 
-    private static final String ROOM_COVER_ARRAY[] = {
+    private static final String[] ROOM_COVER_ARRAY = {
             "https://liteav-test-1252463788.cos.ap-guangzhou.myqcloud.com/voice_room/voice_room_cover1.png",
             "https://liteav-test-1252463788.cos.ap-guangzhou.myqcloud.com/voice_room/voice_room_cover2.png",
             "https://liteav-test-1252463788.cos.ap-guangzhou.myqcloud.com/voice_room/voice_room_cover3.png",
@@ -133,21 +133,23 @@ public class MainActivity extends AppCompatActivity {
     private void initData() {
         final UserModel userModel = UserModelManager.getInstance().getUserModel();
         mTRTCVoiceRoom = TRTCVoiceRoom.sharedInstance(this);
-        mTRTCVoiceRoom.login(GenerateTestUserSig.SDKAPPID, userModel.userId, userModel.userSig, new TRTCVoiceRoomCallback.ActionCallback() {
-            @Override
-            public void onCallback(int code, String msg) {
-                if (code == 0) {
-                    mTRTCVoiceRoom.setSelfProfile(userModel.userName, userModel.userAvatar, new TRTCVoiceRoomCallback.ActionCallback() {
-                        @Override
-                        public void onCallback(int code, String msg) {
-                            if (code == 0) {
-                                Log.d(TAG, "setSelfProfile success");
-                            }
+        mTRTCVoiceRoom.login(GenerateTestUserSig.SDKAPPID, userModel.userId, userModel.userSig,
+                new TRTCVoiceRoomCallback.ActionCallback() {
+                    @Override
+                    public void onCallback(int code, String msg) {
+                        if (code == 0) {
+                            mTRTCVoiceRoom.setSelfProfile(userModel.userName, userModel.userAvatar,
+                                    new TRTCVoiceRoomCallback.ActionCallback() {
+                                        @Override
+                                        public void onCallback(int code, String msg) {
+                                            if (code == 0) {
+                                                Log.d(TAG, "setSelfProfile success");
+                                            }
+                                        }
+                                    });
                         }
-                    });
-                }
-            }
-        });
+                    }
+                });
     }
 
     private void createRoom() {
