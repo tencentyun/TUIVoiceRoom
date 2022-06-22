@@ -284,9 +284,9 @@ class TRTCVoiceRoomTopView: UIView {
         
     }
     @objc func reportBtnClick() {
-        let selector = NSSelectorFromString("showReportAlertWithRoomId:")
+        let selector = NSSelectorFromString("showReportAlertWithRoomId:ownerId:")
         if responds(to: selector) {
-            perform(selector, with: viewModel.roomInfo.roomID.description)
+            perform(selector, with: viewModel.roomInfo.roomID.description, with: viewModel.roomInfo.ownerId)
         }
     }
 }
