@@ -828,10 +828,10 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         if (TextUtils.isEmpty(userId)) {
             return false;
         }
-        for (Map.Entry<Integer, String> entity : mSeatInfoMap.entrySet()) {
-            return userId.equals(entity.getValue());
+        if (mSeatInfoMap == null) {
+            return false;
         }
-        return false;
+        return mSeatInfoMap.containsValue(userId);
     }
 
     private void showConnectTimeoutDialog() {
