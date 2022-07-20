@@ -209,8 +209,9 @@ static const int TC_TRTC_FRAMEWORK      = 1;
         }
     } else {
         self.isInRoom = NO;
+        NSString *errorMsg = (result == ERR_TRTC_USER_SIG_CHECK_FAILED ? @"userSig invalid, please login again.":@"enter trtc room fail.");
         if (self.enterRoomCallback) {
-            self.enterRoomCallback((int)result, @"enter trtc room fail.");
+            self.enterRoomCallback((int)result, errorMsg);
         }
     }
     self.enterRoomCallback = nil;
