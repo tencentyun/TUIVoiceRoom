@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.tencent.liteav.debug.BuildConfig;
+import com.tencent.liteav.basic.RTCubeUtils;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
@@ -92,7 +92,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             }
         });
         TUILogin.addLoginListener(mTUILoginListener);
-        mBtnReport.setVisibility(BuildConfig.RTCube_APPSTORE ? View.VISIBLE : View.GONE);
+        mBtnReport.setVisibility(RTCubeUtils.isRTCubeApp(this) ? View.VISIBLE : View.GONE);
         mBtnReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,16 +259,17 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             }
             String inviteId = mTRTCVoiceRoom.sendInvitation(TCConstants.CMD_REQUEST_TAKE_SEAT, mOwnerId,
                     String.valueOf(changeSeatIndexToModelIndex(itemPos)), new TRTCVoiceRoomCallback.ActionCallback() {
-                @Override
-                public void onCallback(int code, String msg) {
-                    if (code == 0) {
-                        ToastUtils.showShort(
-                                R.string.trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing);
-                    } else {
-                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_failed_to_send_application, msg));
-                    }
-                }
-            });
+                        @Override
+                        public void onCallback(int code, String msg) {
+                            if (code == 0) {
+                                ToastUtils.showShort(R.string
+                                        .trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing);
+                            } else {
+                                ToastUtils.showShort(getString(R
+                                        .string.trtcvoiceroom_toast_failed_to_send_application, msg));
+                            }
+                        }
+                    });
             mInvitationSeatMap.put(inviteId, itemPos);
         } else {
             if (mIsTakingSeat) {
@@ -297,16 +298,17 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             }
             String inviteId = mTRTCVoiceRoom.sendInvitation(TCConstants.CMD_REQUEST_TAKE_SEAT, mOwnerId,
                     String.valueOf(changeSeatIndexToModelIndex(itemPos)), new TRTCVoiceRoomCallback.ActionCallback() {
-                @Override
-                public void onCallback(int code, String msg) {
-                    if (code == 0) {
-                        ToastUtils.showShort(
-                                R.string.trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing);
-                    } else {
-                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_failed_to_send_application, msg));
-                    }
-                }
-            });
+                        @Override
+                        public void onCallback(int code, String msg) {
+                            if (code == 0) {
+                                ToastUtils.showShort(R.string
+                                        .trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing);
+                            } else {
+                                ToastUtils.showShort(getString(R
+                                        .string.trtcvoiceroom_toast_failed_to_send_application, msg));
+                            }
+                        }
+                    });
             mInvitationSeatMap.put(inviteId, itemPos);
         } else {
             if (mIsTakingSeat) {
@@ -400,23 +402,23 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                 if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
                     mTRTCVoiceRoom.moveSeat(changeSeatIndexToModelIndex(seatIndex),
                             new TRTCVoiceRoomCallback.ActionCallback() {
-                        @Override
-                        public void onCallback(int code, String msg) {
-                            if (code != 0) {
-                                showTakingSeatLoading(false);
-                            }
-                        }
-                    });
+                                @Override
+                                public void onCallback(int code, String msg) {
+                                    if (code != 0) {
+                                        showTakingSeatLoading(false);
+                                    }
+                                }
+                            });
                 } else {
                     mTRTCVoiceRoom.enterSeat(changeSeatIndexToModelIndex(seatIndex),
                             new TRTCVoiceRoomCallback.ActionCallback() {
-                        @Override
-                        public void onCallback(int code, String msg) {
-                            if (code != 0) {
-                                showTakingSeatLoading(false);
-                            }
-                        }
-                    });
+                                @Override
+                                public void onCallback(int code, String msg) {
+                                    if (code != 0) {
+                                        showTakingSeatLoading(false);
+                                    }
+                                }
+                            });
                 }
 
 
@@ -462,9 +464,9 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
 
     private void showReportDialog() {
         try {
-            Class clz = Class.forName("com.tencent.liteav.demo.report.ReportDialog");
-            Method method = clz.getDeclaredMethod("showReportDialog", Context.class, String.class);
-            method.invoke(null, this, String.valueOf(mRoomId));
+            Class<?> clz = Class.forName("com.tencent.liteav.demo.report.ReportDialog");
+            Method method = clz.getDeclaredMethod("showReportDialog", Context.class, String.class, String.class);
+            method.invoke(null, this, String.valueOf(mRoomId), mOwnerId);
         } catch (Exception e) {
             e.printStackTrace();
         }
