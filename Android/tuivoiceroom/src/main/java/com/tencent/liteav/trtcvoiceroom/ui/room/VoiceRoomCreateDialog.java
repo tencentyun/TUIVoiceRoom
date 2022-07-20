@@ -15,21 +15,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.tencent.liteav.basic.RTCubeUtils;
 import com.tencent.liteav.basic.UserModelManager;
-import com.tencent.liteav.debug.BuildConfig;
 import com.tencent.liteav.trtcvoiceroom.R;
 
 public class VoiceRoomCreateDialog extends BottomSheetDialog {
-    private static final int          MAX_LEN = 30;
+    private static final int MAX_LEN = 30;
 
-    private              EditText     mRoomNameEt;
-    private              TextView     mEnterTv;
-    private              SwitchCompat mSwitchBtn;
-    private              String       mUserName;
-    private              String       mUserId;
-    private              String       mCoverUrl;
-    private              int          mAudioQuality;
-    private              boolean      mNeedRequest;
+    private EditText     mRoomNameEt;
+    private TextView     mEnterTv;
+    private SwitchCompat mSwitchBtn;
+    private String       mUserName;
+    private String       mUserId;
+    private String       mCoverUrl;
+    private int          mAudioQuality;
+    private boolean      mNeedRequest;
 
     public void showVoiceRoomCreateDialog(String userId, String userName, String coverUrl, int audioQuality,
                                           boolean needRequest) {
@@ -100,6 +100,6 @@ public class VoiceRoomCreateDialog extends BottomSheetDialog {
         mRoomNameEt = (EditText) findViewById(R.id.et_room_name);
         mEnterTv = (TextView) findViewById(R.id.tv_enter);
         mSwitchBtn = (SwitchCompat) findViewById(R.id.switch_item);
-        mRoomNameEt.setFocusableInTouchMode(!BuildConfig.RTCube_APPSTORE);
+        mRoomNameEt.setFocusableInTouchMode(!RTCubeUtils.isRTCubeApp(getContext()));
     }
 }
