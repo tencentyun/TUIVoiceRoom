@@ -1,6 +1,9 @@
 package com.tencent.liteav.trtcvoiceroom.model.impl.room.impl;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -18,9 +21,11 @@ import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMSignalingListener;
 import com.tencent.imsdk.v2.V2TIMSimpleMsgListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
+import com.tencent.liteav.trtcvoiceroom.model.impl.TRTCVoiceRoomImpl;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXCallback;
 import com.tencent.liteav.trtcvoiceroom.model.impl.base.TXRoomInfo;
@@ -35,13 +40,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TXRoomService extends V2TIMSDKListener {
     private static final String TAG = "TXRoomService";
 
-    private static final int CODE_ERROR = -1;
+    private static final int CODE_ERROR               = -1;
+    private static final int NOT_IN_SEAT              = -1;
+    private static final int MSG_ON_USER_OFFLINE      = 10001;
+    private static final int MSG_KICK_USER_ON_OFFLINE = 10002;
 
     private static TXRoomService          sInstance;
     private        Context                mContext;
@@ -59,6 +70,11 @@ public class TXRoomService extends V2TIMSDKListener {
     private String                  mSelfUserName;
     private VoiceRoomGroupListener  mGroupListener;
     private VoiceRoomSignalListener mSignalListener;
+    private UserStatusListener      mUserStatusListener;
+    private Handler                 mMainHandler;
+    private LinkedList<String>      mOfflineUserList;
+    private Map<Integer, String>    mOfflineKickMap;
+    private boolean                 mIsKickUserOnOffline;
 
     public static synchronized TXRoomService getInstance() {
         if (sInstance == null) {
@@ -75,6 +91,10 @@ public class TXRoomService extends V2TIMSDKListener {
         mSimpleListener = new VoiceRoomSimpleListener();
         mGroupListener = new VoiceRoomGroupListener();
         mSignalListener = new VoiceRoomSignalListener();
+        mUserStatusListener = new UserStatusListener();
+        mOfflineUserList = new LinkedList<>();
+        mOfflineKickMap = new HashMap<>();
+        mMainHandler = new Handler(Looper.getMainLooper(), new HandlerCallback());
     }
 
     public void init(Context context) {
@@ -127,6 +147,7 @@ public class TXRoomService extends V2TIMSDKListener {
         V2TIMManager.getSignalingManager().addSignalingListener(mSignalListener);
         V2TIMManager.getMessageManager();
         V2TIMManager.getInstance().addSimpleMsgListener(mSimpleListener);
+        V2TIMManager.getInstance().addIMSDKListener(mUserStatusListener);
     }
 
     private void getSelfInfo() {
@@ -385,9 +406,16 @@ public class TXRoomService extends V2TIMSDKListener {
         V2TIMManager.getInstance().removeGroupListener(mGroupListener);
         V2TIMManager.getSignalingManager().removeSignalingListener(mSignalListener);
         V2TIMManager.getInstance().removeSimpleMsgListener(mSimpleListener);
+        V2TIMManager.getInstance().unsubscribeUserStatus(null, null);
+        V2TIMManager.getInstance().removeIMSDKListener(mUserStatusListener);
+        mMainHandler.removeMessages(MSG_ON_USER_OFFLINE);
+        mMainHandler.removeMessages(MSG_KICK_USER_ON_OFFLINE);
         mIsEnterRoom = false;
+        mIsKickUserOnOffline = false;
         mRoomId = "";
         mOwnerUserId = "";
+        mOfflineUserList.clear();
+        mOfflineKickMap.clear();
     }
 
     private void cleanGroupAttr() {
@@ -972,6 +1000,23 @@ public class TXRoomService extends V2TIMSDKListener {
                 }
             }
         });
+
+        if (isOwner()) {
+            List<String> userList = new ArrayList<>();
+            userList.add(user);
+            V2TIMManager.getInstance().subscribeUserStatus(userList, new V2TIMCallback() {
+                @Override
+                public void onSuccess() {
+                    TRTCLogger.i(TAG, "subscribeUserStatus success id: " + user);
+                }
+
+                @Override
+                public void onError(int code, String message) {
+                    TRTCLogger.e(TAG, "subscribeUserStatus failed, code: " + code
+                            + ",message: " + message + " id: " + user);
+                }
+            });
+        }
     }
 
     private void onSeatClose(int index, boolean isClose) {
@@ -1002,6 +1047,27 @@ public class TXRoomService extends V2TIMSDKListener {
                 }
             }
         });
+        if (isOwner()) {
+            List<String> userList = new ArrayList<>();
+            userList.add(user);
+            V2TIMManager.getInstance().unsubscribeUserStatus(userList, new V2TIMCallback() {
+                @Override
+                public void onSuccess() {
+                    TRTCLogger.i(TAG, "unsubscribeUserStatus success id: " + user);
+                }
+
+                @Override
+                public void onError(int code, String message) {
+                    TRTCLogger.e(TAG, "unsubscribeUserStatus failed, code: " + code
+                            + ",message: " + message + " id: " + user);
+                }
+            });
+        }
+
+        String userId = mOfflineKickMap.get(index);
+        if (!TextUtils.isEmpty(userId)) {
+            mMainHandler.sendEmptyMessage(MSG_KICK_USER_ON_OFFLINE);
+        }
     }
 
     private void onSeatMute(int index, boolean mute) {
@@ -1144,6 +1210,24 @@ public class TXRoomService extends V2TIMSDKListener {
                         }
                     }
                 });
+    }
+
+    private int getSeatIndex(String userId) {
+        if (TextUtils.isEmpty(userId)) {
+            TRTCLogger.e(TAG, "get seat index, userId is empty");
+            return NOT_IN_SEAT;
+        }
+        if (mTXSeatInfoList == null) {
+            TRTCLogger.e(TAG, "get seat index, current seat info list is null");
+            return NOT_IN_SEAT;
+        }
+        for (int i = 0; i < mTXSeatInfoList.size(); i++) {
+            TXSeatInfo info = mTXSeatInfoList.get(i);
+            if (info != null && userId.equals(info.user)) {
+                return i;
+            }
+        }
+        return NOT_IN_SEAT;
     }
 
     private class VoiceRoomSimpleListener extends V2TIMSimpleMsgListener {
@@ -1350,5 +1434,74 @@ public class TXRoomService extends V2TIMSDKListener {
         SignallingData.DataInfo dataInfo = new SignallingData.DataInfo();
         callingData.setData(dataInfo);
         return callingData;
+    }
+
+    private void kickUserOnOffline() {
+        mIsKickUserOnOffline = true;
+        if (mOfflineUserList.isEmpty()) {
+            mIsKickUserOnOffline = false;
+            return;
+        }
+        final String userId = mOfflineUserList.getFirst();
+        mOfflineUserList.removeFirst();
+        final int seatIndex = getSeatIndex(userId);
+        TRTCLogger.i(TAG, "find user " + userId + ", seatIndex: " + seatIndex);
+        if (seatIndex == NOT_IN_SEAT) {
+            mMainHandler.sendEmptyMessage(MSG_KICK_USER_ON_OFFLINE);
+        } else {
+            kickSeat(seatIndex, new TXCallback() {
+                @Override
+                public void onCallback(int code, String msg) {
+                    TRTCLogger.i(TAG, userId + " is offline, remove it from seat list, code: " + code + " msg: "
+                            + msg);
+                    if (code == 0) {
+                        mOfflineKickMap.put(seatIndex, userId);
+                    } else {
+                        mMainHandler.sendEmptyMessage(MSG_KICK_USER_ON_OFFLINE);
+                    }
+                }
+            });
+        }
+    }
+
+    private class UserStatusListener extends V2TIMSDKListener {
+        @Override
+        public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
+            if (userStatusList == null) {
+                TRTCLogger.e(TAG, "onUserStatusChanged, userStatusList is null ");
+                return;
+            }
+            for (V2TIMUserStatus userStatus : userStatusList) {
+                final String userId = userStatus.getUserID();
+                int status = userStatus.getStatusType();
+                TRTCLogger.i(TAG, "onUserStatusChanged, userId: " + userId + " status:" + status);
+                if (status == V2TIMUserStatus.V2TIM_USER_STATUS_OFFLINE) {
+                    Message message = mMainHandler.obtainMessage();
+                    message.obj = userId;
+                    message.what = MSG_ON_USER_OFFLINE;
+                    message.sendToTarget();
+                }
+            }
+        }
+    }
+
+    private class HandlerCallback implements Handler.Callback {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == MSG_ON_USER_OFFLINE) {
+                String userId = (String) msg.obj;
+                if (!mOfflineUserList.contains(userId)) {
+                    mOfflineUserList.add(userId);
+                }
+                if (!mIsKickUserOnOffline) {
+                    mMainHandler.sendEmptyMessage(MSG_KICK_USER_ON_OFFLINE);
+                }
+                return true;
+            } else if (msg.what == MSG_KICK_USER_ON_OFFLINE) {
+                kickUserOnOffline();
+                return true;
+            }
+            return false;
+        }
     }
 }
