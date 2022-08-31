@@ -58,7 +58,7 @@ class TRTCVoiceRoomSeatView: UIView {
     let avatarImageView: UIImageView = {
         let imageView = UIImageView.init(frame: .zero)
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage.init(named: "voiceroom_placeholder_avatar", in: VoiceRoomBundle(), compatibleWith: nil)
+        imageView.image = UIImage.init(named: "voiceroom_placeholder_avatar", in: voiceRoomBundle(), compatibleWith: nil)
         imageView.layer.masksToBounds = true
         return imageView
     }()
@@ -66,7 +66,7 @@ class TRTCVoiceRoomSeatView: UIView {
     let muteImageView: UIImageView = {
         let imageView = UIImageView.init(frame: .zero)
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage.init(named: "audience_voice_off", in: VoiceRoomBundle(), compatibleWith: nil)
+        imageView.image = UIImage.init(named: "audience_voice_off", in: voiceRoomBundle(), compatibleWith: nil)
         imageView.isHidden = true
         return imageView
     }()
@@ -143,7 +143,7 @@ class TRTCVoiceRoomSeatView: UIView {
     
     func setSeatInfo(model: SeatInfoModel, userMuteMap: [String:Bool]) {
         if model.isClosed {
-            avatarImageView.image = UIImage.init(named: "room_lockseat", in: VoiceRoomBundle(), compatibleWith: nil)
+            avatarImageView.image = UIImage.init(named: "room_lockseat", in: voiceRoomBundle(), compatibleWith: nil)
             nameLabel.text = ""//.lockedText
             speakView.isHidden = true
             muteImageView.isHidden = true
@@ -160,7 +160,7 @@ class TRTCVoiceRoomSeatView: UIView {
         
         if model.isUsed {
             if let userSeatInfo = model.seatUser {
-                let placeholder = UIImage.init(named: "avatar2_100", in: VoiceRoomBundle(), compatibleWith: nil)
+                let placeholder = UIImage.init(named: "avatar2_100", in: voiceRoomBundle(), compatibleWith: nil)
                 if userSeatInfo.userAvatar.count > 0, let avatarURL = URL.init(string: userSeatInfo.userAvatar) {
                     avatarImageView.kf.setImage(with: avatarURL, placeholder: placeholder)
                 } else {
@@ -169,7 +169,7 @@ class TRTCVoiceRoomSeatView: UIView {
                 nameLabel.text = userSeatInfo.userName
             }
         } else {
-            avatarImageView.image = UIImage.init(named: "Servingwheat", in: VoiceRoomBundle(), compatibleWith: nil)
+            avatarImageView.image = UIImage.init(named: "Servingwheat", in: voiceRoomBundle(), compatibleWith: nil)
             nameLabel.text = ""
                 //model.isOwner ? .inviteHandsupText : .handsupText
         }
@@ -211,9 +211,9 @@ extension TRTCVoiceRoomSeatView {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let handsupText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.presshandsup")
-    static let lockedText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.islocked")
-    static let inviteHandsupText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
+    static let handsupText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.presshandsup")
+    static let lockedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.islocked")
+    static let inviteHandsupText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
 }
 
 

@@ -31,9 +31,9 @@ struct SeatInfoModel {
 }
 
 struct MsgEntity {
-    public static let TYPE_NORMAL     = 0;
-    public static let TYPE_WAIT_AGREE = 1;
-    public static let TYPE_AGREED     = 2;
+    public static let TYPE_NORMAL     = 0
+    public static let TYPE_WAIT_AGREE = 1
+    public static let TYPE_AGREED     = 2
     
     let userId: String
     let userName: String

@@ -31,7 +31,7 @@ public class TRTCCreateVoiceRoomViewController: UIViewController {
         title = .controllerTitle
         
         let backBtn = UIButton(type: .custom)
-        backBtn.setImage(UIImage(named: "navigationbar_back", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        backBtn.setImage(UIImage(named: "navigationbar_back", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         backBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         backBtn.sizeToFit()
         let backItem = UIBarButtonItem(customView: backBtn)
@@ -59,6 +59,6 @@ public class TRTCCreateVoiceRoomViewController: UIViewController {
 }
 
 private extension String {
-    static let controllerTitle = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.createvoicechatroom")
+    static let controllerTitle = voiceRoomLocalize("Demo.TRTC.VoiceRoom.createvoicechatroom")
 }
 

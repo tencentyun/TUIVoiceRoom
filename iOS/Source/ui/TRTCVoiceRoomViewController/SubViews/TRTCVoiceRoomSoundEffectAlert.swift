@@ -25,7 +25,7 @@ class TRTCVoiceRoomSoundEffectAlert : TRTCVoiceRoomAlertContentView {
     
     lazy var helpBtn: UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "helpUrl", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.setImage(UIImage(named: "helpUrl", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         btn.isHidden = true
         return btn
     }()
@@ -413,7 +413,7 @@ class TRTCVoiceRoomSoundEffectSliderCell: TRTCVoiceRoomSoundEffectBaseCell {
     
     lazy var slider: TRTCVoiceRoomSoundEffectSlider = {
         let slider = TRTCVoiceRoomSoundEffectSlider(frame: .zero)
-        slider.setThumbImage(UIImage(named: "Slider", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        slider.setThumbImage(UIImage(named: "Slider", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         slider.minimumTrackTintColor = UIColor(hex: "006EFF")
         slider.maximumTrackTintColor = UIColor(hex: "F4F5F9")
         return slider
@@ -478,8 +478,8 @@ class TRTCVoiceRoomSoundEffectPlayingCell: TRTCVoiceRoomSoundEffectBaseCell {
     }()
     lazy var playBtn: UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "bgm_play", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
-        btn.setImage(UIImage(named: "bgm_pause", in: VoiceRoomBundle(), compatibleWith: nil), for: .selected)
+        btn.setImage(UIImage(named: "bgm_play", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.setImage(UIImage(named: "bgm_pause", in: voiceRoomBundle(), compatibleWith: nil), for: .selected)
         return btn
     }()
     
@@ -518,7 +518,7 @@ class TRTCVoiceRoomSoundEffectPlayingCell: TRTCVoiceRoomSoundEffectBaseCell {
 
 class TRTCVoiceRoomSoundEffectDetailCell: TRTCVoiceRoomSoundEffectBaseCell {
     lazy var arrowImageView: UIImageView = {
-        let imageV = UIImageView(image: UIImage(named: "detail", in: VoiceRoomBundle(), compatibleWith: nil))
+        let imageV = UIImageView(image: UIImage(named: "detail", in: voiceRoomBundle(), compatibleWith: nil))
         return imageV
     }()
     
@@ -706,14 +706,14 @@ class TRTCVoiceRoomSoundEffectCellForCollectionCell: UICollectionViewCell {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let effectTitleText = VoiceRoomLocalize("ASKit.MainMenu.Title")
-    static let voiceChangeText = VoiceRoomLocalize("ASKit.MainMenu.VoiceChangeTitle")
-    static let reverbText = VoiceRoomLocalize("ASKit.MainMenu.Reverberation")
-    static let auditionText = VoiceRoomLocalize("ASKit.MusicSelectMenu.Title")
-    static let bringHeadphoneText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.useearphones")
-    static let copyrightText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.copyrights")
-    static let selectMusicText = VoiceRoomLocalize("ASKit.MainMenu.SelectMusic")
-    static let musicVolumeText = VoiceRoomLocalize("ASKit.MainMenu.MusicVolum")
-    static let vocalVolumeText = VoiceRoomLocalize("ASKit.MainMenu.PersonVolum")
-    static let vocalRiseFallText = VoiceRoomLocalize("ASKit.MainMenu.PersonPitch")
+    static let effectTitleText = voiceRoomLocalize("ASKit.MainMenu.Title")
+    static let voiceChangeText = voiceRoomLocalize("ASKit.MainMenu.VoiceChangeTitle")
+    static let reverbText = voiceRoomLocalize("ASKit.MainMenu.Reverberation")
+    static let auditionText = voiceRoomLocalize("ASKit.MusicSelectMenu.Title")
+    static let bringHeadphoneText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.useearphones")
+    static let copyrightText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.copyrights")
+    static let selectMusicText = voiceRoomLocalize("ASKit.MainMenu.SelectMusic")
+    static let musicVolumeText = voiceRoomLocalize("ASKit.MainMenu.MusicVolum")
+    static let vocalVolumeText = voiceRoomLocalize("ASKit.MainMenu.PersonVolum")
+    static let vocalRiseFallText = voiceRoomLocalize("ASKit.MainMenu.PersonPitch")
 }

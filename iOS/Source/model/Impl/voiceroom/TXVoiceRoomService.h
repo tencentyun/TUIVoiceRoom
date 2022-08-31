@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-static int VOICE_ROOM_SERVICE_CODE_ERROR = -1;
+static int gVOICE_ROOM_SERVICE_CODE_ERROR = -1;
 
 @interface TXVoiceRoomService : NSObject
 

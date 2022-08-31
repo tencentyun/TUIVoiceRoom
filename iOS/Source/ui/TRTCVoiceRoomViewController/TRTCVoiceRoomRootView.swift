@@ -75,11 +75,11 @@ class TRTCVoiceRoomRootView: UIView {
     
     let mainMenuView: TRTCVoiceRoomMainMenuView = {
         let icons: [IconTuple] = [
-            IconTuple(normal: UIImage(named: "room_message", in: VoiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_message", in: VoiceRoomBundle(), compatibleWith: nil)!, type: .message),
-            IconTuple(normal: UIImage(named: "room_leave_mic", in: VoiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_leave_mic", in: VoiceRoomBundle(), compatibleWith: nil)!, type: .micoff),
-            IconTuple(normal: UIImage(named: "room_bgmusic", in: VoiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_bgmusic", in: VoiceRoomBundle(), compatibleWith: nil)!, type: .bgmusic),
-            IconTuple(normal: UIImage(named: "room_voice_off", in: VoiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_voice_on", in: VoiceRoomBundle(), compatibleWith: nil)!, type: .mute),
-            IconTuple(normal: UIImage(named: "room_more", in: VoiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_more", in: VoiceRoomBundle(), compatibleWith: nil)!, type: .more),
+            IconTuple(normal: UIImage(named: "room_message", in: voiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_message", in: voiceRoomBundle(), compatibleWith: nil)!, type: .message),
+            IconTuple(normal: UIImage(named: "room_leave_mic", in: voiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_leave_mic", in: voiceRoomBundle(), compatibleWith: nil)!, type: .micoff),
+            IconTuple(normal: UIImage(named: "room_bgmusic", in: voiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_bgmusic", in: voiceRoomBundle(), compatibleWith: nil)!, type: .bgmusic),
+            IconTuple(normal: UIImage(named: "room_voice_off", in: voiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_voice_on", in: voiceRoomBundle(), compatibleWith: nil)!, type: .mute),
+            IconTuple(normal: UIImage(named: "room_more", in: voiceRoomBundle(), compatibleWith: nil)!, selected: UIImage(named: "room_more", in: voiceRoomBundle(), compatibleWith: nil)!, type: .more),
         ]
         let view = TRTCVoiceRoomMainMenuView.init(icons: icons)
         return view
@@ -468,15 +468,15 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let mutedText = VoiceRoomLocalize("Demo.TRTC.Salon.seatmuted")
-    static let unmutedText = VoiceRoomLocalize("Demo.TRTC.Salon.seatunmuted")
-    static let acceptText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
-    static let refuseText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.refuse")
-    static let selectText = VoiceRoomLocalize("Demo.TRTC.Salon.pleaseselect")
-    static let cancelText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
-    static let seatmutedText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.onseatmuted")
-    static let alertText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.prompt")
-    static let timeoutText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.connecttimeout")
+    static let mutedText = voiceRoomLocalize("Demo.TRTC.Salon.seatmuted")
+    static let unmutedText = voiceRoomLocalize("Demo.TRTC.Salon.seatunmuted")
+    static let acceptText = voiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
+    static let refuseText = voiceRoomLocalize("Demo.TRTC.LiveRoom.refuse")
+    static let selectText = voiceRoomLocalize("Demo.TRTC.Salon.pleaseselect")
+    static let cancelText = voiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
+    static let seatmutedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.onseatmuted")
+    static let alertText = voiceRoomLocalize("Demo.TRTC.LiveRoom.prompt")
+    static let timeoutText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.connecttimeout")
 }
 
 

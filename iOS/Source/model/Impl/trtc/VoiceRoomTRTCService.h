@@ -11,8 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define kTRTCRoleAnchorValue 20
-#define kTRTCRoleAudienceValue 21
+#define KTRTCRoleAnchorValue 20
+#define KTRTCRoleAudienceValue 21
 
 @class TRTCQualityInfo;
 @class TRTCVolumeInfo;
@@ -35,7 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (void)enterRoomWithSdkAppId:(UInt32)sdkAppId roomId:(NSString *)roomId userId:(NSString *)userId userSign:(NSString *)userSign role:(NSInteger)role callback:(TXCallback _Nullable)callback;
+- (void)enterRoomWithSdkAppId:(UInt32)sdkAppId roomId:(NSString *)roomId userId:(NSString
+ *)userId userSign:(NSString *)userSign role:(NSInteger)role callback:(TXCallback
+ _Nullable)callback;
 
 - (void)exitRoom:(TXCallback _Nullable)callback;
 

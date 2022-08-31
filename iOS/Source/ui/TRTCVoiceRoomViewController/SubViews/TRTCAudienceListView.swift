@@ -142,8 +142,8 @@ extension TRTCAudienceListView: UITableViewDataSource {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let closeText = VoiceRoomLocalize("Demo.TRTC.Salon.close")
-    static let inviteHandsupText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
+    static let closeText = voiceRoomLocalize("Demo.TRTC.Salon.close")
+    static let inviteHandsupText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
 }
 
 

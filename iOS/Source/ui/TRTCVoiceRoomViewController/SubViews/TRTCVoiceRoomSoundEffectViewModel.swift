@@ -221,11 +221,11 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
     lazy var reverbDataSource: [TRTCAudioEffectCellModel] = {
         var res: [TRTCAudioEffectCellModel] = []
         let titleArray = [
-            VoiceRoomLocalize("ASKit.MenuItem.No effect"),
-            VoiceRoomLocalize("ASKit.MenuItem.Karaoke room"),
-            VoiceRoomLocalize("ASKit.MenuItem.Metallic"),
-            VoiceRoomLocalize("ASKit.MenuItem.Deep"),
-            VoiceRoomLocalize("ASKit.MenuItem.Resonant"),
+            voiceRoomLocalize("ASKit.MenuItem.No effect"),
+            voiceRoomLocalize("ASKit.MenuItem.Karaoke room"),
+            voiceRoomLocalize("ASKit.MenuItem.Metallic"),
+            voiceRoomLocalize("ASKit.MenuItem.Deep"),
+            voiceRoomLocalize("ASKit.MenuItem.Resonant"),
             ]
         let iconNameArray = [
             "originState_nor",
@@ -249,9 +249,9 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
             let model = TRTCAudioEffectCellModel()
             model.actionID = index
             model.title = title
-            model.selected = title == VoiceRoomLocalize("ASKit.MenuItem.No effect")
-            model.icon = UIImage(named: normalIconName, in: VoiceRoomBundle(), compatibleWith: nil)
-            model.selectIcon = UIImage(named: selectIconName, in: VoiceRoomBundle(), compatibleWith: nil)
+            model.selected = title == voiceRoomLocalize("ASKit.MenuItem.No effect")
+            model.icon = UIImage(named: normalIconName, in: voiceRoomBundle(), compatibleWith: nil)
+            model.selectIcon = UIImage(named: selectIconName, in: voiceRoomBundle(), compatibleWith: nil)
             model.action = { [weak self] in
                 guard let `self` = self else { return }
                 let type = self.switch2ReverbType(index)
@@ -269,11 +269,11 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
         var res: [TRTCAudioEffectCellModel] = []
         
         let titleArray =
-            [VoiceRoomLocalize("ASKit.MenuItem.Original"),
-             VoiceRoomLocalize("ASKit.MenuItem.Naughty boy"),
-             VoiceRoomLocalize("ASKit.MenuItem.Little girl"),
-             VoiceRoomLocalize("ASKit.MenuItem.Middle-aged man"),
-             VoiceRoomLocalize("ASKit.MenuItem.Ethereal voice"),
+            [voiceRoomLocalize("ASKit.MenuItem.Original"),
+             voiceRoomLocalize("ASKit.MenuItem.Naughty boy"),
+             voiceRoomLocalize("ASKit.MenuItem.Little girl"),
+             voiceRoomLocalize("ASKit.MenuItem.Middle-aged man"),
+             voiceRoomLocalize("ASKit.MenuItem.Ethereal voice"),
              ]
         
         let iconNameArray = [
@@ -299,9 +299,9 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
             let model = TRTCAudioEffectCellModel()
             model.title = title
             model.actionID = index
-            model.selected = title == VoiceRoomLocalize("ASKit.MenuItem.Original")
-            model.icon = UIImage(named: normalIconName, in: VoiceRoomBundle(), compatibleWith: nil)
-            model.selectIcon = UIImage(named: selectedIconName, in: VoiceRoomBundle(), compatibleWith: nil)
+            model.selected = title == voiceRoomLocalize("ASKit.MenuItem.Original")
+            model.icon = UIImage(named: normalIconName, in: voiceRoomBundle(), compatibleWith: nil)
+            model.selectIcon = UIImage(named: selectedIconName, in: voiceRoomBundle(), compatibleWith: nil)
             model.action = { [weak self] in
                 guard let `self` = self else { return }
                 let type = self.switch2VoiceChangeType(index)
@@ -352,7 +352,7 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let musicTitle1Text = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname1")
-    static let musicTitle2Text = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname2")
-    static let musicTitle3Text = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname3")
+    static let musicTitle1Text = voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname1")
+    static let musicTitle2Text = voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname2")
+    static let musicTitle3Text = voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname3")
 }

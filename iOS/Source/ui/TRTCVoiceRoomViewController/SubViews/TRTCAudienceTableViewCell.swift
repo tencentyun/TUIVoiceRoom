@@ -122,7 +122,7 @@ class TRTCAudienceTableViewCell: UITableViewCell {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let acceptText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
-    static let inviteText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.invite")
+    static let acceptText = voiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
+    static let inviteText = voiceRoomLocalize("Demo.TRTC.LiveRoom.invite")
 }
 

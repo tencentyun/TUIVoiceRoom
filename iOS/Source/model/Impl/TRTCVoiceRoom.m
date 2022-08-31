@@ -15,14 +15,14 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 
-static NSInteger TIME_CONNECT_TIMEOUT = 120;
+static NSInteger gTIME_CONNECT_TIMEOUT = 120;
 
-static NSInteger CALL_MOVE_SEAT_LIMIT_TIME = 1000; //`moveSeat` API call frequency limit, which is 1 second by default
+static NSInteger gCALL_MOVE_SEAT_LIMIT_TIME = 1000; //`moveSeat` API call frequency limit, which is 1 second by default
 
 /// Move to a new seat
-static NSString *MOVE_SEAT_STATUS_ENTER = @"voiceRoom_moveSeat_status_enter";
+static NSString *gMOVE_SEAT_STATUS_ENTER = @"voiceRoom_moveSeat_status_enter";
 /// Leave the original seat
-static NSString *MOVE_SEAT_STATUS_LEAVE = @"voiceRoom_moveSeat_status_leave";
+static NSString *gMOVE_SEAT_STATUS_LEAVE = @"voiceRoom_moveSeat_status_leave";
 
 @interface TRTCVoiceRoom ()<VoiceRoomTRTCServiceDelegate, ITXRoomServiceDelegate, TUINotificationProtocol>
 
@@ -63,8 +63,8 @@ static NSString *MOVE_SEAT_STATUS_LEAVE = @"voiceRoom_moveSeat_status_leave";
 
 @implementation TRTCVoiceRoom
 
-static TRTCVoiceRoom *_instance;
-static dispatch_once_t onceToken;
+static TRTCVoiceRoom *gInstance;
+static dispatch_once_t gOnceToken;
 
 - (instancetype)init
 {
@@ -191,10 +191,12 @@ static dispatch_once_t onceToken;
     }];
 }
 
-- (void)enterTRTCRoomInnerWithRoomId:(NSString *)roomId userId:(NSString *)userId userSign:(NSString *)userSig role:(NSInteger)role callback:(ActionCallback)callback {
+- (void)enterTRTCRoomInnerWithRoomId:(NSString *)roomId userId:(NSString *)userId
+ userSign:(NSString *)userSig role:(NSInteger)role callback:(ActionCallback)callback {
     TRTCLog(@"start enter trtc room.");
     @weakify(self)
-    [self.roomTRTCService enterRoomWithSdkAppId:self.mSDKAppID roomId:roomId userId:userId userSign:userSig role:role callback:^(int code, NSString * _Nonnull message) {
+    [self.roomTRTCService enterRoomWithSdkAppId:self.mSDKAppID roomId:roomId userId:userId
+     userSign:userSig role:role callback:^(int code, NSString * _Nonnull message) {
         @strongify(self)
         if (!self) {
             return;
@@ -209,17 +211,17 @@ static dispatch_once_t onceToken;
 
 #pragma mark - TRTCVoiceRoom Implementation
 + (instancetype)sharedInstance {
-    dispatch_once(&onceToken, ^{
-        _instance = [[TRTCVoiceRoom alloc] init];
-        [TXVoiceRoomService sharedInstance].delegate = _instance;
-        [VoiceRoomTRTCService sharedInstance].delegate = _instance;
+    dispatch_once(&gOnceToken, ^{
+        gInstance = [[TRTCVoiceRoom alloc] init];
+        [TXVoiceRoomService sharedInstance].delegate = gInstance;
+        [VoiceRoomTRTCService sharedInstance].delegate = gInstance;
     });
-    return _instance;
+    return gInstance;
 }
 
 + (void)destroySharedInstance {
-    onceToken = 0;
-    _instance = nil;
+    gOnceToken = 0;
+    gInstance = nil;
 }
 
 - (void)setDelegate:(id<TRTCVoiceRoomDelegate>)delegate{
@@ -237,7 +239,7 @@ static dispatch_once_t onceToken;
         if (!self) {
             return;
         }
-        TRTCLog(@"start login sdkAppID:%d userId:%@ app version:%@", sdkAppID, userId, APP_VERSION);
+        TRTCLog(@"start login sdkAppID:%d userId:%@ app version:%@", sdkAppID, userId, gAPP_VERSION);
         if (sdkAppID != 0 && userId && ![userId isEqualToString:@""] && userSig && ![userSig isEqualToString:@""]) {
             self.mSDKAppID = sdkAppID;
             self.userId = userId;
@@ -308,7 +310,7 @@ static dispatch_once_t onceToken;
         if (!self) {
             return;
         }
-        TRTCLog(@"create room roomID: %d app version: %@", roomID, APP_VERSION);
+        TRTCLog(@"create room roomID: %d app version: %@", roomID, gAPP_VERSION);
         [self.roomService getSelfInfo];
         if (roomID == 0) {
             TRTCLog(@"crate room fail. params invalid.");
@@ -351,7 +353,7 @@ static dispatch_once_t onceToken;
                 return;
             }
             if (code == 0) {
-                [self enterTRTCRoomInnerWithRoomId:self.roomID userId:self.userId userSign:self.userSig role:kTRTCRoleAnchorValue callback:callback];
+                [self enterTRTCRoomInnerWithRoomId:self.roomID userId:self.userId userSign:self.userSig role:KTRTCRoleAnchorValue callback:callback];
                 return;
             } else {
                 [self runOnDelegateQueue:^{
@@ -415,8 +417,9 @@ static dispatch_once_t onceToken;
         }
         [self clearList];
         self.roomID = [NSString stringWithFormat:@"%ld", (long)roomID];
-        TRTCLog(@"start enter room, room id is %ld app version: %@", (long)roomID, APP_VERSION);
-        [self enterTRTCRoomInnerWithRoomId:self.roomID userId:self.userId userSign:self.userSig role:kTRTCRoleAudienceValue callback:^(int code, NSString * _Nonnull message) {
+        TRTCLog(@"start enter room, room id is %ld app version: %@", (long)roomID, gAPP_VERSION);
+        [self enterTRTCRoomInnerWithRoomId:self.roomID userId:self.userId userSign:self.userSig
+         role:KTRTCRoleAudienceValue callback:^(int code, NSString * _Nonnull message) {
             @strongify(self)
             if (!self) {
                 return;
@@ -520,7 +523,8 @@ static dispatch_once_t onceToken;
             [self getAudienceList:callback];
             return;
         }
-        [self.roomService getUserInfo:userIDList callback:^(int code, NSString * _Nonnull message, NSArray<TXVoiceRoomUserInfo *> * _Nonnull userInfos) {
+        [self.roomService getUserInfo:userIDList callback:^(int code, NSString * _Nonnull
+         message, NSArray<TXVoiceRoomUserInfo *> * _Nonnull userInfos) {
             @strongify(self)
             if (!self) {
                 return;
@@ -579,14 +583,14 @@ static dispatch_once_t onceToken;
 - (NSInteger)moveSeat:(NSInteger)seatIndex callback:(ActionCallback)callback{
     if (self.lastMoveSeatDate) {
         NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:self.lastMoveSeatDate] * 1000;
-        if (duration < CALL_MOVE_SEAT_LIMIT_TIME) {
+        if (duration < gCALL_MOVE_SEAT_LIMIT_TIME) {
             TRTCLog(@"move seat error: call limit %.2f", duration);
             [self runMainQueue:^{
                 if (callback) {
-                    callback(ERR_CALL_METHOD_LIMIT, [NSString stringWithFormat:@"move seat error: call limit %.2f", duration]);
+                    callback(gERR_CALL_METHOD_LIMIT, [NSString stringWithFormat:@"move seat error: call limit %.2f", duration]);
                 }
             }];
-            return ERR_CALL_METHOD_LIMIT;
+            return gERR_CALL_METHOD_LIMIT;
         }
     }
     self.lastMoveSeatDate = [NSDate date];
@@ -606,8 +610,8 @@ static dispatch_once_t onceToken;
         }
         self.moveSeatCallback = callback;
         [self.moveSeatStatus removeAllObjects];
-        [self.moveSeatStatus addObject:MOVE_SEAT_STATUS_ENTER];
-        [self.moveSeatStatus addObject:MOVE_SEAT_STATUS_LEAVE];
+        [self.moveSeatStatus addObject:gMOVE_SEAT_STATUS_ENTER];
+        [self.moveSeatStatus addObject:gMOVE_SEAT_STATUS_LEAVE];
         [self.roomService moveSeat:seatIndex callback:^(int code, NSString * _Nonnull message) {
             @strongify(self)
             if (code == 0) {
@@ -665,7 +669,7 @@ static dispatch_once_t onceToken;
         if ([self isOnSeatWithUserId:userId]) {
             [self runOnDelegateQueue:^{
                 if (callback) {
-                    callback(-1, VoiceRoomLocalize(@"Demo.TRTC.Salon.userisspeaker"));
+                    callback(-1, voiceRoomLocalize(@"Demo.TRTC.Salon.userisspeaker"));
                 }
             }];
             return;
@@ -993,17 +997,23 @@ static dispatch_once_t onceToken;
 #pragma mark - Network Listener
 - (void)registerNetworkChangedEvent {
 #ifdef TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
-    [TUICore registerEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECTING object:self];
-    [TUICore registerEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_SUCCESS object:self];
-    [TUICore registerEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_FAILED object:self];
+    [TUICore registerEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
+     subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECTING object:self];
+    [TUICore registerEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
+     subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_SUCCESS object:self];
+    [TUICore registerEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
+     subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_FAILED object:self];
 #endif
 }
 
 - (void)unRegisterNetworkChangedEvent {
 #ifdef TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
-    [TUICore unRegisterEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECTING object:self];
-    [TUICore unRegisterEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_SUCCESS object:self];
-    [TUICore unRegisterEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_FAILED object:self];
+    [TUICore unRegisterEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
+     subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECTING object:self];
+    [TUICore unRegisterEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
+     subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_SUCCESS object:self];
+    [TUICore unRegisterEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED
+     subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_FAILED object:self];
 #endif
 }
 
@@ -1026,7 +1036,7 @@ static dispatch_once_t onceToken;
         return;
     }
     _networkTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
-    dispatch_source_set_timer(_networkTimer, dispatch_walltime(NULL, TIME_CONNECT_TIMEOUT * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
+    dispatch_source_set_timer(_networkTimer, dispatch_walltime(NULL, gTIME_CONNECT_TIMEOUT * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
     @weakify(self);
     dispatch_source_set_event_handler(_networkTimer, ^{
         @strongify(self)
@@ -1064,7 +1074,7 @@ static dispatch_once_t onceToken;
             }];
         }
         if (self.delegate && [self.delegate respondsToSelector:@selector(onError:message:)]) {
-            [self.delegate onError:ERR_CONNECT_SERVICE_TIMEOUT message:@"Connect to cloud service is time out"];
+            [self.delegate onError:gERR_CONNECT_SERVICE_TIMEOUT message:@"Connect to cloud service is time out"];
         }
     }];
 }
@@ -1098,7 +1108,7 @@ static dispatch_once_t onceToken;
                 return;
             }
             if (self.moveSeatCallback != nil) {
-                [self.moveSeatStatus removeObject:MOVE_SEAT_STATUS_LEAVE];
+                [self.moveSeatStatus removeObject:gMOVE_SEAT_STATUS_LEAVE];
                 if (self.moveSeatStatus.count == 0) {
                     self.moveSeatCallback(0, @"move seat success");
                     self.moveSeatCallback = nil;
@@ -1148,7 +1158,7 @@ static dispatch_once_t onceToken;
                     return;
                 }
                 if (self.moveSeatCallback) {
-                    [self.moveSeatStatus removeObject:MOVE_SEAT_STATUS_ENTER];
+                    [self.moveSeatStatus removeObject:gMOVE_SEAT_STATUS_ENTER];
                     if (self.moveSeatStatus.count == 0) {
                         self.moveSeatCallback(0, @"move seat success");
                         self.moveSeatCallback = nil;

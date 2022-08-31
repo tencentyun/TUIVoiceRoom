@@ -38,7 +38,7 @@ public class TRTCVoiceRoomViewController: UIViewController {
         title = "\(roomInfo.roomName)\(roomInfo.roomID)"
         
         let backBtn = UIButton(type: .custom)
-        backBtn.setImage(UIImage(named: "navigationbar_back", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        backBtn.setImage(UIImage(named: "navigationbar_back", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         backBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         backBtn.sizeToFit()
         let backItem = UIBarButtonItem(customView: backBtn)
@@ -139,10 +139,10 @@ extension TRTCVoiceRoomViewController {
 }
 
 private extension String {
-    static let exitText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
-    static let sureToExitText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
-    static let confirmText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.confirm")
-    static let cancelText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
+    static let exitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
+    static let sureToExitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
+    static let confirmText = voiceRoomLocalize("Demo.TRTC.LiveRoom.confirm")
+    static let cancelText = voiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
 }
 
 

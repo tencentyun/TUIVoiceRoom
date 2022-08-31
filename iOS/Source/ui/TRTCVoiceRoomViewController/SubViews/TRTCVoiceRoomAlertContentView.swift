@@ -175,7 +175,7 @@ extension TRTCVoiceRoomMoreAlert : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TRTCVoiceRoomMoreAlertCell", for: indexPath)
         if let cell = cell as? TRTCVoiceRoomMoreAlertCell {
-            cell.model = (UIImage(named: "eraback_off", in: VoiceRoomBundle(), compatibleWith: nil), UIImage(named: "eraback_on", in: VoiceRoomBundle(), compatibleWith: nil))
+            cell.model = (UIImage(named: "eraback_off", in: voiceRoomBundle(), compatibleWith: nil), UIImage(named: "eraback_on", in: voiceRoomBundle(), compatibleWith: nil))
             cell.titleLabel.text = .earMonitorText
             cell.enable = viewModel.voiceEarMonitor
         }
@@ -335,8 +335,8 @@ class TRTCVoiceRoomAudienceAlert: TRTCVoiceRoomAlertContentView {
     
     lazy var unlockBtn: UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "lock", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
-        btn.setImage(UIImage(named: "unlock", in: VoiceRoomBundle(), compatibleWith: nil), for: .selected)
+        btn.setImage(UIImage(named: "lock", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.setImage(UIImage(named: "unlock", in: voiceRoomBundle(), compatibleWith: nil), for: .selected)
         btn.setTitle(.lockText, for: .normal)
         btn.setTitle(.unlockText, for: .selected)
         btn.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 14)
@@ -560,13 +560,13 @@ extension TRTCVoiceRoomAudienceAlert : UITableViewDelegate {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let audienceText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.audience")
-    static let unlockText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.unlock")
-    static let lockText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.lock")
-    static let agreeText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.agree")
-    static let inviteText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.invite")
-    static let earMonitorText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.earmonitor")
-    static let toolText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.tools")
-    static let backText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.back")
-    static let bgmText = VoiceRoomLocalize("ASKit.MainMenu.BGM")
+    static let audienceText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.audience")
+    static let unlockText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.unlock")
+    static let lockText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.lock")
+    static let agreeText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.agree")
+    static let inviteText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.invite")
+    static let earMonitorText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.earmonitor")
+    static let toolText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.tools")
+    static let backText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.back")
+    static let bgmText = voiceRoomLocalize("ASKit.MainMenu.BGM")
 }
