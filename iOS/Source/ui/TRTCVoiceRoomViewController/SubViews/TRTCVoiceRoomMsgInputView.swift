@@ -149,8 +149,8 @@ class TRTCVoiceRoomMsgInputView: UIView {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let saysmtText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.saysomething")
-    static let sendText = VoiceRoomLocalize("Demo.TRTC.LiveRoom.send")
+    static let saysmtText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.saysomething")
+    static let sendText = voiceRoomLocalize("Demo.TRTC.LiveRoom.send")
 
 }
 

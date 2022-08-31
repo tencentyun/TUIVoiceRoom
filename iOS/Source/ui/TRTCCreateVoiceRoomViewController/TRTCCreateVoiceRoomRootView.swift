@@ -36,7 +36,7 @@ class TRTCCreateVoiceRoomRootView: UIView {
         let textView = UITextView(frame: .zero)
         textView.font = UIFont(name: "PingFangSC-Regular", size: 16)
         textView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        textView.text = LocalizeReplaceXX(.defaultCreateText, viewModel.userName).subString(toByteLength: createRoomTextMaxByteLength)
+        textView.text = localizeReplaceXX(.defaultCreateText, viewModel.userName).subString(toByteLength: createRoomTextMaxByteLength)
         textView.textColor = .black
         textView.layer.cornerRadius = 20
         textView.backgroundColor = UIColor(hex: "F4F5F9")
@@ -90,7 +90,8 @@ class TRTCCreateVoiceRoomRootView: UIView {
         self.viewModel = viewModel
         super.init(frame: frame)
         bindInteraction()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChange(noti:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChange(noti:)),
+         name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     deinit {
@@ -218,7 +219,7 @@ class TRTCCreateVoiceRoomRootView: UIView {
     
     private func enterRoom() {
         if textView.text == String.placeholderTitleText {
-            viewModel.roomName = LocalizeReplaceXX(.defaultCreateText, viewModel.userName)
+            viewModel.roomName = localizeReplaceXX(.defaultCreateText, viewModel.userName)
         }
         else {
             viewModel.roomName = textView.text
@@ -310,9 +311,9 @@ extension TRTCCreateVoiceRoomRootView : TRTCCreateVoiceRoomViewResponder {
 
 // MARK: - internationalization string
 fileprivate extension String {
-    static let titleText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.roomsubject")
-    static let placeholderTitleText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.enterroomsubject")
-    static let createText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.starttalking")
-    static let defaultCreateText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.xxxsroom")
-    static let needRequestText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.needrequesttip")
+    static let titleText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomsubject")
+    static let placeholderTitleText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.enterroomsubject")
+    static let createText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.starttalking")
+    static let defaultCreateText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxxsroom")
+    static let needRequestText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.needrequesttip")
 }

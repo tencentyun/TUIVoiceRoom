@@ -66,7 +66,7 @@ class TRTCVoiceRoomTopView: UIView {
     }
     public func reloadRoomInfo(_ info: VoiceRoomInfo) {
         roomTitleLabel.text = info.roomName
-        roomDescLabel.text = LocalizeReplaceXX(.roomIdDescText, String(info.roomID))
+        roomDescLabel.text = localizeReplaceXX(.roomIdDescText, String(info.roomID))
         setNeedsDisplay()
     }
     
@@ -102,20 +102,20 @@ class TRTCVoiceRoomTopView: UIView {
     }()
     private let shareBtn : UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "share", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.setImage(UIImage(named: "share", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         btn.adjustsImageWhenHighlighted = false
         btn.isHidden = true
         return btn
     }()
     private let closeBtn : UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "exit", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.setImage(UIImage(named: "exit", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         btn.adjustsImageWhenHighlighted = false
         return btn
     }()
     private let reportBtn : UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "voiceroom_report", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.setImage(UIImage(named: "voiceroom_report", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         btn.adjustsImageWhenHighlighted = false
         return btn
     }()
@@ -133,7 +133,7 @@ class TRTCVoiceRoomTopView: UIView {
     }()
     private let nextBtn : UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "room_scrollright", in: VoiceRoomBundle(), compatibleWith: nil), for: .normal)
+        btn.setImage(UIImage(named: "room_scrollright", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         btn.adjustsImageWhenHighlighted = false
         return btn
     }()
@@ -314,7 +314,7 @@ extension TRTCVoiceRoomTopView : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "audienceListCell", for: indexPath) as! TRTCVoiceRoomImageOnlyCell
         let info = memberAudienceDataSource[indexPath.item]
-        let placeholder = UIImage.init(named: "avatar2_100", in: VoiceRoomBundle(), compatibleWith: nil)
+        let placeholder = UIImage.init(named: "avatar2_100", in: voiceRoomBundle(), compatibleWith: nil)
         cell.headImageView.kf.setImage(with: URL(string: info.userInfo.userAvatar), placeholder: placeholder, options: [], completionHandler: nil)
         return cell
     }
@@ -339,9 +339,9 @@ extension TRTCVoiceRoomTopView : UICollectionViewDelegate {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let roomTitleText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.roomname")
-    static let roomIdDescText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.roomidxx")
-    static let welcomeText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.xxenterroom")
-    static let exitText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
-    static let sureToExitText = VoiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
+    static let roomTitleText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomname")
+    static let roomIdDescText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomidxx")
+    static let welcomeText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxenterroom")
+    static let exitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
+    static let sureToExitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
 }

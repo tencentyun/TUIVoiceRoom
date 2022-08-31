@@ -12,20 +12,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Base
 
-extern NSBundle *VoiceRoomBundle(void);
+extern NSBundle *voiceRoomBundle(void);
 
-extern NSString *TVRLocalizeFromTable(NSString *key, NSString *table);
-extern NSString *TVRLocalizeFromTableAndCommon(NSString *key, NSString *common, NSString *table);
+extern NSString *tvrLocalizeFromTable(NSString *key, NSString *table);
+extern NSString *tvrLocalizeFromTableAndCommon(NSString *key, NSString *common, NSString *table);
 
 #pragma mark - Replace String
-extern NSString *LocalizeReplaceXX(NSString *origin, NSString *xxx_replace);
-extern NSString *LocalizeReplace(NSString *origin, NSString *xxx_replace, NSString *yyy_replace);
-extern NSString *LocalizeReplaceThreeCharacter(NSString *origin, NSString *xxx_replace, NSString *yyy_replace, NSString *zzz_replace);
-extern NSString *LocalizeReplaceFourCharacter(NSString *origin, NSString *xxx_replace, NSString *yyy_replace, NSString *zzz_replace, NSString *mmm_replace);
-extern NSString *LocalizeReplaceFiveCharacter(NSString *origin, NSString *xxx_replace, NSString *yyy_replace, NSString *zzz_replace, NSString *mmm_replace, NSString *nnn_replace);
+extern NSString *localizeReplaceXX(NSString *origin, NSString *xxx_replace);
+extern NSString *localizeReplace(NSString *origin, NSString *xxx_replace, NSString *yyy_replace);
+extern NSString *localizeReplaceThreeCharacter(NSString *origin, NSString *xxx_replace, NSString
+ *yyy_replace, NSString *zzz_replace);
+extern NSString *localizeReplaceFourCharacter(NSString *origin, NSString *xxx_replace, NSString
+ *yyy_replace, NSString *zzz_replace, NSString *mmm_replace);
+extern NSString *localizeReplaceFiveCharacter(NSString *origin, NSString *xxx_replace, NSString
+ *yyy_replace, NSString *zzz_replace, NSString *mmm_replace, NSString *nnn_replace);
 
 #pragma mark - TRTC
-extern NSString *const VoiceRoom_Localize_TableName;
-extern NSString *VoiceRoomLocalize(NSString *key);
+extern NSString *const voiceRoom_Localize_TableName;
+extern NSString *voiceRoomLocalize(NSString *key);
 
 NS_ASSUME_NONNULL_END

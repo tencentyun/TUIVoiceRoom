@@ -11,13 +11,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Version number defined by the current app module
-static NSString *APP_VERSION = @"app_version_1.0";
+static NSString *gAPP_VERSION = @"app_version_1.0";
 /// Group attribute write conflict. Get the latest group attribute first before writing. This error code is supported in IM SDK 5.6 or later. The seat information has changed and needs to be pulled again.
-static int ERR_SVR_GROUP_ATTRIBUTE_WRITE_CONFLICT = 10056;
+static int gERR_SVR_GROUP_ATTRIBUTE_WRITE_CONFLICT = 10056;
 /// API call frequency limit
-static int ERR_CALL_METHOD_LIMIT = 10001;
+static int gERR_CALL_METHOD_LIMIT = 10001;
 /// Connect Tencent timeout
-static int ERR_CONNECT_SERVICE_TIMEOUT = 10002;
+static int gERR_CONNECT_SERVICE_TIMEOUT = 10002;
 
 @interface VoiceRoomSeatInfo : NSObject
 
