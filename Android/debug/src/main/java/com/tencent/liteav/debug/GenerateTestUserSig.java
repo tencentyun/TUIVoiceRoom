@@ -79,6 +79,56 @@ public class GenerateTestUserSig {
      */
     private static final String SECRETKEY = "PLACEHOLDER";
 
+
+    /**
+     * Xmagic美颜证书url
+     * <p>
+     * 详细内容见https://cloud.tencent.com/document/product/616/65878
+     * </p>
+     */
+    public static final String XMAGIC_LICENSE_URL = "PLACEHOLDER";
+
+    /**
+     * Xmagic美颜证书url
+     * <p>
+     * 详细内容见https://cloud.tencent.com/document/product/616/65878
+     * </p>
+     */
+    public static final String XMAGIC_LICENSE_KEY = "PLACEHOLDER";
+
+
+    /**
+     * 腾讯云直播license管理页面(https://console.cloud.tencent.com/live/license)
+     * 当前应用的License LicenseUrl
+     * <p>
+     * License Management View (https://console.cloud.tencent.com/live/license)
+     * License URL of your application
+     */
+    public static final String LICENSEURL = "请替换成您的licenseURL";
+
+    /**
+     * 腾讯云直播license管理页面(https://console.cloud.tencent.com/live/license)
+     * 当前应用的License Key
+     * <p>
+     * License Management View (https://console.cloud.tencent.com/live/license)
+     * License key of your application
+     */
+    public static final String LICENSEURLKEY = "请替换成您的licenseKey";
+
+    /**
+     * 配置的后台服务域名，类似：https://service-3vscss6c-xxxxxxxxxxx.gz.apigw.tencentcs.com"
+     * <p>
+     * 小直播后台提供有登录、房间列表等服务，更多细节见文档：https://cloud.tencent.com/document/product/454/38625
+     */
+    public static final String SERVERLESSURL = "PLACEHOLDER";
+
+    /**
+     * 配置的播放域名
+     * <p>
+     * 腾讯云域名管理页面：https://console.cloud.tencent.com/live/domainmanage
+     */
+    public static final String PLAY_DOMAIN = "PLACEHOLDER";
+
     /**
      * Calculating UserSig
      * <p>

@@ -10,3 +10,4 @@ build/
 *.codecc/
 /build.yml
 tuicore
+tuiofflinepush
