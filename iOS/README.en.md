@@ -1,7 +1,7 @@
 # Quick Run of TUIVoiceRoom Demo for iOS
 _[中文](README.md) | English_
 
-This document describes how to quickly run the TUIVoiceRoom demo project to try out high-quality audio interaction. For more information on the TUIVoiceRoom component connection process, see **[Integrating TUIVoiceRoom (iOS)](https://cloud.tencent.com/document/product/647/45753)**.
+This document describes how to quickly run the TUIVoiceRoom demo project to try out high-quality audio interaction. For more information on the TUIVoiceRoom component connection process, see **[Integrating TUIVoiceRoom (iOS)](https://www.tencentcloud.com/document/product/647/37287)**.
 
 ## Directory Structure
     
@@ -11,7 +11,7 @@ TUIVoiceRoom
 ├─ Resources                 // Images and internationalization string resources required by the audio chat room feature
 ├─ Source                    // Core business logic code of audio chat room
 ├─ TXAppBasic                // Dependent basic components of the project
-└─ TUIVoiceRoom.podspec      // CocoaPods podspec file of the TUIRoom component
+└─ TUIVoiceRoom.podspec      // CocoaPods podspec file of the TUIVoiceRoom component
 ```
     
 ## Environment Requirements
@@ -28,7 +28,7 @@ TUIVoiceRoom
     <img src="https://qcloudimg.tencent-cloud.cn/raw/62f58d310dde3de2d765e9a460b8676a.png" width="900">
 3. On the application information page, note down the `SDKAppID` and key as shown below:
     <img src="https://qcloudimg.tencent-cloud.cn/raw/bea06852e22a33c77cb41d287cac25db.png" width="900">
->! This feature uses two basic PaaS services of Tencent Cloud: [TRTC](https://cloud.tencent.com/document/product/647/16788) and [IM](https://cloud.tencent.com/document/product/269). When you activate TRTC, IM will be activated automatically. IM is a value-added service. See [Pricing](https://cloud.tencent.com/document/product/269/11673) for its billing details.
+>! This feature uses two basic PaaS services of Tencent Cloud: [TRTC](https://www.tencentcloud.com/document/product/647/35078) and [IM](https://www.tencentcloud.com/document/product/1047/33513). When you activate TRTC, IM will be activated automatically. IM is a value-added service.
 
 ### Step 2. Download the source code and configure the project
 
@@ -64,17 +64,10 @@ Note: You need to prepare at least two devices to try out TUIVoiceRoom. Here, us
 - Step 4: After successful creation, you will enter the main UI of the audio chat room. Note down the room number at this time.
 
 
-| Step 1 | Step 2 | Step 3 | Step 4 |
-|---------|---------|---------|---------|
-| <img src="https://qcloudimg.tencent-cloud.cn/raw/24a76a18049eda3bdb6414493d43e286.png" width="250"> | <img src="https://qcloudimg.tencent-cloud.cn/raw/1b9a92912201d65fdaceb5db12b544af.png" width="250"> | <img src="https://qcloudimg.tencent-cloud.cn/raw/027c36cb954aa58f53f139af302620c6.png" width="250"> |<img src="https://qcloudimg.tencent-cloud.cn/raw/b2d8de0412d5378a8b269d277338902d.jpg" width="250"> |
-
 **Device B (userId: 222)**
 - Step 1: Enter the username (which must be unique), such as `222`.
 - Step 2: Click **Enter Room** and enter the ID of the room created by user A (the room ID noted down in step 4 on device A).
 
-| Step 1 | Step 2 | 
-|---------|---------|
-| <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/user_b_ios.png" width="320"/> | <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuivoiceroom_roomid_ios.png" width="320"/> | 
 
 ## Have any questions?
 Welcome to join our Telegram Group to communicate with our professional engineers! We are more than happy to hear from you~
