@@ -15,22 +15,15 @@ _[中文](README.md) | English_
 
 ## Demonstration
 
-<table>
-     <tr>
-         <th>Room Owner</th>  
-         <th>Listener</th>  
-     </tr>
-<tr>
-<td><img src="voiceroom_pick_seat.gif" width="300px" height="640px"/></td>
-<td><img src="voiceroom_enter_seat.gif" width="300px" height="640px"/></td>
-</tr>
-</table>
+<img src="https://qcloudimg.tencent-cloud.cn/raw/692c5d6086ff4410c2151645280c7ff0.png" width="640" />
+
 
 ## Demos
+You can directly scan the QR codes to try out the component.
 
 | iOS                                                          | Android                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![](https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/app_download_ios.png) | ![](https://main.qcloudimg.com/raw/8a603ced0a61983018c794df842f7029.png) |
+| <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/app_download_ios.png" width="150" /> | <img src="https://main.qcloudimg.com/raw/8a603ced0a61983018c794df842f7029.png" width="150" /> |
 
 ## Documentation
 
