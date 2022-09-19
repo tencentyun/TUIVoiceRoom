@@ -1,7 +1,7 @@
 # Quick Run of TUIVoiceRoom Demo for Android
 _[中文](README.md) | English_
 
-This document describes how to quickly run the TUIVoiceRoom demo project to make a high-quality audio/video chat. For more information on the TUIVoiceRoom component connection process, see **[Integrating TUIVoiceRoom (Android)](https://www.tencentcloud.com/document/product/647/37286)**.
+This document describes how to quickly run the TUIVoiceRoom demo project to make a high-quality audio/video chat. For more information on the TUIVoiceRoom component connection process, see **[Integrating TUIVoiceRoom (Android)](https://cloud.tencent.com/document/product/647/45737)**.
 
 ## Directory Structure
 
@@ -9,7 +9,7 @@ This document describes how to quickly run the TUIVoiceRoom demo project to make
 TUIVoiceRoom
 ├─ app           // Main panel, which provides entries of various scenarios
 ├─ debug         // Debugging code
-└─ tuivoicerooom // Integrating audio chat business logic
+└─ tuivoicerooom // Video meeting business logic
 ```
 
 ## Environment Requirements
@@ -25,7 +25,7 @@ TUIVoiceRoom
 3. On the application information page, note down the `SDKAppID` and key as shown below:
     <img src="https://qcloudimg.tencent-cloud.cn/raw/bea06852e22a33c77cb41d287cac25db.png" width="900">
 
->! This feature uses two basic PaaS services of Tencent Cloud: [TRTC](https://www.tencentcloud.com/document/product/647/35078) and [IM](https://www.tencentcloud.com/document/product/1047/33513). When you activate TRTC, IM will be activated automatically. IM is a value-added service.
+>! This feature uses two basic PaaS services of Tencent Cloud: [TRTC](https://cloud.tencent.com/document/product/647/16788) and [IM](https://cloud.tencent.com/document/product/269). When you activate TRTC, IM will be activated automatically. IM is a value-added service. See [Pricing](https://cloud.tencent.com/document/product/269/11673) for its billing details.
 
 
 [](id:ui.step2)
@@ -51,11 +51,18 @@ Note: You need to prepare at least two devices to try out TUIVoiceRoom. Here, us
 - Step 3: Enter a room subject and click **Start**.
 - Step 4: Enter the room.
 
+| Step 1 | Step 2 | Step 3 | Step 4 |
+|---------|---------|---------|---------|
+| <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/user_a.png" width="250"> | <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuivoiceroom_create_room.png" width="250"> | <img src="https://qcloudimg.tencent-cloud.cn/raw/d974a54fa71b221ff342e9789d6e125a.png" width="250"> |<img src="https://qcloudimg.tencent-cloud.cn/raw/b2d8de0412d5378a8b269d277338902d.jpg" width="250"> |
+
 **Device B (userId: 222)**
 
 - Step 1: Enter the username (which must be unique), such as `222`.
 - Step 2: Click **Enter Room** and enter the ID of the room created by use A (the room ID that you noted down in step 4 on device A) to enter the room.
 
+| Step 1 | Step 2 |
+|---------|---------|
+| <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/user_b.png" width="320"/> | <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuivoiceroom_enter_room.png" width="320"/> |
 
 ## Have any questions?
 Welcome to join our Telegram Group to communicate with our professional engineers! We are more than happy to hear from you~
