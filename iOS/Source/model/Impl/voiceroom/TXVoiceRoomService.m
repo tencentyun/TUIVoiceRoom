@@ -25,6 +25,9 @@
 @property (nonatomic, strong) NSString *ownerUserId;
 @property (nonatomic, strong) TXRoomInfo *roomInfo;
 @property (nonatomic, strong) NSArray<TXSeatInfo *> *seatInfoList;
+@property (nonatomic, strong) NSMutableSet<NSString *> *offlineUsers;
+@property (nonatomic, getter=isOfflineKicking) BOOL offlineKicking;
+@property (nonatomic, strong) NSMutableDictionary *offlineKickedMap;
 @property (nonatomic, strong) NSString *selfUserName;
 
 @property (nonatomic, strong, readonly)V2TIMManager* imManager;
@@ -32,6 +35,14 @@
 @end
 
 @implementation TXVoiceRoomService
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.offlineUsers = [NSMutableSet set];
+        self.offlineKickedMap = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 + (instancetype)sharedInstance {
     static TXVoiceRoomService* instance = nil;
@@ -766,7 +777,69 @@
     return [dic mj_JSONString];
 }
 
+- (NSInteger)getSeatIndexWithUserId:(NSString *)userId {
+    NSInteger seatIndex = -1;
+    if (!userId || ![userId isKindOfClass:[NSString class]] || userId.length == 0) {
+        return seatIndex;
+    }
+    for (NSInteger index = 0; index < self.seatInfoList.count; index++) {
+        TXSeatInfo *seatInfo = self.seatInfoList[index];
+        if (seatInfo.user && [seatInfo.user isEqualToString: userId]) {
+            seatIndex = index;
+            break;
+        }
+    }
+    return seatIndex;
+}
+
+- (void)handleKickOfflineUser {
+    if (self.isOfflineKicking || self.offlineUsers.count == 0) {
+        return;
+    }
+    self.offlineKicking = YES;
+    NSString *kickedUserId = _offlineUsers.allObjects.firstObject;
+    [self.offlineUsers removeObject:kickedUserId];
+    NSInteger kickedSeatIndex = [self getSeatIndexWithUserId:kickedUserId];
+    if (kickedSeatIndex == -1) {
+        self.offlineKicking = NO;
+        [self handleKickOfflineUser];
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [self kickSeat:kickedSeatIndex callback:^(int code, NSString * _Nonnull message) {
+        if (!weakSelf) {
+            return;
+        }
+        TRTCLog(@"kickSeat offlineUser userId: %@ seatIndex:%d message:%@", kickedUserId, kickedSeatIndex, message);
+        if (code == 0) {
+            [weakSelf.offlineKickedMap setObject:kickedUserId forKey:@(kickedSeatIndex)];
+        } else {
+            weakSelf.offlineKicking = NO;
+            [weakSelf handleKickOfflineUser];
+        }
+    }];
+}
+
 #pragma mark - V2TIMSDKListener
+- (void)onUserStatusChanged:(NSArray<V2TIMUserStatus *> *)userStatusList {
+    if (!userStatusList || userStatusList.count == 0) {
+        TRTCLog(@"onUserStatusChanged, userStatusList is null");
+        return;
+    }
+    for (V2TIMUserStatus *userStatus in userStatusList) {
+        TRTCLog(@"onUserStatusChanged, userId: %@ status: %d", userStatus.userID, userStatus.statusType);
+        if (userStatus.statusType == V2TIM_USER_STATUS_OFFLINE) {
+            if (![self.offlineUsers containsObject:userStatus.userID]) {
+                [self.offlineUsers addObject:userStatus.userID];
+            }
+            [self handleKickOfflineUser];
+        } else if (userStatus.statusType == V2TIM_USER_STATUS_ONLINE) {
+            if ([self.offlineUsers containsObject:userStatus.userID]) {
+                [self.offlineUsers removeObject:userStatus.userID];
+            }
+        }
+    }
+}
 
 #pragma mark - V2TIMSimpleMsgListener
 - (void)onRecvC2CTextMessage:(NSString *)msgID sender:(V2TIMUserInfo *)info text:(NSString *)text {
@@ -1056,6 +1129,9 @@
     self.isEnterRoom = NO;
     self.mRoomId = @"";
     self.ownerUserId = @"";
+    [self.offlineUsers removeAllObjects];
+    [self.offlineKickedMap removeAllObjects];
+    self.offlineKicking = NO;
 }
 
 - (BOOL)canDelegateResponseMethod:(SEL)method {
@@ -1081,6 +1157,13 @@
             [self.delegate onSeatTakeWithIndex:index userInfo:userInfo];
         }
     }];
+    if ([self isOwner]) {
+        [self.imManager subscribeUserStatus:@[userId] succ:^{
+            TRTCLog(@"subscribeUserStatus success userId %@", userId);
+        } fail:^(int code, NSString *desc) {
+            TRTCLog(@"subscribeUserStatus failed, code: %d message:%@ userId %@", code, desc, userId);
+        }];
+    }
 }
 
 - (void)onSeatLeaveWithIndex:(NSInteger)index user:(NSString *)userId {
@@ -1102,6 +1185,19 @@
             [self.delegate onSeatLeaveWithIndex:index userInfo:userInfo];
         }
     }];
+    if ([self isOwner]) {
+        [self.imManager unsubscribeUserStatus:@[userId] succ:^{
+            TRTCLog(@"unsubscribeUserStatus success userId %@", userId);
+        } fail:^(int code, NSString *desc) {
+            TRTCLog(@"unsubscribeUserStatus failed, code: %d message:%@ userId %@", code, desc, userId);
+        }];
+    }
+    // handle offlineUsers status on onSeatLeaveWithIndex
+    NSString *kickedUserId = self.offlineKickedMap[@(index)];
+    if (kickedUserId && [kickedUserId isKindOfClass:[NSString class]] && kickedUserId.length > 0) {
+        self.offlineKicking = NO;
+        [self handleKickOfflineUser];
+    }
 }
 
 - (void)onSeatcloseWithIndex:(NSInteger)index isClose:(BOOL)isClose {
@@ -1120,6 +1216,7 @@
 
 - (void)initImListener {
     [self.imManager addGroupListener:self];
+    [self.imManager addIMSDKListener:self];
     [self.imManager removeSignalingListener:self];
     [self.imManager removeSimpleMsgListener:self];
     [self.imManager addSignalingListener:self];
@@ -1127,9 +1224,12 @@
 }
 
 - (void)unInitIMListener {
-    [self.imManager removeGroupListener:nil];
+    [self.imManager removeIMSDKListener:self];
+    [self.imManager removeGroupListener:self];
     [self.imManager removeSignalingListener:self];
     [self.imManager removeSimpleMsgListener:self];
+    // 取消所有在线用户订阅
+    [self.imManager unsubscribeUserStatus:@[] succ:nil fail:nil];
 }
 
 - (void)onCreateSuccess:(TXCallback _Nullable)callback {
