@@ -1,5 +1,8 @@
 package com.tencent.liteav.trtcvoiceroom.ui.utils;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+
 public class Utils {
 
     public static String formattedTime(long second) {
@@ -36,5 +39,10 @@ public class Utils {
             formatTime = ms + ":" + ss;
         }
         return formatTime;
+    }
+
+    public static String getAppName(Context context) {
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        return context.getPackageManager().getApplicationLabel(applicationInfo).toString();
     }
 }
