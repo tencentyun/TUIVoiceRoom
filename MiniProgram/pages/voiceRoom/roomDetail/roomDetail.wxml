@@ -12,7 +12,7 @@
   <view class="weat-list">
     <view class="owner">
       <view class="weat">
-        <image class="avatar" src="{{usreInfoListObject[groupAttributes.seat0.user].avatar}}" mode="aspectFit"></image>
+        <image class="avatar" src="{{userInfoListObject[groupAttributes.seat0.user].avatar}}" mode="aspectFit"></image>
         <image class="mute" wx:if="{{ groupAttributes.seat0.mute == true || !isPushing[groupAttributes.seat0.user]}}" src="../../../static/images/voiceclose-fill.svg" mode="aspectFit"></image>
         <image class="isPushing" wx:if="{{audioPlayerListObject[groupAttributes['seat0'].user]}}"></image>
         <view class="">{{groupAttributes.seat0.user}}</view>
@@ -25,15 +25,15 @@
           <image wx:if="{{groupAttributes['seat'+[(index+1)]].status === voiceRoom.SEAT_STATUS.CLOSE}}" src="../../../static/images/lock_fill_ccc.svg" mode="aspectFit" lazy-load="false" bindtap='seatClick' data-seatIndex="{{index+1}}"></image>
           <view class="avatar" wx:if="{{groupAttributes['seat'+[(index+1)]].status === voiceRoom.SEAT_STATUS.EXIST_USER}}">
             <image class="mute" wx:if="{{groupAttributes['seat'+[(index+1)]].mute || !isPushing[groupAttributes['seat'+(index+1)].user]}}" src="../../../static/images/voiceclose-fill.svg" mode="aspectFit"></image>
-            <image class="avatar" wx:if="{{groupAttributes['seat'+[(index+1)]].status === voiceRoom.SEAT_STATUS.EXIST_USER && !audioPlayerListObject[groupAttributes['seat'+[(index+1)]].user]}}" src="{{usreInfoListObject[groupAttributes['seat'+[(index+1)]].user].avatar}}" mode="aspectFit" lazy-load="false" bindtap='seatClick' data-seatIndex="{{index+1}}"></image>
-            <image class="avatar isPushing" wx:if="{{groupAttributes['seat'+[(index+1)]].status === voiceRoom.SEAT_STATUS.EXIST_USER&& audioPlayerListObject[groupAttributes['seat'+[(index+1)]].user]}}" src="{{usreInfoListObject[groupAttributes['seat'+[(index+1)]].user].avatar}}" mode="aspectFit" lazy-load="false" bindtap='seatClick' data-seatIndex="{{index+1}}"></image>
+            <image class="avatar" wx:if="{{groupAttributes['seat'+[(index+1)]].status === voiceRoom.SEAT_STATUS.EXIST_USER && !audioPlayerListObject[groupAttributes['seat'+[(index+1)]].user]}}" src="{{userInfoListObject[groupAttributes['seat'+[(index+1)]].user].avatar}}" mode="aspectFit" lazy-load="false" bindtap='seatClick' data-seatIndex="{{index+1}}"></image>
+            <image class="avatar isPushing" wx:if="{{groupAttributes['seat'+[(index+1)]].status === voiceRoom.SEAT_STATUS.EXIST_USER&& audioPlayerListObject[groupAttributes['seat'+[(index+1)]].user]}}" src="{{userInfoListObject[groupAttributes['seat'+[(index+1)]].user].avatar}}" mode="aspectFit" lazy-load="false" bindtap='seatClick' data-seatIndex="{{index+1}}"></image>
             <!-- <image class="isPushing" wx:if="{{!audioPlayerListObject[groupAttributes['seat'+[(index+1)]].user]}}"></image> -->
           </view>
           <view wx:if="{{groupAttributes['seat'+[(index+1)]].status !== voiceRoom.SEAT_STATUS.EXIST_USER}}">
             {{'No.'+(index+1)}}
           </view>
           <view wx:else>
-            {{usreInfoListObject[groupAttributes['seat'+[(index+1)]].user].userID}}
+            {{userInfoListObject[groupAttributes['seat'+[(index+1)]].user].userID}}
           </view>
         </view>
       </block>

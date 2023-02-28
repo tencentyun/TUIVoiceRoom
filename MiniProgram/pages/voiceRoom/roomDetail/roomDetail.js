@@ -22,7 +22,7 @@ Page({
     playerList: [],
     audioPlayerListObject: {},
   },
-  onLoad(options) {
+  async onLoad(options) {
     this.TRTC = new TRTC(this, { TUIScene: "TUIVoiceRoom" });
     this.EVENT = this.TRTC.EVENT;
     const pusher = this.TRTC.createPusher({
@@ -41,7 +41,7 @@ Page({
       voiceRoom: wx.$VoiceRoom,
       groupAttributes: wx.$VoiceRoom._groupAttributes,
     });
-    this.setUserInfoList();
+    this.setUserInfoList(await this.data.voiceRoom.getUserInfoList([this.data.userId]), 'push');
     this.setData({
       seatInfoMap: this.getSeatInfoMap(this.data.groupAttributes),
     });
@@ -265,7 +265,11 @@ Page({
   },
   async setUserInfoList(userInfo = undefined, type = '') {
     if (userInfo && type) {
-      this.data.userInfoList[type](userInfo);
+      if(type === 'push') {
+        this.data.userInfoList.push(userInfo);
+      }else {
+        this.data.userInfoList = this.data.userInfoList.filter(item => item.userID !== userInfo.userID)
+      }
     }
     const userInfoList = !userInfo
       ? await this.data.voiceRoom.getUserInfoList([])
