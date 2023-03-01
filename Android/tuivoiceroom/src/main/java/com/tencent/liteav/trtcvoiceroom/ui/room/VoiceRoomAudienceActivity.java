@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtcvoiceroom.ui.room;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +16,13 @@ import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
 import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
 import com.tencent.liteav.trtcvoiceroom.ui.base.VoiceRoomSeatEntity;
-import com.tencent.liteav.trtcvoiceroom.ui.utils.PermissionHelper;
+import com.tencent.liteav.trtcvoiceroom.ui.utils.Utils;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.CommonBottomDialog;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.ConfirmDialogFragment;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
+import com.tencent.qcloud.tuicore.permission.PermissionCallback;
+import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.lang.reflect.Method;
@@ -194,32 +197,29 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                             ToastUtils.showShort(getString(R.string.trtcvoiceroom_seat_closed));
                             return;
                         }
-                        PermissionHelper.requestPermission(mContext, PermissionHelper.PERMISSION_MICROPHONE,
-                                new PermissionHelper.PermissionCallback() {
-                                    @Override
-                                    public void onGranted() {
-                                        if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
-                                            startMoveSeat(itemPos);
-                                        } else {
-                                            startTakeSeat(itemPos);
-                                        }
-                                    }
+                        PermissionCallback callback = new PermissionCallback() {
+                            @Override
+                            public void onGranted() {
+                                if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
+                                    startMoveSeat(itemPos);
+                                } else {
+                                    startTakeSeat(itemPos);
+                                }
+                            }
 
-                                    @Override
-                                    public void onDenied() {
-
-                                    }
-
-                                    @Override
-                                    public void onDialogApproved() {
-
-                                    }
-
-                                    @Override
-                                    public void onDialogRefused() {
-                                        finish();
-                                    }
-                                });
+                            @Override
+                            public void onDenied() {
+                                finish();
+                            }
+                        };
+                        String title = getString(R.string.trtcvoiceroom_permission_mic_reason_title,
+                                Utils.getAppName(mContext));
+                        PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
+                                .title(title)
+                                .description(getString(R.string.trtcvoiceroom_permission_mic_reason))
+                                .settingsTip(getString(R.string.trtcvoiceroom_tips_start_audio))
+                                .callback(callback)
+                                .request();
                     }
                     dialog.dismiss();
                 }
