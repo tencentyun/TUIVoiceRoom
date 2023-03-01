@@ -1,17 +1,16 @@
 # Voice Room
-_[中文](README.md) | English_
+_[简体中文](README.md) | English_
 
 ## Overview
 
 **TUI component solutions** are low-code solutions launched by TRTC for live streaming, audio chat, video call, and other scenarios based on Tencent's technical accumulation in audio, video, and communication fields. They help you quickly implement relevant business scenarios so you can focus on your core business.
 
+- [Audio/Video call - TUICallKit](https://github.com/tencentyun/TUICalling/)
+- [Multi-person communication - TUIRoomKit](https://github.com/tencentyun/TUIRoom/)
 - [Interactive video live streaming - TUILiveRoom](https://github.com/tencentyun/TUILiveRoom/)
-- [Multi-person communication - TUIRoom](https://github.com/tencentyun/TUIRoom/)
-- [Audio/Video call - TUICalling](https://github.com/tencentyun/TUICalling/)
 - [Audio chat room - TUIVoiceRoom](https://github.com/tencentyun/TUIVoiceRoom/)
-- [Chat salon - TUIChatSalon](https://github.com/tencentyun/TUIChatSalon/)
 - [Karaoke - TUIKaraoke](https://github.com/tencentyun/TUIKaraoke/)
-- [Chorus - TUIChorus](https://github.com/tencentyun/TUIChorus/)
+
 
 ## Demonstration
 
