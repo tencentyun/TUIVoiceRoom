@@ -26,7 +26,6 @@ public class VoiceRoomTRTCService extends TRTCCloudListener {
     private static final long   PLAY_TIME_OUT           = 5000;
     private static final int    KTC_COMPONENT_VOICEROOM = 6;
 
-    private static VoiceRoomTRTCService sInstance;
 
     private TRTCCloud                    mTRTCCloud;
     private TXBeautyManager              mTXBeautyManager;
@@ -39,20 +38,14 @@ public class VoiceRoomTRTCService extends TRTCCloudListener {
     private TXCallback                   mExitRoomCallback;
     private OnSwitchListener             mOnSwitchListener;
 
-    public static synchronized VoiceRoomTRTCService getInstance() {
-        if (sInstance == null) {
-            sInstance = new VoiceRoomTRTCService();
-        }
-        return sInstance;
-    }
-
-    public void init(Context context) {
+    public VoiceRoomTRTCService(Context context) {
         mTRTCCloud = TRTCCloud.sharedInstance(context);
         TRTCLogger.i(TAG, "init context:" + context);
         mTXBeautyManager = mTRTCCloud.getBeautyManager();
         mMainHandler = new Handler(Looper.getMainLooper());
+        TRTCLogger.i(TAG, "VoiceRoomTRTCService instance@" + this + " initialized");
     }
-
+    
     public void setDelegate(VoiceRoomTRTCServiceDelegate delegate) {
         TRTCLogger.i(TAG, "init delegate:" + delegate);
         mDelegate = delegate;

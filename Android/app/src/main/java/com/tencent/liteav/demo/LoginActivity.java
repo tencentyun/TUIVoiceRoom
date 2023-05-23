@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         String userId = mEditUserId.getText().toString().trim();
         final UserModel userModel = new UserModel();
+        userModel.appId = GenerateTestUserSig.SDKAPPID;
         userModel.userId = userId;
         userModel.userName = userId;
         int index = new Random().nextInt(AvatarConstant.USER_AVATAR_ARRAY.length);

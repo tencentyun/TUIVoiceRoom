@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtcvoiceroom.ui.room;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +15,15 @@ import com.tencent.liteav.trtcvoiceroom.model.VoiceRoomManager;
 import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
 import com.tencent.liteav.trtcvoiceroom.ui.base.MemberEntity;
 import com.tencent.liteav.trtcvoiceroom.ui.base.VoiceRoomSeatEntity;
-import com.tencent.liteav.trtcvoiceroom.ui.utils.PermissionHelper;
+import com.tencent.liteav.trtcvoiceroom.ui.utils.Utils;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.CommonBottomDialog;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.ConfirmDialogFragment;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.SelectMemberView;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.msg.MsgEntity;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
+import com.tencent.qcloud.tuicore.permission.PermissionCallback;
+import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.lang.reflect.Method;
@@ -110,7 +113,6 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
             public void onError(int errorCode, String message) {
             }
         });
-        mTRTCVoiceRoom.setDelegate(null);
     }
 
     private void initAnchor() {
@@ -132,28 +134,26 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
         mRoomId = getRoomId();
         mCurrentRole = TRTCCloudDef.TRTCRoleAnchor;
         mTRTCVoiceRoom.setSelfProfile(mUserName, mUserAvatar, null);
-        PermissionHelper.requestPermission(this, PermissionHelper.PERMISSION_MICROPHONE,
-                new PermissionHelper.PermissionCallback() {
-                    @Override
-                    public void onGranted() {
-                        internalCreateRoom();
-                    }
 
-                    @Override
-                    public void onDenied() {
+        PermissionCallback callback = new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                internalCreateRoom();
+            }
 
-                    }
-
-                    @Override
-                    public void onDialogApproved() {
-
-                    }
-
-                    @Override
-                    public void onDialogRefused() {
-                        finish();
-                    }
-                });
+            @Override
+            public void onDenied() {
+                finish();
+            }
+        };
+        String title = getString(R.string.trtcvoiceroom_permission_mic_reason_title,
+                Utils.getAppName(mContext));
+        PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
+                .title(title)
+                .description(getString(R.string.trtcvoiceroom_permission_mic_reason))
+                .settingsTip(getString(R.string.trtcvoiceroom_tips_start_audio))
+                .callback(callback)
+                .request();
 
         TUILogin.addLoginListener(mTUILoginListener);
         showAlertUserLiveTips();
@@ -229,8 +229,8 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                 if (code == 0) {
                     ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_owner_succeeded_in_occupying_the_seat));
                 } else {
-                    ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_owner_failed_to_occupy_the_seat)
-                            + "[" + code + "]:" + msg);
+                    String s = getString(R.string.trtcvoiceroom_toast_owner_failed_to_occupy_the_seat, code, msg);
+                    ToastUtils.showLong(s);
                 }
             }
         });
@@ -339,7 +339,7 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                         entity.type = MsgEntity.TYPE_AGREED;
                         mMsgListAdapter.notifyDataSetChanged();
                     } else {
-                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_accept_failed) + code);
+                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
                     }
                 }
             });
@@ -398,7 +398,7 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                         }
                         mMsgListAdapter.notifyDataSetChanged();
                     } else {
-                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_accept_request_failure) + code);
+                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
                         memberEntity.type = MemberEntity.TYPE_IDEL;
                         mViewSelectMember.notifyDataSetChanged();
                     }

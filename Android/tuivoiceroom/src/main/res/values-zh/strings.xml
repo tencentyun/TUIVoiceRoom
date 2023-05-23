@@ -20,8 +20,6 @@
     <string name="trtcvoiceroom_tv_create_chat_room">创建聊天室</string>
     <string name="trtcvoiceroom_msg_living_now_whether_to_exit_live">当前正在直播，是否退出直播？</string>
     <string name="trtcvoiceroom_tv_invite_chat">邀请上麦</string>
-    <string name="trtcvoiceroom_toast_create">创建房间失败</string>
-    <string name="trtcvoiceroom_toast_create_live_room_failure">创建房间失败[%1$d]:%2$s</string>
     <string name="trtcvoiceroom_toast_owner_succeeded_in_occupying_the_seat">房主占座成功</string>
     <string name="trtcvoiceroom_toast_owner_failed_to_occupy_the_seat">房主占座失败[%1$d]:%2$s</string>
     <string name="trtcvoiceroom_tv_not_mute_audio">对 Ta 解禁</string>
@@ -65,8 +63,6 @@
     <string name="trtcvoiceroom_toast_sent_message_failure">发送消息失败[%1$d]</string>
     <string name="trtcvoiceroom_tv_information_acquisition">房主信息获取中</string>
     <string name="trtcvoiceroom_tv_the_anchor_is_not_online">主播未上线</string>
-    <string name="trtcvoiceroom_tv_online">%1$s上%2$d号麦</string>
-    <string name="trtcvoiceroom_tv_offline">%1$s下%2$d号麦</string>
     <string name="trtcvoiceroom_tv_the_position_has_muted">%d号位被禁言</string>
     <string name="trtcvoiceroom_tv_the_position_has_unmuted">%d号位解除禁言</string>
     <string name="trtcvoiceroom_tv_the_owner_ban_this_position">房主封禁%d号位</string>
@@ -102,7 +98,6 @@
     <string name="trtcvoiceroom_anchor_leave_room">离开会解散房间，确定离开吗？</string>
     <string name="trtcvoiceroom_sound_effects">音效</string>
     <string name="trtcvoiceroom_request_expired">该请求已过期</string>
-    <string name="trtcvoiceroom_accept_failed">接受请求失败</string>
     <string name="trtcvoiceroom_seat_unmuted">解除禁言</string>
     <string name="trtcvoiceroom_audience_leave_room">确认离开房间吗？</string>
     <string name="trtcvoiceroom_sound_audition">音乐试听</string>

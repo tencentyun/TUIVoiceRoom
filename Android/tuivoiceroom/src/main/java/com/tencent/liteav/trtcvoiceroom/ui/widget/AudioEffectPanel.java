@@ -36,6 +36,7 @@ import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
 import com.tencent.liteav.trtcvoiceroom.ui.utils.Utils;
+import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -804,10 +805,9 @@ public class AudioEffectPanel extends BottomSheetDialog {
                 mTvActor.setText(model.mTitle);
                 mTvStartTime.setVisibility(VISIBLE);
                 mTvTotalTime.setVisibility(VISIBLE);
-                mTvTotalTime.setText("/" + Utils.formattedTime(
-                        mAudioEffectManager.getMusicDurationInMS(model.mPath) / 1000) + "");
                 mImgbtnBGMPlay.setVisibility(VISIBLE);
                 mImgbtnBGMPlay.setImageResource(R.drawable.trtcvoiceroom_bgm_pause);
+                updateMusicTotalTimeView(model.mPath);
             }
         });
         final TXAudioEffectManager.AudioMusicParam audioMusicParam = new TXAudioEffectManager
@@ -842,6 +842,19 @@ public class AudioEffectPanel extends BottomSheetDialog {
             }
         });
     }
+
+    public void updateMusicTotalTimeView(String path) {
+        if (mAudioEffectManager == null) {
+            return;
+        }
+        new Thread(() -> {
+            long duration = mAudioEffectManager.getMusicDurationInMS(path);
+            BackgroundTasks.getInstance().runOnUiThread(() -> {
+                mTvTotalTime.setText("/" + Utils.formattedTime(duration / 1000) + "");
+            });
+        }).start();
+    }
+
 
     public boolean isZh(Context context) {
         Locale locale = context.getResources().getConfiguration().locale;
