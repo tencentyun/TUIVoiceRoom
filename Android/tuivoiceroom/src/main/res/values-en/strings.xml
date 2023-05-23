@@ -20,8 +20,6 @@
     <string name="trtcvoiceroom_tv_create_chat_room">Create</string>
     <string name="trtcvoiceroom_msg_living_now_whether_to_exit_live">Are you sure you want to exit the live stream?</string>
     <string name="trtcvoiceroom_tv_invite_chat">Invite</string>
-    <string name="trtcvoiceroom_toast_create">Failed to create the room</string>
-    <string name="trtcvoiceroom_toast_create_live_room_failure">Failed to create room [%1$d]:%2$s</string>
     <string name="trtcvoiceroom_toast_owner_succeeded_in_occupying_the_seat">Seat taken successfully</string>
     <string name="trtcvoiceroom_toast_owner_failed_to_occupy_the_seat">Failed to take a seat [%1$d]:%2$s</string>
     <string name="trtcvoiceroom_tv_not_mute_audio">Unmute</string>
@@ -65,8 +63,6 @@
     <string name="trtcvoiceroom_toast_sent_message_failure">Failed to send message [%1$d]</string>
     <string name="trtcvoiceroom_tv_information_acquisition">Getting room owner information</string>
     <string name="trtcvoiceroom_tv_the_anchor_is_not_online">The anchor is not online</string>
-    <string name="trtcvoiceroom_tv_online">%1$s took seat %2$d</string>
-    <string name="trtcvoiceroom_tv_offline">%1$s left seat %2$d</string>
     <string name="trtcvoiceroom_tv_the_position_has_muted">Seat %d muted</string>
     <string name="trtcvoiceroom_tv_the_position_has_unmuted">Seat %d unmuted</string>
     <string name="trtcvoiceroom_tv_the_owner_ban_this_position">Seat %d blocked</string>
@@ -103,7 +99,6 @@
     <string name="trtcvoiceroom_sound_effects">Sound effect settings</string>
     <string name="trtcvoiceroom_sounds_adjustment">Music tone</string>
     <string name="trtcvoiceroom_request_expired">The request has expired</string>
-    <string name="trtcvoiceroom_accept_failed">Failed to accept request</string>
     <string name="trtcvoiceroom_seat_unmuted">Seat unmuted</string>
     <string name="trtcvoiceroom_audience_leave_room">Are you sure you want to leave?</string>
     <string name="trtcvoiceroom_sound_audition">Music</string>

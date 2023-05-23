@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtcvoiceroom.ui.room;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,9 +33,10 @@ import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDelegate;
+import com.tencent.liteav.trtcvoiceroom.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtcvoiceroom.ui.base.MemberEntity;
 import com.tencent.liteav.trtcvoiceroom.ui.base.VoiceRoomSeatEntity;
-import com.tencent.liteav.trtcvoiceroom.ui.utils.PermissionHelper;
+import com.tencent.liteav.trtcvoiceroom.ui.utils.Utils;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.AudioEffectPanel;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.ConfirmDialogFragment;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.InputTextMsgDialog;
@@ -43,6 +45,9 @@ import com.tencent.liteav.trtcvoiceroom.ui.widget.SelectMemberView;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.msg.AudienceEntity;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.msg.MsgEntity;
 import com.tencent.liteav.trtcvoiceroom.ui.widget.msg.MsgListAdapter;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
+import com.tencent.qcloud.tuicore.permission.PermissionCallback;
+import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.nio.charset.StandardCharsets;
@@ -181,6 +186,8 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
             mAnchorAudioPanel.unInit();
             mAnchorAudioPanel = null;
         }
+        mTRTCVoiceRoom.setDelegate(null);
+        TRTCVoiceRoom.destroySharedInstance();
     }
 
     private void updateMicButton() {
@@ -214,27 +221,25 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         mBtnMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.requestPermission(mContext, PermissionHelper.PERMISSION_MICROPHONE,
-                        new PermissionHelper.PermissionCallback() {
-                            @Override
-                            public void onGranted() {
-                                updateMicButton();
-                            }
+                PermissionCallback callback = new PermissionCallback() {
+                    @Override
+                    public void onGranted() {
+                        updateMicButton();
+                    }
 
-                            @Override
-                            public void onDenied() {
-                            }
-
-                            @Override
-                            public void onDialogApproved() {
-
-                            }
-
-                            @Override
-                            public void onDialogRefused() {
-                                finish();
-                            }
-                        });
+                    @Override
+                    public void onDenied() {
+                        finish();
+                    }
+                };
+                String title = getString(R.string.trtcvoiceroom_permission_mic_reason_title,
+                        Utils.getAppName(mContext));
+                PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
+                        .title(title)
+                        .description(getString(R.string.trtcvoiceroom_permission_mic_reason))
+                        .settingsTip(getString(R.string.trtcvoiceroom_tips_start_audio))
+                        .callback(callback)
+                        .request();
             }
         });
         mBtnEffect.setOnClickListener(new View.OnClickListener() {
@@ -304,7 +309,27 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         mUserAvatar = intent.getStringExtra(VOICEROOM_USER_AVATAR);
         mRoomCover = intent.getStringExtra(VOICEROOM_ROOM_COVER);
         mAudioQuality = intent.getIntExtra(VOICEROOM_AUDIO_QUALITY, TRTCCloudDef.TRTC_AUDIO_QUALITY_MUSIC);
+
+        UserModel userModel = UserModelManager.getInstance().getUserModel();
+
         mTRTCVoiceRoom = TRTCVoiceRoom.sharedInstance(this);
+        mTRTCVoiceRoom.login(userModel.appId, userModel.userId, userModel.userSig,
+                new TRTCVoiceRoomCallback.ActionCallback() {
+                    @Override
+                    public void onCallback(int code, String msg) {
+                        if (code == 0) {
+                            mTRTCVoiceRoom.setSelfProfile(userModel.userName,
+                                    userModel.userAvatar, new TRTCVoiceRoomCallback.ActionCallback() {
+                                        @Override
+                                        public void onCallback(int code, String msg) {
+                                            if (code == 0) {
+                                                Log.d(TAG, "onCallback: code = " + code + " , msg = " + msg);
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
         mTRTCVoiceRoom.setDelegate(this);
         mAnchorAudioPanel = new AudioEffectPanel(this);
         mAnchorAudioPanel.setAudioEffectManager(mTRTCVoiceRoom.getAudioEffectManager());
@@ -408,7 +433,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
                 if (code == 0) {
                     ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_sent_successfully));
                 } else {
-                    ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_sent_message_failure), code);
+                    ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_sent_message_failure, code));
                 }
             }
         });
@@ -682,7 +707,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         Log.d(TAG, "onAudienceEnter userInfo:" + userInfo);
         MsgEntity msgEntity = new MsgEntity();
         msgEntity.type = MsgEntity.TYPE_NORMAL;
-        msgEntity.content = getString(R.string.trtcvoiceroom_tv_enter_room, "");
+        msgEntity.content = getString(R.string.trtcvoiceroom_tv_enter_room, userInfo.userName);
         msgEntity.userName = userInfo.userName;
         showImMsg(msgEntity);
         if (userInfo.userId.equals(mSelfUserId)) {
@@ -700,7 +725,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         MsgEntity msgEntity = new MsgEntity();
         msgEntity.type = MsgEntity.TYPE_NORMAL;
         msgEntity.userName = userInfo.userName;
-        msgEntity.content = getString(R.string.trtcvoiceroom_tv_exit_room, "");
+        msgEntity.content = getString(R.string.trtcvoiceroom_tv_exit_room, userInfo.userName);
         showImMsg(msgEntity);
         mAudienceListAdapter.removeMember(userInfo.userId);
     }
