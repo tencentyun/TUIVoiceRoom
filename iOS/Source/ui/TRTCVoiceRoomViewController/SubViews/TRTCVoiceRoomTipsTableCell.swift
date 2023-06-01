@@ -292,6 +292,10 @@ class TRTCVoiceRoomTipsTableCell: UITableViewCell {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let acceptText = voiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
-    static let welcomeText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.welcome")
+    static var acceptText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
+    }
+    static var welcomeText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.welcome")
+    }
 }

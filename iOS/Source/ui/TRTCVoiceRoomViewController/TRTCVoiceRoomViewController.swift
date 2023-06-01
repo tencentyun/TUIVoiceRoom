@@ -139,10 +139,18 @@ extension TRTCVoiceRoomViewController {
 }
 
 private extension String {
-    static let exitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
-    static let sureToExitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
-    static let confirmText = voiceRoomLocalize("Demo.TRTC.LiveRoom.confirm")
-    static let cancelText = voiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
+    static var exitText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
+    }
+    static var sureToExitText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
+    }
+    static var confirmText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.confirm")
+    }
+    static var cancelText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
+    }
 }
 
 

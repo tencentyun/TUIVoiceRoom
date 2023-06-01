@@ -468,15 +468,33 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let mutedText = voiceRoomLocalize("Demo.TRTC.Salon.seatmuted")
-    static let unmutedText = voiceRoomLocalize("Demo.TRTC.Salon.seatunmuted")
-    static let acceptText = voiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
-    static let refuseText = voiceRoomLocalize("Demo.TRTC.LiveRoom.refuse")
-    static let selectText = voiceRoomLocalize("Demo.TRTC.Salon.pleaseselect")
-    static let cancelText = voiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
-    static let seatmutedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.onseatmuted")
-    static let alertText = voiceRoomLocalize("Demo.TRTC.LiveRoom.prompt")
-    static let timeoutText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.connecttimeout")
+    static var mutedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.seatmuted")
+    }
+    static var unmutedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.seatunmuted")
+    }
+    static var acceptText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.accept")
+    }
+    static var refuseText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.refuse")
+    }
+    static var selectText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.pleaseselect")
+    }
+    static var cancelText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.cancel")
+    }
+    static var seatmutedText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.onseatmuted")
+    }
+    static var alertText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.prompt")
+    }
+    static var timeoutText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.connecttimeout")
+    }
 }
 
 

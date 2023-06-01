@@ -6,6 +6,7 @@
 //  Copyright © 2022 Tencent. All rights reserved.
 
 #import "VoiceRoomLocalized.h"
+#import "TUICore/TUIGlobalization.h"
 
 #pragma mark - Base
 NSBundle *voiceRoomBundle() {
@@ -14,7 +15,9 @@ NSBundle *voiceRoomBundle() {
 }
 
 NSString *tvrLocalizeFromTable(NSString *key, NSString *table) {
-    return [voiceRoomBundle() localizedStringForKey:key value:@"" table:table];
+    NSString *bundlePath = [voiceRoomBundle() pathForResource:[TUIGlobalization tk_localizableLanguageKey] ?: @"" ofType:@"lproj"];
+    NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
+    return [bundle localizedStringForKey:key value:@"" table:table];
 }
 
 NSString *tvrLocalizeFromTableAndCommon(NSString *key, NSString *common, NSString *table) {

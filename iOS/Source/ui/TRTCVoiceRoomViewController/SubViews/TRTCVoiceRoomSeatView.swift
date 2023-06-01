@@ -211,9 +211,15 @@ extension TRTCVoiceRoomSeatView {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let handsupText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.presshandsup")
-    static let lockedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.islocked")
-    static let inviteHandsupText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
+    static var handsupText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.presshandsup")
+    }
+    static var lockedText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.islocked")
+    }
+    static var inviteHandsupText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
+    }
 }
 
 

@@ -311,9 +311,19 @@ extension TRTCCreateVoiceRoomRootView : TRTCCreateVoiceRoomViewResponder {
 
 // MARK: - internationalization string
 fileprivate extension String {
-    static let titleText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomsubject")
-    static let placeholderTitleText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.enterroomsubject")
-    static let createText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.starttalking")
-    static let defaultCreateText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxxsroom")
-    static let needRequestText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.needrequesttip")
+    static var titleText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomsubject")
+    }
+    static var placeholderTitleText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.enterroomsubject")
+    }
+    static var createText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.starttalking")
+    }
+    static var defaultCreateText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxxsroom")
+    }
+    static var needRequestText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.needrequesttip")
+    }
 }

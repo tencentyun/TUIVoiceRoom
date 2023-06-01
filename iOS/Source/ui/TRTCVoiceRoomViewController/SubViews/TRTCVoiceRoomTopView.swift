@@ -339,9 +339,19 @@ extension TRTCVoiceRoomTopView : UICollectionViewDelegate {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let roomTitleText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomname")
-    static let roomIdDescText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomidxx")
-    static let welcomeText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxenterroom")
-    static let exitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
-    static let sureToExitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
+    static var roomTitleText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomname")
+    }
+    static var roomIdDescText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.roomidxx")
+    }
+    static var welcomeText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxenterroom")
+    }
+    static var exitText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.exit")
+    }
+    static var sureToExitText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.isvoicingandsuretoexit")
+    }
 }
