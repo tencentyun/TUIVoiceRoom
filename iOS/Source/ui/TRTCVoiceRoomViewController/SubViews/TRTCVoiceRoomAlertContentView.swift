@@ -560,13 +560,31 @@ extension TRTCVoiceRoomAudienceAlert : UITableViewDelegate {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let audienceText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.audience")
-    static let unlockText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.unlock")
-    static let lockText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.lock")
-    static let agreeText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.agree")
-    static let inviteText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.invite")
-    static let earMonitorText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.earmonitor")
-    static let toolText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.tools")
-    static let backText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.back")
-    static let bgmText = voiceRoomLocalize("ASKit.MainMenu.BGM")
+    static var audienceText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.audience")
+    }
+    static var unlockText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.unlock")
+    }
+    static var lockText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.lock")
+    }
+    static var agreeText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.agree")
+    }
+    static var inviteText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.invite")
+    }
+    static var earMonitorText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.earmonitor")
+    }
+    static var toolText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.tools")
+    }
+    static var backText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.back")
+    }
+    static var bgmText: String {
+        voiceRoomLocalize("ASKit.MainMenu.BGM")
+    }
 }

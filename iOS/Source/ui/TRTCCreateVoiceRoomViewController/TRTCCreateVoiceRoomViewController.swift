@@ -59,6 +59,8 @@ public class TRTCCreateVoiceRoomViewController: UIViewController {
 }
 
 private extension String {
-    static let controllerTitle = voiceRoomLocalize("Demo.TRTC.VoiceRoom.createvoicechatroom")
+    static var controllerTitle: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.createvoicechatroom")
+    }
 }
 

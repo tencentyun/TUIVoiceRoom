@@ -706,14 +706,34 @@ class TRTCVoiceRoomSoundEffectCellForCollectionCell: UICollectionViewCell {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let effectTitleText = voiceRoomLocalize("ASKit.MainMenu.Title")
-    static let voiceChangeText = voiceRoomLocalize("ASKit.MainMenu.VoiceChangeTitle")
-    static let reverbText = voiceRoomLocalize("ASKit.MainMenu.Reverberation")
-    static let auditionText = voiceRoomLocalize("ASKit.MusicSelectMenu.Title")
-    static let bringHeadphoneText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.useearphones")
-    static let copyrightText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.copyrights")
-    static let selectMusicText = voiceRoomLocalize("ASKit.MainMenu.SelectMusic")
-    static let musicVolumeText = voiceRoomLocalize("ASKit.MainMenu.MusicVolum")
-    static let vocalVolumeText = voiceRoomLocalize("ASKit.MainMenu.PersonVolum")
-    static let vocalRiseFallText = voiceRoomLocalize("ASKit.MainMenu.PersonPitch")
+    static var effectTitleText: String {
+        voiceRoomLocalize("ASKit.MainMenu.Title")
+    }
+    static var voiceChangeText: String {
+        voiceRoomLocalize("ASKit.MainMenu.VoiceChangeTitle")
+    }
+    static var reverbText: String {
+        voiceRoomLocalize("ASKit.MainMenu.Reverberation")
+    }
+    static var auditionText: String {
+        voiceRoomLocalize("ASKit.MusicSelectMenu.Title")
+    }
+    static var bringHeadphoneText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.useearphones")
+    }
+    static var copyrightText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.copyrights")
+    }
+    static var selectMusicText: String {
+        voiceRoomLocalize("ASKit.MainMenu.SelectMusic")
+    }
+    static var musicVolumeText: String {
+        voiceRoomLocalize("ASKit.MainMenu.MusicVolum")
+    }
+    static var vocalVolumeText: String {
+        voiceRoomLocalize("ASKit.MainMenu.PersonVolum")
+    }
+    static var vocalRiseFallText: String {
+        voiceRoomLocalize("ASKit.MainMenu.PersonPitch")
+    }
 }

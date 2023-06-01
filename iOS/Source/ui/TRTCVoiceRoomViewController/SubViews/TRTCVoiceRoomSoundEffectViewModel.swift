@@ -352,7 +352,13 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
 
 /// MARK: - internationalization string
 fileprivate extension String {
-    static let musicTitle1Text = voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname1")
-    static let musicTitle2Text = voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname2")
-    static let musicTitle3Text = voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname3")
+    static var musicTitle1Text: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname1")
+    }
+    static var musicTitle2Text: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname2")
+    }
+    static var musicTitle3Text: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.musicname3")
+    }
 }

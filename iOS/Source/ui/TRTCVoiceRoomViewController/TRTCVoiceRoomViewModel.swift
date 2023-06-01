@@ -1051,62 +1051,177 @@ extension TRTCVoiceRoomViewModel: TRTCVoiceRoomDelegate {
 
 // MARK: - internationalization string
 fileprivate extension String {
-    static let seatmutedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.onseatmuted")
-    static let micmutedText = voiceRoomLocalize("Demo.TRTC.Salon.micmuted")
-    static let micunmutedText = voiceRoomLocalize("Demo.TRTC.Salon.micunmuted")
-    static let mutedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.ismuted")
-    static let unmutedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.isunmuted")
-    static let seatuninitText = voiceRoomLocalize("Demo.TRTC.Salon.seatlistnotinit")
-    static let enterSuccessText = voiceRoomLocalize("Demo.TRTC.Salon.enterroomsuccess")
-    static let enterFailedText = voiceRoomLocalize("Demo.TRTC.Salon.enterroomfailed")
-    static let createRoomFailedText = voiceRoomLocalize("Demo.TRTC.LiveRoom.createroomfailed")
-    static let meText = voiceRoomLocalize("Demo.TRTC.LiveRoom.me")
-    static let sendSuccessText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.sendsuccess")
-    static let sendFailedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.sendfailedxx")
-    static let cupySeatSuccessText = voiceRoomLocalize("Demo.TRTC.Salon.hostoccupyseatsuccess")
-    static let cupySeatFailedText = voiceRoomLocalize("Demo.TRTC.Salon.hostoccupyseatfailed")
-    static let onlyAnchorOperationText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.onlyanchorcanoperation")
-    static let seatLockedText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatislockedandcanthandup")
-    static let audienceText = voiceRoomLocalize("Demo.TRTC.Salon.audience")
-    static let otherAnchorText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.otheranchor")
-    static let isInxxSeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.isinxxseat")
-    static let notInitText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatisnotinittocanthandsup")
-    static let handsupText = voiceRoomLocalize("Demo.TRTC.Salon.handsup")
-    static let moveSeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.requestmoveseat")
-    static let totaxxText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.totaxx")
-    static let unmuteOneText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.unmuteone")
-    static let muteOneText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.muteone")
-    static let makeAudienceText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.makeoneaudience")
-    static let inviteHandsupText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
-    static let banSeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.banseat")
-    static let liftbanSeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.liftbanseat")
-    static let seatBusyText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatisbusy")
-    static let sendInviteSuccessText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.sendinvitesuccess")
-    static let reqExpiredText = voiceRoomLocalize("Demo.TRTC.Salon.reqisexpired")
-    static let acceptReqFailedText = voiceRoomLocalize("Demo.TRTC.Salon.acceptreqfailed")
-    static let audienceSuccessText = voiceRoomLocalize("Demo.TRTC.Salon.audiencesuccess")
-    static let audienceFailedxxText = voiceRoomLocalize("Demo.TRTC.Salon.audiencefailedxx")
-    static let beingArchonText = voiceRoomLocalize("Demo.TRTC.Salon.isbeingarchon")
-    static let roomNotReadyText = voiceRoomLocalize("Demo.TRTC.Salon.roomnotready")
-    static let reqSentText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.reqsentandwaitforarchondeal")
-    static let reqSendFailedxxText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.reqsendfailedxx")
-    static let handsupSuccessText = voiceRoomLocalize("Demo.TRTC.Salon.successbecomespaker")
-    static let handsupFailedText = voiceRoomLocalize("Demo.TRTC.Salon.failedbecomespaker")
+    static var seatmutedText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.onseatmuted")
+    }
+    static var micmutedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.micmuted")
+    }
+    static var micunmutedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.micunmuted")
+    }
+    static var mutedText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.ismuted")
+    }
+    static var unmutedText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.isunmuted")
+    }
+    static var seatuninitText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.seatlistnotinit")
+    }
+    static var enterSuccessText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.enterroomsuccess")
+    }
+    static var enterFailedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.enterroomfailed")
+    }
+    static var createRoomFailedText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.createroomfailed")
+    }
+    static var meText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.me")
+    }
+    static var sendSuccessText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.sendsuccess")
+    }
+    static var sendFailedText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.sendfailedxx")
+        
+    }
+    static var cupySeatSuccessText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.hostoccupyseatsuccess")
+    }
+    static var cupySeatFailedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.hostoccupyseatfailed")
+    }
+    static var onlyAnchorOperationText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.onlyanchorcanoperation")
+    }
+    static var seatLockedText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatislockedandcanthandup")
+    }
+    static var audienceText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.audience")
+    }
+    static var otherAnchorText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.otheranchor")
+    }
+    static var isInxxSeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.isinxxseat")
+    }
+    static var notInitText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatisnotinittocanthandsup")
+    }
+    static var handsupText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.handsup")
+    }
+    static var moveSeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.requestmoveseat")
+    }
+    static var totaxxText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.totaxx")
+    }
+    static var unmuteOneText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.unmuteone")
+    }
+    static var muteOneText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.muteone")
+    }
+    static var makeAudienceText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.makeoneaudience")
+    }
+    static var inviteHandsupText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.invitehandsup")
+    }
+    static var banSeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.banseat")
+    }
+    static var liftbanSeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.liftbanseat")
+    }
+    static var seatBusyText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatisbusy")
+    }
+    static var sendInviteSuccessText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.sendinvitesuccess")
+    }
+    static var reqExpiredText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.reqisexpired")
+    }
+    static var acceptReqFailedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.acceptreqfailed")
+    }
+    static var audienceSuccessText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.audiencesuccess")
+    }
+    static var audienceFailedxxText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.audiencefailedxx")
+    }
+    static var beingArchonText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.isbeingarchon")
+    }
+    static var roomNotReadyText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.roomnotready")
+    }
+    static var reqSentText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.reqsentandwaitforarchondeal")
+    }
+    static var reqSendFailedxxText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.reqsendfailedxx")
+    }
+    static var handsupSuccessText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.successbecomespaker")
+    }
+    static var handsupFailedText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.failedbecomespaker")
+    }
     
-    static let alertText = voiceRoomLocalize("Demo.TRTC.LiveRoom.prompt")
-    static let invitexxSeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.anchorinvitexxseat")
-    static let refuseHandsupText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.refusehandsupreq")
-    static let applyxxSeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.applyforxxseat")
-    static let closeRoomText = voiceRoomLocalize("Demo.TRTC.Salon.archonclosedroom")
-    static let seatlistWrongText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatlistwentwrong")
-    static let beyySeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxbeyyseat")
-    static let audienceyySeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxaudienceyyseat")
-    static let bemutedxxText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxisbemuted")
-    static let beunmutedxxText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxisbeunmuted")
-    static let ownerxxSeatText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.ownerxxyyseat")
-    static let banText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.ban")
-    static let inRoomText = voiceRoomLocalize("Demo.TRTC.LiveRoom.xxinroom")
-    static let exitRoomText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxexitroom")
-    static let hugHandsupSuccessText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.hugxxhandsupsuccess")
-    static let refuseBespeakerText = voiceRoomLocalize("Demo.TRTC.VoiceRoom.refusebespeaker")
+    static var alertText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.prompt")
+    }
+    static var invitexxSeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.anchorinvitexxseat")
+    }
+    static var refuseHandsupText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.refusehandsupreq")
+    }
+    static var applyxxSeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.applyforxxseat")
+    }
+    static var closeRoomText: String {
+        voiceRoomLocalize("Demo.TRTC.Salon.archonclosedroom")
+    }
+    static var seatlistWrongText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.seatlistwentwrong")
+    }
+    static var beyySeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxbeyyseat")
+    }
+    static var audienceyySeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxaudienceyyseat")
+    }
+    static var bemutedxxText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxisbemuted")
+    }
+    static var beunmutedxxText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxisbeunmuted")
+    }
+    static var ownerxxSeatText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.ownerxxyyseat")
+    }
+    static var banText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.ban")
+    }
+    static var inRoomText: String {
+        voiceRoomLocalize("Demo.TRTC.LiveRoom.xxinroom")
+    }
+    static var exitRoomText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.xxexitroom")
+    }
+    static var hugHandsupSuccessText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.hugxxhandsupsuccess")
+    }
+    static var refuseBespeakerText: String {
+        voiceRoomLocalize("Demo.TRTC.VoiceRoom.refusebespeaker")
+    }
 }

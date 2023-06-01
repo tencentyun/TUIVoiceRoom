@@ -405,6 +405,7 @@ static dispatch_once_t gOnceToken;
         [self unRegisterNetworkChangedEvent];
         [self stopNetworkTimer];
         [self clearList];
+        [TRTCCloud destroySharedIntance];
     }];
 }
 
@@ -468,6 +469,7 @@ static dispatch_once_t gOnceToken;
         }
         [self unRegisterNetworkChangedEvent];
         [self stopNetworkTimer];
+        [TRTCCloud destroySharedIntance];
     }];
 }
 
