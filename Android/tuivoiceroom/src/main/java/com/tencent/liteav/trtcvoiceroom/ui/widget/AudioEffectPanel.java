@@ -435,6 +435,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
     public void unInit() {
         if (mAudioEffectManager != null) {
             mAudioEffectManager.stopPlayMusic(mBGMId);
+            mAudioEffectManager.setMusicObserver(mBGMId, null);
             mAudioEffectManager = null;
         }
         if (mHandler != null) {
