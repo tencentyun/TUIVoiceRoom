@@ -82,7 +82,6 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
 
     private void initAudience() {
         mInvitationSeatMap = new HashMap<>();
-        mVoiceRoomSeatAdapter.setEmptyText(getString(R.string.trtcvoiceroom_msg_click_to_chat));
         mVoiceRoomSeatAdapter.notifyDataSetChanged();
         enterRoom();
         mBtnMsg.setActivated(true);
@@ -226,6 +225,10 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             }, getString(mCurrentRole == TRTCCloudDef.TRTCRoleAnchor ? R.string.trtcvoiceroom_request_move_seat :
                     R.string.trtcvoiceroom_tv_apply_for_chat));
             dialog.show();
+        } else {
+            if (!entity.userId.equals(mSelfUserId)) {
+                ToastUtils.showShort(entity.userName);
+            }
         }
     }
 

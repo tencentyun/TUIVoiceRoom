@@ -63,6 +63,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef.SeatInfo.STATUS_CLOSE;
 import static com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef.SeatInfo.STATUS_UNUSED;
 import static com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef.SeatInfo.STATUS_USED;
+import static com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomSeatAdapter.PAYLOAD_TALK;
 
 public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoomSeatAdapter.OnItemClickListener,
         TRTCVoiceRoomDelegate, InputTextMsgDialog.OnTextSendListener, MsgListAdapter.OnItemClickListener {
@@ -741,11 +742,11 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
                     VoiceRoomSeatEntity entity = findSeatEntityFromUserId(info.userId);
                     if (entity != null) {
                         entity.isTalk = volume > 20 ? true : false;
-                        mVoiceRoomSeatAdapter.notifyDataSetChanged();
                     }
                 }
             }
         }
+        mVoiceRoomSeatAdapter.notifyItemRangeChanged(0, mVoiceRoomSeatAdapter.getItemCount(), PAYLOAD_TALK);
     }
 
     @Override
