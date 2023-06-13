@@ -19,7 +19,6 @@
     <string name="trtcvoiceroom_rb_music">音乐</string>
     <string name="trtcvoiceroom_tv_create_chat_room">创建聊天室</string>
     <string name="trtcvoiceroom_msg_living_now_whether_to_exit_live">当前正在直播，是否退出直播？</string>
-    <string name="trtcvoiceroom_tv_invite_chat">邀请上麦</string>
     <string name="trtcvoiceroom_toast_owner_succeeded_in_occupying_the_seat">房主占座成功</string>
     <string name="trtcvoiceroom_toast_owner_failed_to_occupy_the_seat">房主占座失败[%1$d]:%2$s</string>
     <string name="trtcvoiceroom_tv_not_mute_audio">对 Ta 解禁</string>
@@ -35,7 +34,6 @@
     <string name="trtcvoiceroom_toast_invitation_sent_successfully">发送邀请成功！</string>
     <string name="trtcvoiceroom_toast_refuse_to_chat">%s 拒绝上麦</string>
     <string name="trtcvoiceroom_toast_invite_to_chat_successfully">抱%s上麦成功啦！</string>
-    <string name="trtcvoiceroom_msg_click_to_chat">点击上麦</string>
     <string name="trtcvoiceroom_toast_exit_the_room_successfully">退房成功</string>
     <string name="trtcvoiceroom_toast_enter_the_room_successfully">进房成功</string>
     <string name="trtcvoiceroom_toast_enter_the_room_failure">进房失败[%1$d]:%2$s</string>

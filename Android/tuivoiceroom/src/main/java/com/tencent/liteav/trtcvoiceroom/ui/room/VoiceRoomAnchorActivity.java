@@ -118,7 +118,6 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
     private void initAnchor() {
         mTakeSeatInvitationMap = new HashMap<>();
         mPickSeatInvitationMap = new HashMap<>();
-        mVoiceRoomSeatAdapter.setEmptyText(getString(R.string.trtcvoiceroom_tv_invite_chat));
         mVoiceRoomSeatAdapter.notifyDataSetChanged();
         mViewSelectMember.setList(mMemberEntityList);
         mViewSelectMember.setOnSelectedCallback(this);

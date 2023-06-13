@@ -24,10 +24,11 @@ public class VoiceRoomSeatAdapter extends
         RecyclerView.Adapter<VoiceRoomSeatAdapter.ViewHolder> {
     private static final String TAG = VoiceRoomSeatAdapter.class.getSimpleName();
 
+    public static final String PAYLOAD_TALK = "payload_talk";
+
     private Context                   context;
     private List<VoiceRoomSeatEntity> list;
     private OnItemClickListener       onItemClickListener;
-    private String                    mEmptyText;
 
     public VoiceRoomSeatAdapter(Context context, List<VoiceRoomSeatEntity> list,
                                 OnItemClickListener onItemClickListener) {
@@ -45,16 +46,24 @@ public class VoiceRoomSeatAdapter extends
         return new ViewHolder(view);
     }
 
-    public void setEmptyText(String emptyText) {
-        mEmptyText = emptyText;
-    }
-
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         VoiceRoomSeatEntity item = list.get(position);
         holder.bind(context, item, onItemClickListener);
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads);
+        } else {
+            if (PAYLOAD_TALK.equals(payloads.get(0))) {
+                // 正在发言时
+                VoiceRoomSeatEntity item = list.get(position);
+                holder.updateTalkState(item);
+            }
+        }
+    }
 
     @Override
     public int getItemCount() {
@@ -79,13 +88,7 @@ public class VoiceRoomSeatAdapter extends
         public void bind(final Context context,
                          final VoiceRoomSeatEntity model,
                          final OnItemClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(getLayoutPosition());
-
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onItemClick(getLayoutPosition()));
             if (model.isClose) {
                 ImageLoader.loadImage(context, mImgHead, R.drawable.trtcvoiceroom_ic_lock);
                 mTvName.setText("");
@@ -93,13 +96,7 @@ public class VoiceRoomSeatAdapter extends
                 mIvTalkBorder.setVisibility(View.GONE);
                 return;
             }
-            if (!model.isUsed) {
-                // 占位图片
-                ImageLoader.loadImage(context, mImgHead, R.drawable.trtcvoiceroom_add_seat);
-                mTvName.setText("");
-                mIvMute.setVisibility(View.GONE);
-                mIvTalkBorder.setVisibility(View.GONE);
-            } else {
+            if (model.isUsed) {
                 ImageLoader.loadImage(context, mImgHead, model.userAvatar, R.drawable.trtcvoiceroom_ic_head);
                 if (!TextUtils.isEmpty(model.userName)) {
                     mTvName.setText(model.userName);
@@ -113,6 +110,20 @@ public class VoiceRoomSeatAdapter extends
                 } else {
                     mIvTalkBorder.setVisibility(model.isTalk ? View.VISIBLE : View.GONE);
                 }
+            } else {
+                // 占位图片
+                ImageLoader.loadImage(context, mImgHead, R.drawable.trtcvoiceroom_add_seat);
+                mTvName.setText("");
+                mIvMute.setVisibility(View.GONE);
+                mIvTalkBorder.setVisibility(View.GONE);
+            }
+        }
+
+        private void updateTalkState(final VoiceRoomSeatEntity model) {
+            mIvTalkBorder.setVisibility(model.isTalk ? View.VISIBLE : View.GONE);
+            boolean mute = model.isUserMute || model.isSeatMute;
+            if (!model.isUsed || model.isClose || mute) {
+                mIvTalkBorder.setVisibility(View.GONE);
             }
         }
 

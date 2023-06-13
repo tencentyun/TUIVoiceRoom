@@ -19,7 +19,6 @@
     <string name="trtcvoiceroom_rb_music">Music</string>
     <string name="trtcvoiceroom_tv_create_chat_room">Create</string>
     <string name="trtcvoiceroom_msg_living_now_whether_to_exit_live">Are you sure you want to exit the live stream?</string>
-    <string name="trtcvoiceroom_tv_invite_chat">Invite</string>
     <string name="trtcvoiceroom_toast_owner_succeeded_in_occupying_the_seat">Seat taken successfully</string>
     <string name="trtcvoiceroom_toast_owner_failed_to_occupy_the_seat">Failed to take a seat [%1$d]:%2$s</string>
     <string name="trtcvoiceroom_tv_not_mute_audio">Unmute</string>
@@ -35,7 +34,6 @@
     <string name="trtcvoiceroom_toast_invitation_sent_successfully">Invitation sent</string>
     <string name="trtcvoiceroom_toast_refuse_to_chat">%s declined the mic-on request</string>
     <string name="trtcvoiceroom_toast_invite_to_chat_successfully">Placed %s in the seat</string>
-    <string name="trtcvoiceroom_msg_click_to_chat">Tap to Speak</string>
     <string name="trtcvoiceroom_toast_exit_the_room_successfully">Left room</string>
     <string name="trtcvoiceroom_toast_enter_the_room_successfully">Entered room</string>
     <string name="trtcvoiceroom_toast_enter_the_room_failure">Failed to enter room[%1$d]:%2$s</string>
