@@ -10,7 +10,7 @@
 #import "VoiceRoomTRTCService.h"
 #import "TXVoiceRoomService.h"
 #import "TXVoiceRoomCommonDef.h"
-#import "TRTCCloud.h"
+#import "TXLiteAVSDK_TRTC/TRTCCloud.h"
 #import "VoiceRoomLocalized.h"
 #import "TUICore.h"
 #import "TUIDefine.h"

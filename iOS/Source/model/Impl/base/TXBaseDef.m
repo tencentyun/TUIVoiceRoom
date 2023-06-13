@@ -7,7 +7,7 @@
 //
 
 #import "TXBaseDef.h"
-#import "TRTCCloud.h"
+#import "TXLiteAVSDK_TRTC/TRTCCloud.h"
 
 @interface TRTCCloud (VoiceRoomLog)
 
