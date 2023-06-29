@@ -48,7 +48,6 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
     private void enterRoom() {
         mIsSeatInitSuccess = false;
         mCurrentRole = TRTCCloudDef.TRTCRoleAudience;
-        mTRTCVoiceRoom.setSelfProfile(mUserName, mUserAvatar, null);
         mTRTCVoiceRoom.enterRoom(mRoomId, new TRTCVoiceRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
