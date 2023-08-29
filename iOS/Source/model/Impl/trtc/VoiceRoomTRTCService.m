@@ -7,7 +7,7 @@
 //
 
 #import "VoiceRoomTRTCService.h"
-#import "TXLiteAVSDK_TRTC/TRTCCloud.h"
+#import "TUIVoiceRoomKit.h"
 
 static const int TC_COMPONENT_VOICEROOM = 6;
 static const int TC_TRTC_FRAMEWORK      = 1;

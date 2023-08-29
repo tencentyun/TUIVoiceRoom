@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import TUICore
 
 protocol TRTCVoiceRoomViewResponder: class {
     func showToast(message: String)
@@ -222,7 +223,7 @@ class TRTCVoiceRoomViewModel: NSObject {
         }
     }
     public func createRoom(toneQuality: Int = 0) {
-        let faceUrl = TRTCVoiceRoomIMManager.shared.curUserAvatar
+        let faceUrl = TUILogin.getFaceUrl() ?? ""
         voiceRoom.setAuidoQuality(quality: toneQuality)
         voiceRoom.setSelfProfile(userName: roomInfo.ownerName, avatarURL: faceUrl) { [weak self] (code, message) in
             guard let `self` = self else { return }

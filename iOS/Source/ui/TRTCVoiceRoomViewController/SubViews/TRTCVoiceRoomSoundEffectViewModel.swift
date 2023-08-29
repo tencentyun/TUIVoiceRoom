@@ -145,6 +145,8 @@ class TRTCVoiceRoomSoundEffectViewModel: NSObject {
             DispatchQueue.main.async {
                 self.isPlaying = true
                 self.isPlayingComplete = false
+                self.setVolume(music: self.currentMusicVolum)
+                self.setPitch(person: self.currentPitchVolum)
                 self.viewResponder?.bgmOnPrepareToPlay()
             }
         } onProgress: { [weak self] (progress, duration) in

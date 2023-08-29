@@ -91,7 +91,7 @@ class TRTCCreateVoiceRoomRootView: UIView {
         super.init(frame: frame)
         bindInteraction()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChange(noti:)),
-         name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+                                               name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     deinit {

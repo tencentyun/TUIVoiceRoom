@@ -10,7 +10,7 @@
 #import "VoiceRoomTRTCService.h"
 #import "TXVoiceRoomService.h"
 #import "TXVoiceRoomCommonDef.h"
-#import "TXLiteAVSDK_TRTC/TRTCCloud.h"
+#import "TUIVoiceRoomKit.h"
 #import "VoiceRoomLocalized.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
@@ -562,7 +562,7 @@ static dispatch_once_t gOnceToken;
         if ([self isOnSeatWithUserId:self.userId]) {
             [self runOnDelegateQueue:^{
                 if (callback) {
-                    callback(-1, @"you are alread in the seat.");
+                    callback(0, @"take seat callback success.");
                 }
             }];
             return;
