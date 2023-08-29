@@ -9,7 +9,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.basic.RTCubeUtils;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
@@ -23,6 +22,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.lang.reflect.Method;
@@ -52,10 +52,11 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             @Override
             public void onCallback(int code, String msg) {
                 if (code == 0) {
-                    ToastUtils.showShort(R.string.trtcvoiceroom_toast_enter_the_room_successfully);
+                    ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_enter_the_room_successfully));
                     mTRTCVoiceRoom.setAudioQuality(mAudioQuality);
                 } else {
-                    ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_enter_the_room_failure, code, msg));
+                    ToastUtil.toastShortMessage(
+                            getString(R.string.trtcvoiceroom_toast_enter_the_room_failure, code, msg));
                     finish();
                 }
             }
@@ -154,7 +155,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
         mTRTCVoiceRoom.exitRoom(new TRTCVoiceRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
-                ToastUtils.showShort(R.string.trtcvoiceroom_toast_exit_the_room_successfully);
+                ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_exit_the_room_successfully));
             }
         });
     }
@@ -174,12 +175,13 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
     @Override
     public void onItemClick(final int itemPos) {
         if (!mIsSeatInitSuccess) {
-            ToastUtils.showLong(R.string.trtcvoiceroom_toast_list_has_not_been_initialized);
+            ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_toast_list_has_not_been_initialized));
             return;
         }
         VoiceRoomSeatEntity entity = mVoiceRoomSeatEntityList.get(itemPos);
         if (entity.isClose) {
-            ToastUtils.showShort(R.string.trtcvoiceroom_toast_position_is_locked_cannot_apply_for_chat);
+            ToastUtil.toastShortMessage(
+                    getString(R.string.trtcvoiceroom_toast_position_is_locked_cannot_apply_for_chat));
         } else if (!entity.isUsed) {
             final CommonBottomDialog dialog = new CommonBottomDialog(this);
             dialog.setButton(new CommonBottomDialog.OnButtonClickListener() {
@@ -188,11 +190,12 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                     if (position == 0) {
                         VoiceRoomSeatEntity seatEntity = mVoiceRoomSeatEntityList.get(itemPos);
                         if (seatEntity.isUsed) {
-                            ToastUtils.showShort(R.string.trtcvoiceroom_toast_position_is_already_occupied);
+                            ToastUtil.toastShortMessage(
+                                    getString(R.string.trtcvoiceroom_toast_position_is_already_occupied));
                             return;
                         }
                         if (seatEntity.isClose) {
-                            ToastUtils.showShort(getString(R.string.trtcvoiceroom_seat_closed));
+                            ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_seat_closed));
                             return;
                         }
                         PermissionCallback callback = new PermissionCallback() {
@@ -226,7 +229,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             dialog.show();
         } else {
             if (!entity.userId.equals(mSelfUserId)) {
-                ToastUtils.showShort(entity.userName);
+                ToastUtil.toastShortMessage(entity.userName);
             }
         }
     }
@@ -241,9 +244,9 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
             @Override
             public void onCallback(int code, String msg) {
                 if (code == 0) {
-                    ToastUtils.showShort(R.string.trtcvoiceroom_toast_offline_successfully);
+                    ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_offline_successfully));
                 } else {
-                    ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_offline_failure, msg));
+                    ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_offline_failure, msg));
                 }
             }
         });
@@ -251,12 +254,12 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
 
     private void startTakeSeat(int itemPos) {
         if (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor) {
-            ToastUtils.showShort(R.string.trtcvoiceroom_toast_you_are_already_an_anchor);
+            ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_you_are_already_an_anchor));
             return;
         }
         if (mNeedRequest) {
             if (mOwnerId == null) {
-                ToastUtils.showShort(R.string.trtcvoiceroom_toast_the_room_is_not_ready);
+                ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_the_room_is_not_ready));
                 return;
             }
             String inviteId = mTRTCVoiceRoom.sendInvitation(TCConstants.CMD_REQUEST_TAKE_SEAT, mOwnerId,
@@ -264,10 +267,10 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                         @Override
                         public void onCallback(int code, String msg) {
                             if (code == 0) {
-                                ToastUtils.showShort(R.string
-                                        .trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing);
+                                ToastUtil.toastShortMessage(getString(R.string
+                                        .trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing));
                             } else {
-                                ToastUtils.showShort(getString(R
+                                ToastUtil.toastShortMessage(getString(R
                                         .string.trtcvoiceroom_toast_failed_to_send_application, msg));
                             }
                         }
@@ -295,7 +298,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
         }
         if (mNeedRequest) {
             if (mOwnerId == null) {
-                ToastUtils.showShort(R.string.trtcvoiceroom_toast_the_room_is_not_ready);
+                ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_the_room_is_not_ready));
                 return;
             }
             String inviteId = mTRTCVoiceRoom.sendInvitation(TCConstants.CMD_REQUEST_TAKE_SEAT, mOwnerId,
@@ -303,10 +306,10 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                         @Override
                         public void onCallback(int code, String msg) {
                             if (code == 0) {
-                                ToastUtils.showShort(R.string
-                                        .trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing);
+                                ToastUtil.toastShortMessage(getString(R.string
+                                        .trtcvoiceroom_toast_application_has_been_sent_please_wait_for_processing));
                             } else {
-                                ToastUtils.showShort(getString(R
+                                ToastUtil.toastShortMessage(getString(R
                                         .string.trtcvoiceroom_toast_failed_to_send_application, msg));
                             }
                         }
@@ -352,7 +355,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                     @Override
                     public void onCallback(int code, String msg) {
                         Log.d(TAG, "rejectInvitation callback:" + code);
-                        ToastUtils.showShort(R.string.trtcvoiceroom_msg_you_refuse_to_chat);
+                        ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_msg_you_refuse_to_chat));
                     }
                 });
                 mConfirmDialogFragment.dismiss();
@@ -365,7 +368,8 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
                     @Override
                     public void onCallback(int code, String msg) {
                         if (code != 0) {
-                            ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
+                            ToastUtil.toastShortMessage(
+                                    getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
                         }
                         Log.d(TAG, "acceptInvitation callback:" + code);
                     }
@@ -459,7 +463,7 @@ public class VoiceRoomAudienceActivity extends VoiceRoomBaseActivity {
     @Override
     public void onRoomDestroy(String roomId) {
         super.onRoomDestroy(roomId);
-        ToastUtils.showLong(R.string.trtcvoiceroom_msg_close_room);
+        ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_msg_close_room));
         mTRTCVoiceRoom.exitRoom(null);
         finish();
     }

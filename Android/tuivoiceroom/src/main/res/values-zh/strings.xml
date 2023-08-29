@@ -65,8 +65,8 @@
     <string name="trtcvoiceroom_tv_the_position_has_unmuted">%d号位解除禁言</string>
     <string name="trtcvoiceroom_tv_the_owner_ban_this_position">房主封禁%d号位</string>
     <string name="trtcvoiceroom_tv_the_owner_not_ban_this_position">房主解禁%d号位</string>
-    <string name="trtcvoiceroom_tv_enter_room">%s进房</string>
-    <string name="trtcvoiceroom_tv_exit_room">%s退房</string>
+    <string name="trtcvoiceroom_tv_enter_room">进房</string>
+    <string name="trtcvoiceroom_tv_exit_room">退房</string>
     <string name="trtcvoiceroom_tv_seat_locked">座位已锁定</string>
     <string name="trtcvoiceroom_tv_the_anchor_name_is_still_looking_up">主播名还在查找</string>
     <string name="trtcvoiceroom_tv_loading">正在加载中</string>

@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import com.blankj.utilcode.util.ToastUtils;
+
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.liteav.basic.IntentUtils;
 import com.tencent.liteav.basic.UserModel;
@@ -168,13 +168,13 @@ public class MainActivity extends AppCompatActivity {
                 if (isRoomExist(result)) {
                     realEnterRoom(roomIdStr);
                 } else {
-                    ToastUtils.showLong(R.string.room_not_exist);
+                    ToastUtil.toastLongMessage(getString(R.string.room_not_exist));
                 }
             }
 
             @Override
             public void onFailed(int code, String msg) {
-                ToastUtils.showLong(msg);
+                ToastUtil.toastLongMessage(msg);
             }
         });
     }
