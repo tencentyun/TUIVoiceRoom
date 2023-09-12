@@ -556,7 +556,7 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
                         public void run() {
                             TRTCLogger.i(TAG, "you are already in the seat");
                             if (callback != null) {
-                                callback.onCallback(-1, "you are already in the seat");
+                                callback.onCallback(0, "you are already in the seat");
                             }
                         }
                     });

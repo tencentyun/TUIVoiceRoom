@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ImSDK_Plus
+import TUICore
 
 public enum VoiceRoomRole {
     case anchor
@@ -38,7 +38,7 @@ class TRTCCreateVoiceRoomViewModel {
     var roomName: String = ""
     var userName: String {
         get {
-            return TRTCVoiceRoomIMManager.shared.curUserName
+            return TUILogin.getNickName() ?? ""
         }
     }
     var userID: String? {

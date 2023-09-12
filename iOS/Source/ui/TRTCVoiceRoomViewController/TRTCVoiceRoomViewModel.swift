@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import TUICore
 
 protocol TRTCVoiceRoomViewResponder: class {
     func showToast(message: String)
@@ -222,7 +223,7 @@ class TRTCVoiceRoomViewModel: NSObject {
         }
     }
     public func createRoom(toneQuality: Int = 0) {
-        let faceUrl = TRTCVoiceRoomIMManager.shared.curUserAvatar
+        let faceUrl = TUILogin.getFaceUrl() ?? ""
         voiceRoom.setAuidoQuality(quality: toneQuality)
         voiceRoom.setSelfProfile(userName: roomInfo.ownerName, avatarURL: faceUrl) { [weak self] (code, message) in
             guard let `self` = self else { return }
@@ -258,6 +259,10 @@ class TRTCVoiceRoomViewModel: NSObject {
         if let audience = memberAudienceDic[identifier] {
             acceptTakeSeatInvitation(userInfo: audience.userInfo)
         }
+    }
+    
+    func updateMsgView() {
+        viewResponder?.refreshMsgView()
     }
 }
 
@@ -801,10 +806,7 @@ extension TRTCVoiceRoomViewModel: TRTCVoiceRoomDelegate {
     }
     
     func onAnchorEnterSeat(index: Int, user: VoiceRoomUserInfo) {
-        if index == 0{
-            return;
-        }
-        showNotifyMsg(messsage: localizeReplace(.beyySeatText, "xxx", String(index)), userName: user.userName)
+        if index == 0 { return }
         if user.userId == dependencyContainer.userId {
             roomType = .anchor
             mSelfSeatIndex = index
@@ -817,14 +819,12 @@ extension TRTCVoiceRoomViewModel: TRTCVoiceRoomDelegate {
             viewResponder?.onAnchorMute(isMute: mute)
             viewResponder?.onSeatMute(isMute: mute)
         }
-        
+        showNotifyMsg(messsage: localizeReplace(.beyySeatText, "xxx", String(index)), userName: user.userName)
         changeAudience(status: AudienceInfoModel.TYPE_IN_SEAT, user: user)
     }
     
     func onAnchorLeaveSeat(index: Int, user: VoiceRoomUserInfo) {
-        if index == 0{
-            return;
-        }
+        if index == 0 { return }
         showNotifyMsg(messsage: localizeReplace(.audienceyySeatText, "xxx", String(index)), userName: user.userName)
         if user.userId == dependencyContainer.userId {
             let currentSeatInfo = isInSeat(userId: user.userId)

@@ -14,10 +14,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.basic.RTCubeUtils;
 import com.tencent.liteav.basic.UserModelManager;
 import com.tencent.liteav.trtcvoiceroom.R;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 public class VoiceRoomCreateDialog extends BottomSheetDialog {
     private static final int MAX_LEN = 30;
@@ -79,7 +79,11 @@ public class VoiceRoomCreateDialog extends BottomSheetDialog {
             }
         });
         String showName = TextUtils.isEmpty(mUserName) ? mUserId : mUserName;
-        mRoomNameEt.setText(getContext().getString(R.string.trtcvoiceroom_create_theme, showName));
+        showName = getContext().getString(R.string.trtcvoiceroom_create_theme, showName);
+        if (showName.getBytes().length > MAX_LEN) {
+            showName = showName.substring(0, MAX_LEN);
+        }
+        mRoomNameEt.setText(showName);
     }
 
     private void createRoom() {
@@ -88,7 +92,7 @@ public class VoiceRoomCreateDialog extends BottomSheetDialog {
             return;
         }
         if (roomName.getBytes().length > MAX_LEN) {
-            ToastUtils.showLong(getContext().getText(R.string.trtcvoiceroom_warning_room_name_too_long));
+            ToastUtil.toastLongMessage(getContext().getString(R.string.trtcvoiceroom_warning_room_name_too_long));
             return;
         }
         VoiceRoomAnchorActivity.createRoom(getContext(), roomName, mUserId, mUserName, mCoverUrl, mAudioQuality,

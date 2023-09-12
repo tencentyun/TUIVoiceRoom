@@ -808,6 +808,8 @@ public class TXRoomService extends V2TIMSDKListener {
             mDelegate.onSeatInfoListChange(txSeatInfoList);
         }
         try {
+            Map<Integer, String> leaveSeatMap = new HashMap<>();
+            Map<Integer, String> takeSeatMap = new HashMap<>();
             for (int i = 0; i < seatSize; i++) {
                 TXSeatInfo oldInfo = oldTXSeatInfoList.get(i);
                 TXSeatInfo newInfo = txSeatInfoList.get(i);
@@ -816,10 +818,10 @@ public class TXRoomService extends V2TIMSDKListener {
                 } else if (oldInfo.status != newInfo.status) {
                     switch (newInfo.status) {
                         case TXSeatInfo.STATUS_UNUSED:
-                            onSeatLeave(i, oldInfo.user);
+                            leaveSeatMap.put(i, oldInfo.user);
                             break;
                         case TXSeatInfo.STATUS_USED:
-                            onSeatTake(i, newInfo.user);
+                            takeSeatMap.put(i, newInfo.user);
                             break;
                         case TXSeatInfo.STATUS_CLOSE:
                             onSeatClose(i, true);
@@ -831,6 +833,13 @@ public class TXRoomService extends V2TIMSDKListener {
                 if (oldInfo.mute != newInfo.mute) {
                     onSeatMute(i, newInfo.mute);
                 }
+            }
+            // 移麦时会同时变更2个麦位状态，但该用户最终状态应该是麦上（onSeatTake应该后回调）
+            for (Map.Entry<Integer, String> entry : leaveSeatMap.entrySet()) {
+                onSeatLeave(entry.getKey(), entry.getValue());
+            }
+            for (Map.Entry<Integer, String> entry : takeSeatMap.entrySet()) {
+                onSeatTake(entry.getKey(), entry.getValue());
             }
         } catch (Exception e) {
             TRTCLogger.e(TAG, "group attr changed, seat compare error:" + e.getCause());

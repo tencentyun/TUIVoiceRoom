@@ -75,7 +75,7 @@
 "Demo.TRTC.VoiceRoom.ban" = "封禁";
 "Demo.TRTC.LiveRoom.xxinroom" = "xxx进房";
 "Demo.TRTC.VoiceRoom.xxexitroom" = "xxx退房";
-"Demo.TRTC.VoiceRoom.hugxxhandsupsuccess" = "抱xxx上麦成功";
+"Demo.TRTC.VoiceRoom.hugxxhandsupsuccess" = "xxx上麦成功";
 "Demo.TRTC.VoiceRoom.refusebespeaker" = "xxx拒绝上麦";
 "Demo.TRTC.VoiceRoom.saysomething" = "说点什么";
 "Demo.TRTC.LiveRoom.send" = "发送";

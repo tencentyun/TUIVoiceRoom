@@ -74,7 +74,7 @@
 "Demo.TRTC.VoiceRoom.ban" = "blocked";
 "Demo.TRTC.LiveRoom.xxinroom" = "xxx entered the room";
 "Demo.TRTC.VoiceRoom.xxexitroom" = "xxx left the room";
-"Demo.TRTC.VoiceRoom.hugxxhandsupsuccess" = "Placed xxx in the seat";
+"Demo.TRTC.VoiceRoom.hugxxhandsupsuccess" = "xxx in the seat";
 "Demo.TRTC.VoiceRoom.refusebespeaker" = "xxx declined the mic-on request";
 "Demo.TRTC.VoiceRoom.saysomething" = "Send a message";
 "Demo.TRTC.LiveRoom.send" = "Send";
