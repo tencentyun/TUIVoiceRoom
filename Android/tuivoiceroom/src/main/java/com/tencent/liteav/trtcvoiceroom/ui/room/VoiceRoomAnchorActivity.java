@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomDef;
@@ -24,6 +23,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.lang.reflect.Method;
@@ -207,7 +207,7 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                 if (errorCode == ERROR_ROOM_ID_EXIT) {
                     onSuccess();
                 } else {
-                    ToastUtils.showLong("create room failed[" + errorCode + "]:" + message);
+                    ToastUtil.toastLongMessage("create room failed[" + errorCode + "]:" + message);
                     finish();
                 }
             }
@@ -225,10 +225,11 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
             @Override
             public void onCallback(int code, String msg) {
                 if (code == 0) {
-                    ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_owner_succeeded_in_occupying_the_seat));
+                    ToastUtil.toastLongMessage(
+                            getString(R.string.trtcvoiceroom_toast_owner_succeeded_in_occupying_the_seat));
                 } else {
                     String s = getString(R.string.trtcvoiceroom_toast_owner_failed_to_occupy_the_seat, code, msg);
-                    ToastUtils.showLong(s);
+                    ToastUtil.toastLongMessage(s);
                 }
             }
         });
@@ -327,7 +328,7 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
             final MsgEntity entity = mMsgEntityList.get(position);
             String inviteId = entity.invitedId;
             if (inviteId == null) {
-                ToastUtils.showLong(getString(R.string.trtcvoiceroom_request_expired));
+                ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_request_expired));
                 return;
             }
             mTRTCVoiceRoom.acceptInvitation(inviteId, new TRTCVoiceRoomCallback.ActionCallback() {
@@ -337,7 +338,8 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                         entity.type = MsgEntity.TYPE_AGREED;
                         mMsgListAdapter.notifyDataSetChanged();
                     } else {
-                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
+                        ToastUtil.toastShortMessage(
+                                getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
                     }
                 }
             });
@@ -373,13 +375,13 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
     public void onSelected(int seatIndex, final MemberEntity memberEntity) {
         VoiceRoomSeatEntity seatEntity = mVoiceRoomSeatEntityList.get(seatIndex);
         if (seatEntity.isUsed) {
-            ToastUtils.showLong(R.string.trtcvoiceroom_toast_already_someone_in_this_position);
+            ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_toast_already_someone_in_this_position));
             return;
         }
         if (memberEntity.type == MemberEntity.TYPE_WAIT_AGREE) {
             String inviteId = mTakeSeatInvitationMap.get(memberEntity.userId);
             if (inviteId == null) {
-                ToastUtils.showLong(R.string.trtcvoiceroom_toast_request_has_expired);
+                ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_toast_request_has_expired));
                 memberEntity.type = MemberEntity.TYPE_IDEL;
                 mViewSelectMember.notifyDataSetChanged();
                 return;
@@ -396,7 +398,8 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                         }
                         mMsgListAdapter.notifyDataSetChanged();
                     } else {
-                        ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
+                        ToastUtil.toastShortMessage(
+                                getString(R.string.trtcvoiceroom_toast_accept_request_failure, code));
                         memberEntity.type = MemberEntity.TYPE_IDEL;
                         mViewSelectMember.notifyDataSetChanged();
                     }
@@ -423,7 +426,8 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                     @Override
                     public void onCallback(int code, String msg) {
                         if (code == 0) {
-                            ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_invitation_sent_successfully));
+                            ToastUtil.toastLongMessage(
+                                    getString(R.string.trtcvoiceroom_toast_invitation_sent_successfully));
                         }
                     }
                 });
@@ -448,7 +452,7 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
         if (seatInvitation != null) {
             MemberEntity entity = mMemberEntityMap.get(seatInvitation.inviteUserId);
             if (entity != null) {
-                ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_refuse_to_chat, entity.userName));
+                ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_refuse_to_chat, entity.userName));
             }
         }
     }
@@ -469,8 +473,9 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
                         @Override
                         public void onCallback(int code, String msg) {
                             if (code == 0) {
-                                ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_invite_to_chat_successfully,
-                                        invitee));
+                                ToastUtil.toastLongMessage(
+                                        getString(R.string.trtcvoiceroom_toast_invite_to_chat_successfully,
+                                                entity.userName));
                             }
                         }
                     });

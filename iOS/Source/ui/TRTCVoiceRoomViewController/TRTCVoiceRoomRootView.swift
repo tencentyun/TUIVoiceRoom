@@ -13,6 +13,7 @@ class TRTCVoiceRoomRootView: UIView {
     private var isViewReady: Bool = false
     let viewModel: TRTCVoiceRoomViewModel
     public weak var rootViewController: UIViewController?
+    var alertViewController: UIAlertController?
     
     init(frame: CGRect = .zero, viewModel: TRTCVoiceRoomViewModel) {
         self.viewModel = viewModel
@@ -147,6 +148,7 @@ class TRTCVoiceRoomRootView: UIView {
         seatCollection.dataSource = self
         mainMenuView.delegate = self
     }
+    
 }
 
 extension TRTCVoiceRoomRootView: TRTCVoiceRoomMainMenuDelegate {
@@ -325,11 +327,14 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
     }
     
     func showAlert(info: (title: String, message: String), sureAction: @escaping () -> Void, cancelAction: (() -> Void)?) {
-        let alertController = UIAlertController.init(title: info.title, message: info.message, preferredStyle: .alert)
-        let sureAlertAction = UIAlertAction.init(title: .acceptText, style: .default) { (action) in
+        if let alertViewController = alertViewController {
+            alertViewController.dismiss(animated: false)
+        }
+        let alertController = UIAlertController(title: info.title, message: info.message, preferredStyle: .alert)
+        let sureAlertAction = UIAlertAction(title: .acceptText, style: .default) { (action) in
             sureAction()
         }
-        let cancelAlertAction = UIAlertAction.init(title: .refuseText, style: .cancel) { (action) in
+        let cancelAlertAction = UIAlertAction(title: .refuseText, style: .cancel) { (action) in
             cancelAction?()
         }
         alertController.addAction(sureAlertAction)
@@ -337,6 +342,7 @@ extension TRTCVoiceRoomRootView: TRTCVoiceRoomViewResponder {
         rootViewController?.present(alertController, animated: false, completion: {
             
         })
+        alertViewController = alertController
     }
     
     func showActionSheet(actionTitles: [String], actions: @escaping (Int) -> Void) {

@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import com.blankj.utilcode.util.ToastUtils;
+
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.liteav.basic.IntentUtils;
 import com.tencent.liteav.basic.UserModel;
@@ -34,6 +34,7 @@ import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoomCallback;
 import com.tencent.liteav.trtcvoiceroom.model.VoiceRoomManager;
 import com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomAudienceActivity;
 import com.tencent.liteav.trtcvoiceroom.ui.room.VoiceRoomCreateDialog;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.Random;
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     private void initData() {
         final UserModel userModel = UserModelManager.getInstance().getUserModel();
         mTRTCVoiceRoom = TRTCVoiceRoom.sharedInstance(this);
-        mTRTCVoiceRoom.login(GenerateTestUserSig.SDKAPPID, userModel.userId, userModel.userSig,
+        mTRTCVoiceRoom.login(userModel.appId, userModel.userId, userModel.userSig,
                 new TRTCVoiceRoomCallback.ActionCallback() {
                     @Override
                     public void onCallback(int code, String msg) {
@@ -168,13 +169,13 @@ public class MainActivity extends AppCompatActivity {
                 if (isRoomExist(result)) {
                     realEnterRoom(roomIdStr);
                 } else {
-                    ToastUtils.showLong(R.string.room_not_exist);
+                    ToastUtil.toastLongMessage(getString(R.string.room_not_exist));
                 }
             }
 
             @Override
             public void onFailed(int code, String msg) {
-                ToastUtils.showLong(msg);
+                ToastUtil.toastLongMessage(msg);
             }
         });
     }

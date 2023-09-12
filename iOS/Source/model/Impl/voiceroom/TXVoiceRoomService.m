@@ -161,7 +161,7 @@
         }
     } fail:^(int code, NSString *desc) {
         if (callback) {
-            callback(0, desc ?: @"set profile failed.");
+            callback(code, desc ?: @"set profile failed.");
         }
     }];
 }

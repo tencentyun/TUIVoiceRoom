@@ -36,7 +36,10 @@ public class TRTCVoiceRoomViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         title = "\(roomInfo.roomName)\(roomInfo.roomID)"
-        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
         let backBtn = UIButton(type: .custom)
         backBtn.setImage(UIImage(named: "navigationbar_back", in: voiceRoomBundle(), compatibleWith: nil), for: .normal)
         backBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
@@ -70,6 +73,7 @@ public class TRTCVoiceRoomViewController: UIViewController {
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
@@ -96,6 +100,12 @@ public class TRTCVoiceRoomViewController: UIViewController {
             }
         } else {
             self.viewModel?.exitRoom()
+        }
+    }
+    
+    @objc func didBecomeActive() {
+        if let viewModel = viewModel {
+            viewModel.updateMsgView()
         }
     }
 }

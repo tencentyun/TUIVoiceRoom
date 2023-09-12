@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.basic.ImageLoader;
 import com.tencent.liteav.basic.UserModel;
 import com.tencent.liteav.basic.UserModelManager;
@@ -48,6 +47,7 @@ import com.tencent.liteav.trtcvoiceroom.ui.widget.msg.MsgListAdapter;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.nio.charset.StandardCharsets;
@@ -198,14 +198,15 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
                 if (!isSeatMute(mSelfSeatIndex)) {
                     updateMuteStatusView(mSelfUserId, false);
                     mTRTCVoiceRoom.muteLocalAudio(false);
-                    ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_you_have_turned_on_the_microphone));
+                    ToastUtil.toastLongMessage(
+                            getString(R.string.trtcvoiceroom_toast_you_have_turned_on_the_microphone));
                 } else {
-                    ToastUtils.showLong(getString(R.string.trtcvoiceroom_seat_already_mute));
+                    ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_seat_already_mute));
                 }
             } else {
                 mTRTCVoiceRoom.muteLocalAudio(true);
                 updateMuteStatusView(mSelfUserId, true);
-                ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_you_have_turned_off_the_microphone));
+                ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_toast_you_have_turned_off_the_microphone));
             }
         }
     }
@@ -295,7 +296,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
     protected boolean checkButtonPermission() {
         boolean hasPermission = (mCurrentRole == TRTCCloudDef.TRTCRoleAnchor);
         if (!hasPermission) {
-            ToastUtils.showLong(getString(R.string.trtcvoiceroom_toast_anchor_can_only_operate_it));
+            ToastUtil.toastLongMessage(getString(R.string.trtcvoiceroom_toast_anchor_can_only_operate_it));
         }
         return hasPermission;
     }
@@ -432,9 +433,9 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
             @Override
             public void onCallback(int code, String msg) {
                 if (code == 0) {
-                    ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_sent_successfully));
+                    ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_sent_successfully));
                 } else {
-                    ToastUtils.showShort(getString(R.string.trtcvoiceroom_toast_sent_message_failure, code));
+                    ToastUtil.toastShortMessage(getString(R.string.trtcvoiceroom_toast_sent_message_failure, code));
                 }
             }
         });
@@ -708,7 +709,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         Log.d(TAG, "onAudienceEnter userInfo:" + userInfo);
         MsgEntity msgEntity = new MsgEntity();
         msgEntity.type = MsgEntity.TYPE_NORMAL;
-        msgEntity.content = getString(R.string.trtcvoiceroom_tv_enter_room, userInfo.userName);
+        msgEntity.content = getString(R.string.trtcvoiceroom_tv_enter_room);
         msgEntity.userName = userInfo.userName;
         showImMsg(msgEntity);
         if (userInfo.userId.equals(mSelfUserId)) {
@@ -726,7 +727,7 @@ public class VoiceRoomBaseActivity extends AppCompatActivity implements VoiceRoo
         MsgEntity msgEntity = new MsgEntity();
         msgEntity.type = MsgEntity.TYPE_NORMAL;
         msgEntity.userName = userInfo.userName;
-        msgEntity.content = getString(R.string.trtcvoiceroom_tv_exit_room, userInfo.userName);
+        msgEntity.content = getString(R.string.trtcvoiceroom_tv_exit_room);
         showImMsg(msgEntity);
         mAudienceListAdapter.removeMember(userInfo.userId);
     }

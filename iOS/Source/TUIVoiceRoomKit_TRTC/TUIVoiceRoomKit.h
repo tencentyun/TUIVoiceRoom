@@ -9,6 +9,8 @@
 #ifndef TUIVoiceRoomKit_h
 #define TUIVoiceRoomKit_h
 
+#import <TXLiteAVSDK_TRTC/TRTCCloud.h>
+
 @import TXLiteAVSDK_TRTC;
 @import TXAppBasic;
 
