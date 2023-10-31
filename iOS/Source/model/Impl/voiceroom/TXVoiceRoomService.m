@@ -1315,6 +1315,16 @@
             [self.delegate onRoomInfoChange:self.roomInfo];
         }
         self.seatInfoList = [TXVoiceRoomIMJsonHandle getSeatListFromAttr:groupAttributeList seatSize:self.roomInfo.seatSize];
+    
+        for(NSInteger index = 0;index < [self.seatInfoList count];index++)
+        {
+           TXSeatInfo *seatInfo = self.seatInfoList[index];
+           if ([seatInfo.user isEqualToString: self.selfUserId] && seatInfo.status == 1) {
+               seatInfo.status = 0;
+               [self takeSeat:index callback:^(int code, NSString * _Nonnull message) {}];
+           }
+        }
+        
         if ([self canDelegateResponseMethod:@selector(onSeatInfoListChange:)]) {
             [self.delegate onSeatInfoListChange:self.seatInfoList];
         }
