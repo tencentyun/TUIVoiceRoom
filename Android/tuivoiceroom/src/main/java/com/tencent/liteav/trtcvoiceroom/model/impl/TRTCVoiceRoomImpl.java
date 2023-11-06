@@ -1405,6 +1405,21 @@ public class TRTCVoiceRoomImpl extends TRTCVoiceRoom implements ITXRoomServiceDe
     @Override
     public void onTRTCAnchorExit(String userId) {
         mAnchorList.remove(userId);
+        if (TXRoomService.getInstance().isOwner()) {
+            // 主播是房主
+            if (mSeatInfoList != null) {
+                int kickSeatIndex = -1;
+                for (int i = 0; i < mSeatInfoList.size(); i++) {
+                    if (userId.equals(mSeatInfoList.get(i).userId)) {
+                        kickSeatIndex = i;
+                        break;
+                    }
+                }
+                if (kickSeatIndex != -1) {
+                    kickSeat(kickSeatIndex, null);
+                }
+            }
+        }
     }
 
     @Override

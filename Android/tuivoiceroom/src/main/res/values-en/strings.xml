@@ -65,8 +65,8 @@
     <string name="trtcvoiceroom_tv_the_position_has_unmuted">Seat %d unmuted</string>
     <string name="trtcvoiceroom_tv_the_owner_ban_this_position">Seat %d blocked</string>
     <string name="trtcvoiceroom_tv_the_owner_not_ban_this_position">Seat %d unblocked</string>
-    <string name="trtcvoiceroom_tv_enter_room">%s entered</string>
-    <string name="trtcvoiceroom_tv_exit_room">%s left the room</string>
+    <string name="trtcvoiceroom_tv_enter_room">entered</string>
+    <string name="trtcvoiceroom_tv_exit_room">left the room</string>
     <string name="trtcvoiceroom_tv_seat_locked">The seat is blocked</string>
     <string name="trtcvoiceroom_tv_the_anchor_name_is_still_looking_up">Getting anchor name</string>
     <string name="trtcvoiceroom_tv_loading">Loading</string>
