@@ -132,6 +132,7 @@ public class VoiceRoomAnchorActivity extends VoiceRoomBaseActivity implements Se
 
         mRoomId = getRoomId();
         mCurrentRole = TRTCCloudDef.TRTCRoleAnchor;
+        mTRTCVoiceRoom.setSelfProfile(mUserName, mUserAvatar, null);
 
         PermissionCallback callback = new PermissionCallback() {
             @Override
