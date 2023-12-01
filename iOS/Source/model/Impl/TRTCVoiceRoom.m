@@ -1185,6 +1185,17 @@ static dispatch_once_t gOnceToken;
 - (void)onTRTCAnchorExit:(NSString *)userId {
     if ([self.anchorSeatList containsObject:userId]) {
         [self.anchorSeatList removeObject:userId];
+        if (self.roomService.isOwner) {
+           //主播是房主
+            if (_seatInfoList != nil) {
+                for (int i=0; i< _seatInfoList.count; i++) {
+                    if (userId == _seatInfoList[i].userId) {
+                        [self kickSeat:i callback:nil];
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 
