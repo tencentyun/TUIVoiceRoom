@@ -98,9 +98,11 @@ public class SelectMemberView extends BottomSheetDialog {
         if (isClose) {
             mIvCloseSeat.setImageResource(R.drawable.trtcvoiceroom_open_seat);
             mTVCloseSeat.setText(mContext.getString(R.string.trtcvoiceroom_unlock));
+            mPusherListRv.setVisibility(View.INVISIBLE);
         } else {
             mIvCloseSeat.setImageResource(R.drawable.trtcvoiceroom_close_seat);
             mTVCloseSeat.setText(mContext.getString(R.string.trtcvoiceroom_lock));
+            mPusherListRv.setVisibility(View.VISIBLE);
         }
     }
 

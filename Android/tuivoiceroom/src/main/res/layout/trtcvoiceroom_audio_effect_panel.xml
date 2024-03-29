@@ -81,15 +81,6 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/link_music"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="3dp"
-                android:layout_toRightOf="@id/music_effect"
-                android:src="@drawable/trtcvoiceroom_ic_link_music" />
-
         </RelativeLayout>
 
         <RelativeLayout
