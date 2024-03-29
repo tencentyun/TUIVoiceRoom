@@ -390,6 +390,7 @@ class TRTCVoiceRoomAudienceAlert: TRTCVoiceRoomAlertContentView {
         tableView.register(TRTCVoiceRoomAudienceCell.self, forCellReuseIdentifier: "TRTCVoiceRoomAudienceCell")
         unlockBtn.addTarget(self, action: #selector(unlockBtnClick), for: .touchUpInside)
         unlockBtn.isSelected = seatModel.isClosed
+        tableView.isHidden = seatModel.isClosed
     }
     
     
