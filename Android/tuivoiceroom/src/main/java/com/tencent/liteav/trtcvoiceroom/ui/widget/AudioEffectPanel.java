@@ -1,9 +1,7 @@
 package com.tencent.liteav.trtcvoiceroom.ui.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,7 +29,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.tencent.liteav.audio.TXAudioEffectManager;
-import com.tencent.liteav.basic.IntentUtils;
 import com.tencent.liteav.trtcvoiceroom.R;
 import com.tencent.liteav.trtcvoiceroom.model.TRTCVoiceRoom;
 import com.tencent.liteav.trtcvoiceroom.ui.base.EarMonitorInstance;
@@ -338,14 +335,6 @@ public class AudioEffectPanel extends BottomSheetDialog {
             }
         });
 
-        findViewById(R.id.link_music).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://cloud.tencent.com/product/ame"));
-                IntentUtils.safeStartActivity(mContext, intent);
-            }
-        });
         if (!isZh(mContext)) {
             mMusicDescription.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
         }
